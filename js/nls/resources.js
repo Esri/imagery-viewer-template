@@ -126,6 +126,7 @@ define({
         bookmark: {
             title: "Bookmarks",
             selectBookmark: "Select bookmarks",
+            default: "Default",
             add: "Add Bookmarks",
             addTitle: "Enter title",
             addBtn: "Add temporary"

@@ -52,7 +52,7 @@ define({
     "secondaryLayer": {"id": null},
     "displayOptions": "slider",
     "zoomLevel": 8,
-    "searchScreenExtent": 75,
+    "searchScreenExtent": 50,
     "enableAutoRefresh": false,
     "distinctImages": false,
     "imageSelectorLayer": "",

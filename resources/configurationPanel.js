@@ -124,8 +124,260 @@
                                 "label":"Configure search tool"
                         }
                         ]
+                }
+                   
+                ]
                 },
-                   {
+        {
+        "category":"Theme",
+                "fields":[
+                {
+                "type":"paragraph",
+                        "value":"<span style='text-align: justify;font-family: verdana;'>Define title header color for the app</span>"
+                },
+                {
+                "type":"color",
+                        "fieldName":"background",
+                        "tooltip":"Choose a title header color",
+                        "label":"Title Header color"
+                },
+                {
+                "type":"color",
+                        "fieldName":"color",
+                        "tooltip":"Choose a text color for the app",
+                        "label":"Text color"
+                },
+                {
+                "type":"paragraph",
+                        "value":"<span style='text-align: justify;font-family: verdana;'>Use the Custom css option to paste css that overwrites rules in the app.</span>"
+                },
+                {
+                "type":"string",
+                        "fieldName":"customstyle",
+                        "tooltip":"Enter custom css",
+                        "label":"Custom css"
+                }
+             
+                ]
+                },
+        {
+        "category": "About",
+                "fields": [
+                {
+                "type":"paragraph",
+                        "value":"<span style='text-align: justify;font-family: verdana;'>Use the About tool to give your app context. Use this widget to explain to the user what the purpose of the app is and how to get started. Click 'Turn on the About widget when the app starts' to make your About text active any time a person opens your app.</span>"
+                },
+                {
+                "type": "conditional",
+                        "condition": false,
+                        "fieldName": "aboutFlag",
+                        "label": "Enable about tool",
+                        "items": [
+                        {
+                        "type": "boolean",
+                                "fieldName": "aboutOnByDefault",
+                                "label": "Turn on the About widget when the app starts."
+                        },
+                        {
+                        "type": "string",
+                                "fieldName": "aboutText",
+                                "label": "Text",
+                                "stringFieldOption": "richtext",
+                                "placeHolder": "Enter about text here."
+                        }
+                        ]
+                }
+                ]
+                }, {
+"category": "Imagery",
+        "fields": [
+        {
+        "type":"paragraph",
+                "value":"<p style='text-align: justify;font-family: verdana;'>Image Date will display the date of the most central image from the active layer in the theme header next to the app name.</p>"
+        },
+        {
+        "type":"conditional",
+                "condition":false,
+                "fieldName":"imageDateFlag",
+                "label":"Enable Image Date",
+                "items":[
+                {
+                "type": "string",
+                        "fieldName": "imageDateLabel",
+                        "label": "Label: ",
+                        "tooltip": "",
+                        "stringFieldOption": "textbox",
+                        "placeHolder": ""
+                },
+                {
+                "type":"paragraph",
+                        "value":"<p style='text-align: justify;font-family: verdana;margin-bottom:0px;'>Check the box next to all the imagery layers that will display a date when selected as the app's active layer, then select one date field for each layer.</p>"
+                },
+                {
+                "type":"multilayerandfieldselector",
+                        "fieldName":"imageDateLayer",
+                        "label":"Imagery Layers",
+                        "tooltip":"Select date field for each imagery layer.",
+                        "layerOptions":{
+                        "supportedTypes":[
+                                "ImageServiceLayer"
+                        ]
+                        },
+                        "fieldOptions":{
+                        "supportedTypes":[
+                                "esriFieldTypeDate"
+                        ]
+                        }
+                }
+            ]
+                },
+                {
+                "type":"paragraph",
+                        "value":"<p style='text-align: justify;font-family: verdana;margin-bottom:0px;'>The Layer Selector lets app users choose different imagery layers or particular images to view. A Single Layer Viewer will show only one imagery layer at a time. A Two-Layer Comparison Viewer will show two imagery layers, using a swipe tool to compare them.</p>"
+                },
+                {
+                "type": "conditional",
+                        "condition": false,
+                        "fieldName": "layersFlag",
+                        "tooltip": "Enable Layer Selector",
+                        "label": "Enable Layer Selector",
+                        "items": [
+                            {
+                "type": "boolean",
+                "fieldName": "layerOnByDefault",
+                "label": "Turn on Layer Selector when the app starts."
+            },
+                        {
+                        "type": "radio",
+                                "fieldName":"viewerTool",
+                                "tooltip": "Select layer viewer type",
+                                "label": "Type: ",
+                                "items": [
+                                {
+                                "label": "Single Layer Viewer",
+                                        "value":"single",
+                                        "checked": true
+                                },
+                                {
+                                "label": "Two-Layer Comparison Viewer",
+                                        "value":"multi"
+                                }
+                                ]
+                        },
+                        {
+                "type":"paragraph",
+                        "value":"<p style='text-align:justify;font-family:verdana;margin-bottom:0px;'>Use the dropdown lists to set the default layer for single layer viewer or to set the left Image and right image for two-layer comparison viewer in the app.</p>"
+                },
+                {
+                "type":"layerAndFieldSelector",
+                        "fieldName":"primaryLayer",
+                        "label": "Layer(Default/Left Image): ",
+                        "tooltip":"Select the default or left image layer",
+                        "layerOptions":{
+                        "supportedTypes":[
+                                "ImageServiceLayer"
+                        ]
+                        }
+                },
+                {
+                "type":"layerAndFieldSelector",
+                        "fieldName":"secondaryLayer",
+                        "label":"Layer(Right Image): ",
+                        "tooltip":"Select the right image layer",
+                        "layerOptions":{
+                        "supportedTypes":[
+                                "ImageServiceLayer"
+                        ]
+                        }
+                },
+                        {
+                        "type":"options",
+                                "fieldName":"displayOptions",
+                                "tooltip":"",
+                                "label":"Display:",
+                                "options":[
+                                {
+                                "label":"Slider",
+                                        "value":"slider"
+                                },
+                                {
+                                "label":"Dropdown List",
+                                        "value":"dropdown"
+                                },
+                                {
+                                "label":"Slider and Dropdown List",
+                                        "value":"both"
+                                }
+                                ]
+                        },
+                         {
+                "type":"Number",
+                        "fieldName":"zoomLevel",
+                        "label":"Minimum Zoom Level",
+                        "tooltip":"",
+                        "constraints":{
+                        "min":0,
+                                "max":23,
+                                "places":0
+                        }
+                },
+                {
+                "type":"Number",
+                        "fieldName":"searchScreenExtent",
+                        "label":"Search Screen Extent (%)",
+                        "tooltip":"",
+                        "constraints":{
+                        "min":1,
+                                "max":100,
+                                "places":0
+                        }
+                },
+                        {
+                        "type":"boolean",
+                                "fieldName":"distinctImages",
+                                "label":"List each image separately",
+                                "tooltip":"If turned on, slider or dropdown will not merge all the images together with same attribute value."
+                        },
+                        {
+                "type":"boolean",
+                        "fieldName":"enableAutoRefresh",
+                        "label":"Enable AutoRefresh",
+                        "toottip":""
+                },
+                        {
+                        "type":"paragraph",
+                                "value":"<p style='text-align: justify;font-family: verdana;margin:20px 0px -10px; 0px;'>Help app users search for specific images. If you want a layer to be searchable, choose one attribute below for users to search. (For example, to explore imagery chronologically, choose an attribute like Acquisition Date.)</p>"
+                        },
+                        {
+                        "type":"multilayerandfieldselector",
+                                "fieldName":"imageSelectorLayer",
+                                "label":"Imagery Layers",
+                                "tooltip":"Set imagery layers properties.",
+                                "layerOptions":{
+                                "supportedTypes":[
+                                        "ImageServiceLayer"
+                                ]
+                                },
+                                "fieldOptions":{
+                                "supportedTypes":[
+                                        "esriFieldTypeSmallInteger",
+                                        "esriFieldTypeInteger",
+                                        "esriFieldTypeSingle",
+                                        "esriFieldTypeDouble",
+                                        "esriFieldTypeString",
+                                        "esriFieldTypeDate",
+                                        "esriFieldTypeOID",
+                                        "esriFieldTypeGeometry",
+                                        "esriFieldTypeBlob",
+                                        "esriFieldTypeRaster",
+                                        "esriFieldTypeGUID",
+                                        "esriFieldTypeGlobalID",
+                                        "esriFieldTypeXML"
+                                ]
+                                }
+                        }
+                ]
+        },{
                 "type":"paragraph",
                         "value":"<p style='text-align:justify;font-family: verdana;'>The Image Measurement tool allows you to perform measurements on image services with mensuration capability. Mensuration applies geometric rules to find the height, area, or location of a feature.</p>"
                 },
@@ -270,231 +522,6 @@
                         }
                         ]
                 }
-                ]
-                },
-        {
-        "category":"Theme",
-                "fields":[
-                {
-                "type":"paragraph",
-                        "value":"<span style='text-align: justify;font-family: verdana;'>Define title header color for the app</span>"
-                },
-                {
-                "type":"color",
-                        "fieldName":"background",
-                        "tooltip":"Choose a title header color",
-                        "label":"Title Header color"
-                },
-                {
-                "type":"color",
-                        "fieldName":"color",
-                        "tooltip":"Choose a text color for the app",
-                        "label":"Text color"
-                },
-                {
-                "type":"paragraph",
-                        "value":"<span style='text-align: justify;font-family: verdana;'>Use the Custom css option to paste css that overwrites rules in the app.</span>"
-                },
-                {
-                "type":"string",
-                        "fieldName":"customstyle",
-                        "tooltip":"Enter custom css",
-                        "label":"Custom css"
-                }
-             
-                ]
-                },
-        {
-        "category": "About",
-                "fields": [
-                {
-                "type":"paragraph",
-                        "value":"<span style='text-align: justify;font-family: verdana;'>Use the About tool to give your app context. Use this widget to explain to the user what the purpose of the app is and how to get started. Click 'Turn on the About widget when the app starts' to make your About text active any time a person opens your app.</span>"
-                },
-                {
-                "type": "conditional",
-                        "condition": false,
-                        "fieldName": "aboutFlag",
-                        "label": "Enable about tool",
-                        "items": [
-                        {
-                        "type": "boolean",
-                                "fieldName": "aboutOnByDefault",
-                                "label": "Turn on the About widget when the app starts."
-                        },
-                        {
-                        "type": "string",
-                                "fieldName": "aboutText",
-                                "label": "Text",
-                                "stringFieldOption": "richtext",
-                                "placeHolder": "Enter about text here."
-                        }
-                        ]
-                }
-                ]
-                }, {
-"category": "Imagery",
-        "fields": [
-        {
-        "type":"paragraph",
-                "value":"<p style='text-align: justify;font-family: verdana;'>Image Date will display the date of the most central image from the active layer in the theme header next to the app name.</p>"
-        },
-        {
-        "type":"conditional",
-                "condition":false,
-                "fieldName":"imageDateFlag",
-                "label":"Enable Image Date",
-                "items":[
-                {
-                "type": "string",
-                        "fieldName": "imageDateLabel",
-                        "label": "Label: ",
-                        "tooltip": "",
-                        "stringFieldOption": "textbox",
-                        "placeHolder": ""
-                },
-                {
-                "type":"paragraph",
-                        "value":"<p style='text-align: justify;font-family: verdana;margin-bottom:0px;'>Check the box next to all the imagery layers that will display a date when selected as the app's active layer, then select one date field for each layer.</p>"
-                },
-                {
-                "type":"multilayerandfieldselector",
-                        "fieldName":"imageDateLayer",
-                        "label":"Imagery Layers",
-                        "tooltip":"Select date field for each imagery layer.",
-                        "layerOptions":{
-                        "supportedTypes":[
-                                "ImageServiceLayer"
-                        ]
-                        },
-                        "fieldOptions":{
-                        "supportedTypes":[
-                                "esriFieldTypeDate"
-                        ]
-                        }
-                }  ]
-                },
-                {
-                "type": "conditional",
-                        "condition": false,
-                        "fieldName": "layersFlag",
-                        "tooltip": "Enable Layer Selector",
-                        "label": "Enable Layer Selector",
-                        "items": [
-                            {
-                "type": "boolean",
-                "fieldName": "layerOnByDefault",
-                "label": "Turn on Layer Selector when the app starts."
-            },
-                        {
-                        "type": "radio",
-                                "fieldName":"viewerTool",
-                                "tooltip": "Select layer viewer type",
-                                "label": "Type: ",
-                                "items": [
-                                {
-                                "label": "Single Layer Viewer",
-                                        "value":"single",
-                                        "checked": true
-                                },
-                                {
-                                "label": "Two-Layer Comparison Viewer",
-                                        "value":"multi"
-                                }
-                                ]
-                        },
-                        {
-                "type":"paragraph",
-                        "value":"<p style='text-align:justify;font-family:verdana;margin-bottom:0px;'>Use the dropdown lists to set the default layer for single layer viewer or to set the left Image and right image for two-layer comparison viewer in the app.</p>"
-                },
-                {
-                "type":"layerAndFieldSelector",
-                        "fieldName":"primaryLayer",
-                        "label": "Layer(Default/Left Image): ",
-                        "tooltip":"Select the default or left image layer",
-                        "layerOptions":{
-                        "supportedTypes":[
-                                "ImageServiceLayer"
-                        ]
-                        }
-                },
-                {
-                "type":"layerAndFieldSelector",
-                        "fieldName":"secondaryLayer",
-                        "label":"Layer(Right Image): ",
-                        "tooltip":"Select the right image layer",
-                        "layerOptions":{
-                        "supportedTypes":[
-                                "ImageServiceLayer"
-                        ]
-                        }
-                },
-                        {
-                        "type":"options",
-                                "fieldName":"displayOptions",
-                                "tooltip":"",
-                                "label":"Display:",
-                                "options":[
-                                {
-                                "label":"Slider",
-                                        "value":"slider"
-                                },
-                                {
-                                "label":"Dropdown List",
-                                        "value":"dropdown"
-                                },
-                                {
-                                "label":"Slider and Dropdown List",
-                                        "value":"both"
-                                }
-                                ]
-                        },
-                        {
-                        "type":"boolean",
-                                "fieldName":"distinctImages",
-                                "label":"List each image separately",
-                                "tooltip":"If turned on, slider or dropdown will not merge all the images together with same attribute value."
-                        },
-                        {
-                "type":"boolean",
-                        "fieldName":"enableAutoRefresh",
-                        "label":"Enable AutoRefresh",
-                        "toottip":""
-                },
-                        {
-                        "type":"paragraph",
-                                "value":"<p style='text-align: justify;font-family: verdana;margin:20px 0px -10px; 0px;'>Below, check the box next to each imagery layer you wish to be searchable, then select one attribute per imagery layer by which to sort the images (for example, you might select AcquisitionDate to sort satellite imagery chronologically).</p>"
-                        },
-                        {
-                        "type":"multilayerandfieldselector",
-                                "fieldName":"imageSelectorLayer",
-                                "label":"Imagery Layers",
-                                "tooltip":"Set imagery layers properties.",
-                                "layerOptions":{
-                                "supportedTypes":[
-                                        "ImageServiceLayer"
-                                ]
-                                },
-                                "fieldOptions":{
-                                "supportedTypes":[
-                                        "esriFieldTypeSmallInteger",
-                                        "esriFieldTypeInteger",
-                                        "esriFieldTypeSingle",
-                                        "esriFieldTypeDouble",
-                                        "esriFieldTypeString",
-                                        "esriFieldTypeDate",
-                                        "esriFieldTypeOID",
-                                        "esriFieldTypeGeometry",
-                                        "esriFieldTypeBlob",
-                                        "esriFieldTypeRaster",
-                                        "esriFieldTypeGUID",
-                                        "esriFieldTypeGlobalID",
-                                        "esriFieldTypeXML"
-                                ]
-                                }
-                        }
-                ]
-        }
         ]
         },
         {
@@ -511,7 +538,7 @@
                 },
                 {
                 "type":"paragraph",
-                        "value":"<p style='text-align:justify;font-family: verdana;margin-bottom:0px;'>The Editor tool allows users to edit feature layers (to pinpoint locations, delineate boundaries, or add additional notes, among other uses).<br><br><br>Enable the Editor tool and select the feature layers that users will be able to edit in-app. This tool requires editable hosted feature layers in the app's web map.</p>"
+                        "value":"<p style='text-align:justify;font-family: verdana;margin-bottom:0px;'>The Editor tool allows users to edit feature layers (to pinpoint locations, delineate boundaries, or add additional notes, among other uses).<br><br><br>Enable the Editor tool and select the feature layers that users will be able to edit in-app. This tool requires <a href='http://doc.arcgis.com/en/arcgis-online/share-maps/manage-hosted-feature-layers.htm' target='_blank'>editable hosted feature layers</a> in the app's web map.</p>"
                 },
                 {
                 "type":"conditional",
@@ -635,6 +662,8 @@
                 "primaryLayer": {"id": null},
                 "secondaryLayer": {"id": null},
                 "displayOptions":"slider",
+                "zoomLevel":8,
+                "searchScreenExtent":50,
                 "distinctImages": false,
                 "enableAutoRefresh": false,
                 "imageSelectorLayer":"",
