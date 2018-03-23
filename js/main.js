@@ -263,9 +263,9 @@ define([
                     }
                 }));
                 setTimeout(lang.hitch(this, function () {
-                    if (this.config.aboutOnByDefault)
+                    if (this.config.toolOnByDefault === "about" && this.config.aboutFlag)
                         dom.byId("aboutContainer").click();
-                    else if (this.config.layerOnByDefault)
+                    else if (this.config.toolOnByDefault === "layer" && this.config.layersFlag)
                         dom.byId("layerViewerContainer").click();
                 }), 1000);
                 return response;
