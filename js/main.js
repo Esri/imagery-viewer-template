@@ -658,13 +658,20 @@ define([
         setupLayerViewer: function (viewerType) {
             this.setupToolContent("layerViewerContainer", 0, (viewerType === "singleLayerViewer" ? singleLayerViewerHtml : twoLayerViewerHtml), this.config.i18n[viewerType].title, "layerViewerNode", viewerType);
             var layers = this.config.itemInfo.itemData.operationalLayers;
-
+            if (!this.config.primaryLayer.id && viewerType === "singleLayerViewer") {
+                for (var z = 0; z <= layers.length; z++) {
+                    if ((layers[z].type && layers[z].type === 'ArcGISTiledImageServiceLayer') || (layers[z].type && layers[z].type === 'ArcGISImageServiceLayer') || (this.map.getLayer(layers[z].id).serviceDataType && this.map.getLayer(layers[z].id).serviceDataType.indexOf("esriImageService") !== -1)) {
+                        this.config.primaryLayer.id = layers[z].id;
+                        break;
+                    }
+                }
+            }
             var layer = [];
             var temp = {
                 defaultLayer: this.config.primaryLayer.id,
                 comparisonLayer: this.config.secondaryLayer.id,
                 display: this.config.displayOptions,
-                zoomLevel:this.config.zoomLevel,
+                zoomLevel: this.config.zoomLevel,
                 searchExtent: this.config.searchScreenExtent,
                 autoRefresh: this.config.enableAutoRefresh,
                 distinctImages: !this.config.distinctImages
@@ -673,7 +680,7 @@ define([
                 this.config.imageSelectorLayer = JSON.parse(this.config.imageSelectorLayer);
             var addLayer = true;
             for (var a = 0; a < layers.length; a++) {
-                if ((layers[a].type && layers[a].type === 'ArcGISTiledImageServiceLayer') || (layers[a].type && layers[a].type === 'ArcGISImageServiceLayer') || (this.map.getLayer(layers[a].id).serviceDataType && this.map.getLayer(layers[a].id).serviceDataType.substr(0, 16) === "esriImageService")) {
+                if ((layers[a].type && layers[a].type === 'ArcGISTiledImageServiceLayer') || (layers[a].type && layers[a].type === 'ArcGISImageServiceLayer') || (this.map.getLayer(layers[a].id).serviceDataType && this.map.getLayer(layers[a].id).serviceDataType.indexOf("esriImageService") !== -1)) {
                     for (var b = 0; b < this.config.imageSelectorLayer.length; b++) {
                         if (this.config.imageSelectorLayer[b].id === layers[a].id && /*this.config.imageSelectorLayer[b].fields.length > 0 &&*/ layers[a].layerObject) {
 
@@ -696,13 +703,13 @@ define([
                             title: layers[a].title || layers[a].layerObject.name || layers[a].id
                         };
                     }
-                    if(viewerType === "singleLayerViewer"){
-                    if(layers[a].id !== this.config.primaryLayer.id)
-                        this.map.getLayer(layers[a].id).hide();
-                }else{
-                    if(layers[a].id !== this.config.primaryLayer.id && layers[a].id !== this.config.secondaryLayer.id)
-                        this.map.getLayer(layers[a].id).hide();
-                }
+                    if (viewerType === "singleLayerViewer") {
+                        if (layers[a].id !== this.config.primaryLayer.id)
+                            this.map.getLayer(layers[a].id).hide();
+                    } else {
+                        if (layers[a].id !== this.config.primaryLayer.id && layers[a].id !== this.config.secondaryLayer.id)
+                            this.map.getLayer(layers[a].id).hide();
+                    }
                 }
             }
 
@@ -774,7 +781,7 @@ define([
                             openForFirstTime = false;
                             toolObject.postCreate();
                         }
-                        
+
                         domStyle.set(node, "display", "block");
                         if (toolObject)
                             toolObject.onOpen();
