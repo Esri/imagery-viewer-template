@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2018 Esri. All Rights Reserved.
+// Copyright 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -116,25 +116,39 @@ define([
             }));
             registry.byId("show").on("change", lang.hitch(this, function (value) {
                 this.leftLayerInfos[this.activeLayer.id].type = value;
+                if (value === "image") {
+                    if (!this.activeLayer.visible)
+                        this.activeLayer.show();
+                } else
+                    this.activeLayer.hide();
+                this.valueSelected = this.nodeList.imageSelectorDropDown.get("value");
                 this.sliderChange();
             }));
             registry.byId("showRight").on("change", lang.hitch(this, function (value) {
                 this.rightLayerInfos[this.activeLayer.id].type = value;
+                if (value === "image") {
+                    if (!this.activeLayer.visible)
+                        this.activeLayer.show();
+                } else
+                    this.activeLayer.hide();
+                this.valueSelected = this.nodeList.imageSelectorDropDown.get("value");
                 this.sliderChange();
             }));
             registry.byId("imageSelector").on("change", lang.hitch(this, this.setFilterDiv));
             registry.byId("imageSelectorRight").on("change", lang.hitch(this, this.setFilterDiv));
             registry.byId("leftLayerSelector").on("change", lang.hitch(this, this.selectLeftLayer));
             registry.byId("rightLayerSelector").on("change", lang.hitch(this, this.selectRightLayer));
-            registry.byId("leftLayer").on("click", lang.hitch(this, function(){
-                if(this.layerSwipe){
-                    this.moveSwipe(this.map.width - 5,this.layerSwipe.invertPlacement,this.layerSwipe.layers);
+            registry.byId("refreshImageSliderBtn").on("click", lang.hitch(this, this.imageSliderRefresh));
+            registry.byId("refreshImageSliderBtnRight").on("click", lang.hitch(this, this.imageSliderRefresh));
+            registry.byId("leftLayer").on("click", lang.hitch(this, function () {
+                if (this.layerSwipe) {
+                    this.moveSwipe(this.map.width - 5, this.layerSwipe.invertPlacement, this.layerSwipe.layers);
                 }
                 this.setLayerProp("left");
             }));
-            registry.byId("rightLayer").on("click", lang.hitch(this, function(){
-                if(this.layerSwipe){
-                    this.moveSwipe(5,this.layerSwipe.invertPlacement,this.layerSwipe.layers);
+            registry.byId("rightLayer").on("click", lang.hitch(this, function () {
+                if (this.layerSwipe) {
+                    this.moveSwipe(5, this.layerSwipe.invertPlacement, this.layerSwipe.layers);
                 }
                 this.setLayerProp("right");
             }));
@@ -151,11 +165,11 @@ define([
                     this.currentLayerProp = this.rightLayerInfos[registry.byId("rightLayerSelector").get("value") + "_RightLayer"];
                     this.activeLayer = this.secondaryLayer;
                     this.checkLayerProp();
-                    if (this.config.defaultLayer) {
-                        this.setCurrentNodes("left");
-                        registry.byId("leftLayerSelector").set("value", this.config.defaultLayer);
-                        this.config.defaultLayer = null;
-                    }
+                    /*  if (this.config.defaultLayer) {
+                     this.setCurrentNodes("left");
+                     registry.byId("leftLayerSelector").set("value", this.config.defaultLayer);
+                     this.config.defaultLayer = null;
+                     }*/
                 }));
             }
             this.setTooltips();
@@ -194,11 +208,14 @@ define([
                 registry.byId("leftLayerSelector").set("value", this.config.defaultLayer);
             } else
                 this.setCurrentNodes("left");
+            setTimeout(lang.hitch(this, function () {
+                this.refreshSwipe();
+            }), 500);
 
         },
         fillLayerSelector: function () {
-            registry.byId("leftLayerSelector").addOption({label: "None", value: "none"});
-            registry.byId("rightLayerSelector").addOption({label: "None", value: "none"});
+            registry.byId("leftLayerSelector").addOption({label: "Basemap", value: "none"});
+            registry.byId("rightLayerSelector").addOption({label: "Basemap", value: "none"});
             var layer;
             this.leftLayerInfos = [], this.rightLayerInfos = [];
             for (var a in this.layerInfos) {
@@ -221,6 +238,26 @@ define([
                 connectId: ['dropDownImageList', "dropDownImageListRight"],
                 position: ['below'],
                 label: this.i18n.dropDown
+            });
+            new Tooltip({
+                connectId: ["imageSelector"],
+                position: ['below'],
+                label: this.i18n.tooltip
+            });
+            new Tooltip({
+                connectId: ["refreshImageSliderBtn"],
+                position: ['after', 'below'],
+                label: this.i18n.refreshTooltip
+            });
+            new Tooltip({
+                connectId: ["imageSelectorRight"],
+                position: ['below'],
+                label: this.i18n.tooltip
+            });
+            new Tooltip({
+                connectId: ["refreshImageSliderBtnRight"],
+                position: ['after', 'below'],
+                label: this.i18n.refreshTooltip
             });
         },
         resizeBtn: function () {
@@ -246,15 +283,15 @@ define([
                     domStyle.set(subtractValue[a], "height", "15px");
                 }
             }
-            if (this.config.display === "both") {
-                document.getElementById("imageSliderDiv").style.width = "85%";
-                document.getElementById("imageSliderDivRight").style.width = "85%";
-            } else if (this.config.display === "slider") {
-                document.getElementById("imageSliderDiv").style.width = "95%";
-                document.getElementById("imageSliderDiv").style.marginBottom = "13px";
-                document.getElementById("imageSliderDivRight").style.width = "95%";
-                document.getElementById("imageSliderDivRight").style.marginBottom = "13px";
-            }
+            /*  if (this.config.display === "both") {
+             document.getElementById("imageSliderDiv").style.width = "85%";
+             document.getElementById("imageSliderDivRight").style.width = "85%";
+             } else if (this.config.display === "slider") {
+             document.getElementById("imageSliderDiv").style.width = "95%";
+             document.getElementById("imageSliderDiv").style.marginBottom = "13px";
+             document.getElementById("imageSliderDivRight").style.width = "95%";
+             document.getElementById("imageSliderDivRight").style.marginBottom = "13px";
+             }*/
         },
         onOpen: function () {
             if (!this.previousInfo) {
@@ -274,6 +311,7 @@ define([
                 }));
             }
             this.refreshHandler = this.map.on("update-end", lang.hitch(this, this.refreshSwipe));
+
             this.refreshSwipe();
             if (this.map.getLevel() < this.config.zoomLevel) {
                 this.turnOffSelector();
@@ -322,9 +360,9 @@ define([
                 errorDiv: "errorDiv" + value
 
             };
-
         },
         selectLeftLayer: function (value) {
+
             if (this.primaryLayer)
                 this.primaryLayer.hide();
 
@@ -337,6 +375,7 @@ define([
                 this.refreshSwipe();
             } else {
                 this.valueSelected = null;
+
                 this.primaryLayer = this.map.getLayer(value);
                 this.primaryLayer.show();
                 this.currentLayerProp = this.leftLayerInfos[value];
@@ -485,8 +524,11 @@ define([
                     this.setFilterDiv();
                 registry.byId("imageSelectorRight").set("disabled", true);
                 html.set(document.getElementById("errorDivRight"), this.i18n.zoom);
-                if (registry.byId("leftLayer").checked)
-                    this.setLayerProp("left");
+                setTimeout(lang.hitch(this, function () {
+                    if (registry.byId("leftLayer").checked)
+                        this.setLayerProp("left");
+                }), 500);
+
             }), 1500);
 
         },
@@ -585,7 +627,6 @@ define([
             this.previousExtentChangeLevel = evt.lod.level;
         },
         setFilterDiv: function () {
-
             if (this.nodeList.imageSelector.get("checked")) {
 
                 if (!this.slider) {
@@ -792,7 +833,7 @@ define([
                                 if (this.orderedDates[i].value === this.currentLayerProp.currentValue.value && this.orderedDates[i].id === this.currentLayerProp.currentValue.id) {
                                     var index = i;
                                     break;
-                                } else if (this.imageFieldType === "esriFieldTypeDate" && this.orderedDates[i].value < this.currentLayerProp.currentValue.value) {
+                                } else if (this.orderedDates[i].value <= this.currentLayerProp.currentValue.value) {
                                     var index = i;
                                 }
                             }
@@ -823,7 +864,7 @@ define([
                 html.set(document.getElementById(this.nodeList.imageRange), this.i18n.date + ": <b>" + locale.format(new Date(this.orderedDates[index].value), {selector: "date", formatLength: "long"}) + "</b>");
             else
                 html.set(document.getElementById(this.nodeList.imageRange), this.imageField + ": <b>" + this.orderedDates[index].value + "</b>");
-            html.set(document.getElementById(this.nodeList.imageCount), "1");
+            html.set(document.getElementById(this.nodeList.imageCount), "1 " + this.i18n.imageLabel);
             this.hideLoading();
         },
         selectDisplayedImage: function () {
@@ -998,31 +1039,31 @@ define([
                     this.clearGraphics();
                     var count = 0;
 
-                    if (this.activeLayer.visible) {
-                        for (var i = 0; i < featureSelect.length; i++) {
-                            if (this.nodeList.show.get("value") === "footprint") {
-                                var geometry = featureSelect[i].geometry;
-                                var sms = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 255, 255]), 2), new Color([0, 255, 255, 0.15]));
-                                var attr = featureSelect[i].attributes;
-                                attr.imagePosition = this.activeLayer.id.indexOf("_RightLayer") === -1 ? "left" : "right";
-                                if (this.imageFieldType === "esriFieldTypeDate")
-                                    attr[this.imageField] = locale.format(new Date(attr[this.imageField]), {selector: "date", formatLength: "long"});
-                                var infoTemplate = new InfoTemplate("Attributes", "${*}");
-                                var graphic = new Graphic(geometry, sms, attr, infoTemplate);
-                                this.map.graphics.add(graphic);
-                                if (count === 19) {
-                                    if (!this.responseAlert) {
-                                        this.responseAlert = confirm(this.i18n.error7);
-                                    }
-                                    count++;
-                                    break;
+                    //  if (this.activeLayer.visible) {
+                    for (var i = 0; i < featureSelect.length; i++) {
+                        if (this.nodeList.show.get("value") === "footprint") {
+                            var geometry = featureSelect[i].geometry;
+                            var sms = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 255, 255]), 2), new Color([0, 255, 255, 0.2]));
+                            var attr = featureSelect[i].attributes;
+                            attr.imagePosition = this.activeLayer.id.indexOf("_RightLayer") === -1 ? "left" : "right";
+                            if (this.imageFieldType === "esriFieldTypeDate")
+                                attr[this.imageField] = locale.format(new Date(attr[this.imageField]), {selector: "date", formatLength: "long"});
+                            var infoTemplate = new InfoTemplate("Attributes", "${*}");
+                            var graphic = new Graphic(geometry, sms, attr, infoTemplate);
+                            this.map.graphics.add(graphic);
+                            if (count === 19) {
+                                if (!this.responseAlert) {
+                                    this.responseAlert = confirm(this.i18n.error7);
                                 }
+                                count++;
+                                break;
                             }
-                            count++;
                         }
+                        count++;
                     }
+                    //  }
 
-                    html.set(document.getElementById(this.nodeList.imageCount), "" + count + "");
+                    html.set(document.getElementById(this.nodeList.imageCount), "" + count + " " + this.i18n.imageLabel);
 
                     if (this.nodeList.show.get("value") === "image") {
                         var mr = new MosaicRule();
@@ -1034,9 +1075,10 @@ define([
 
                     } else {
 
-                        var mr = new MosaicRule(this.currentLayerProp.defaultMosaicRule);
-
-                        this.activeLayer.setMosaicRule(mr);
+                        /*var mr = new MosaicRule(this.currentLayerProp.defaultMosaicRule);
+                         
+                         this.activeLayer.setMosaicRule(mr);*/
+                        this.activeLayer.hide();
 
                     }
                     if (this.dfd)
@@ -1082,10 +1124,10 @@ define([
                             var layer = this.primaryLayer;
                         }
                         if (!this.swipePosition) {
-                            if(registry.byId("leftLayer").checked)
-                            this.swipePosition = this.map.width - 5;
-                        else
-                            this.swipePosition = 5;
+                            if (registry.byId("leftLayer").checked)
+                                this.swipePosition = this.map.width - 5;
+                            else
+                                this.swipePosition = 5;
                         }
                         this.layerSwipe = new LayerSwipe({
                             type: "vertical",
@@ -1095,7 +1137,6 @@ define([
                             layers: [layer]
                         }, dom.byId("swipewidget"));
                         this.layerSwipe.startup();
-
                         this.previousLayerInfo = {primary: this.primaryLayer ? {id: this.primaryLayer.id, mosaicRule: this.primaryLayer.mosaicRule} : {id: null, mosaicRule: null}, secondary: this.secondaryLayer ? {id: this.secondaryLayer.id, mosaicRule: this.secondaryLayer.mosaicRule} : {id: null, mosaicRule: null}};
                     }
                 }
@@ -1109,23 +1150,23 @@ define([
                 this.previousLayerInfo = {primary: {id: null, mosaicRule: null}, secondary: {id: null, mosaicRule: null}};
             }
         },
-        moveSwipe: function(value,invertPlacement,layers){
+        moveSwipe: function (value, invertPlacement, layers) {
             this.layerSwipe.destroy();
             this.layerSwipe = null;
-             domConstruct.place("<div id='swipewidget'></div>", "mapDiv_root", "first");
-                        this.layerSwipe = new LayerSwipe({
-                            type: "vertical",
-                            map: this.map,
-                            left: value,
-                            invertPlacement: invertPlacement,
-                            layers: layers
-                        }, dom.byId("swipewidget"));
-                        this.layerSwipe.startup();
+            domConstruct.place("<div id='swipewidget'></div>", "mapDiv_root", "first");
+            this.layerSwipe = new LayerSwipe({
+                type: "vertical",
+                map: this.map,
+                left: value,
+                invertPlacement: invertPlacement,
+                layers: layers
+            }, dom.byId("swipewidget"));
+            this.layerSwipe.startup();
         },
         clearGraphics: function () {
             if (this.activeLayer) {
                 var imagePosition = this.activeLayer.id.indexOf("_RightLayer") === -1 ? "left" : "right";
-                for (var s = 0; s <= this.map.graphics.graphics.length - 1; s++) {
+                for (var s = this.map.graphics.graphics.length - 1; s >= 0; s--) {
                     if (this.map.graphics.graphics[s].symbol && this.map.graphics.graphics[s].symbol.style === "solid" && this.map.graphics.graphics[s].symbol.outline.color.g === 255 && this.map.graphics.graphics[s].symbol.outline.color.b === 255 && this.map.graphics.graphics[s].attributes.imagePosition === imagePosition) {
                         this.map.graphics.remove(this.map.graphics.graphics[s]);
 

@@ -33,12 +33,14 @@ define({
         singleLayerViewer: {
             title: "Layer Selector",
             enable: "Enable Image Selector",
+            tooltip: "Enable to search for specific images.",
             secondary: "Set Active as Comparison Layer.",
             dropDown: "Show images in drop down list.",
-            refresh: "Refresh query based on current extent.",
+            refresh: "Refresh Button",
+            refreshTooltip: "Refresh query based on current extent.",
             layer: "Layer",
             show: "Show",
-            age: "Age",
+            age: "Range",
             zoom: "Zoom in to select images.",
             error: "No visible Imagery Layers in the map.",
             error1: "Field is not specified.",
@@ -55,17 +57,20 @@ define({
             ageOption4: "Year(s)",
             showOption1: "Image",
             showOption2: "Footprint",
-            date:"Date(s)"
+            date:"Date(s)",
+            imageLabel: "image(s)"
         },
         twoLayerViewer: {
             title: "Layer Selector",
             enable: "Enable Image Selector",
+            tooltip: "Enable to search for specific images.",
             secondary: "Set Active as Comparison Layer.",
             dropDown: "Show images in drop down list.",
-            refresh: "Refresh query based on current extent.",
+            refresh: "Refresh Button",
+            refreshTooltip: "Refresh query based on current extent.",
             layer: "Layer",
             show: "Show",
-            age: "Age",
+            age: "Range",
             zoom: "Zoom in to select images.",
             error: "No visible Imagery Layers in the map.",
             error1: "Field is not specified.",
@@ -85,13 +90,15 @@ define({
             left: "Left Image",
             right: "Right Image",
             identicalLayerError: "Left and Right Image are identical.",
-            date: "Date(s)"
+            date: "Date(s)",
+            imageLabel: "image(s)",
         },
        
         editor: {
             title: "Editor",
-            error: "No Edit Layer selected.",
-            error1: "Access denied. Layers cannot be edited."
+            error: "No Edit Layer found.",
+            error1: "Access denied. Layers cannot be edited.",
+            text:"Select a symbol and click on the map."
         },
         measurement: {
             title: "Image Measurement",
@@ -107,8 +114,8 @@ define({
             pixel: "Pixel Size",
             outsr: "Output Spatial Reference",
             renderer: "Current Renderer",
-            extent: "Define Extent",
-            text: "If Current Renderer is checked, the rendering<br /> is exported, else the original data values<br/>will be exported.",
+            extent: "Draw polygon to define extent",
+            text: "If Current Renderer is checked, the rendering<br /> is exported; else, the original data values<br/>will be exported as an TIFF.",
             error: "No visible imagery layers on the map.",
             error1: "Title is required.",
             error2: "Tag(s) is required.",

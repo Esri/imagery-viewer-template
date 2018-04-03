@@ -2,10 +2,10 @@
 <div class="titleBar"><span class="titleBarTextSpan">${config.i18n.singleLayerViewer.title}</span><button class="closeContainerButton"><img src="images/cancel.png" alt="X"/></button></div><br />
 <div style="margin: 5px;overflow: auto;">
     <label for="layerSelector">${config.i18n.singleLayerViewer.layer}: </label><select id="layerSelector" data-dojo-type="dijit/form/Select"></select>
-    
+
     <div id="imageSelectCheckBox" style="display: none;">
-    <br />
-    <input data-dojo-type="dijit/form/CheckBox" id="imageSelector"/> <label for="imageSelector">${config.i18n.singleLayerViewer.enable}</label>
+        <br />
+        <input data-dojo-type="dijit/form/CheckBox" id="imageSelector"/> <label for="imageSelector">${config.i18n.singleLayerViewer.enable}</label>
     </div>
     <div id="selectorDiv" style="display:none;">
         <div>
@@ -18,11 +18,15 @@
             <div  id="imageSelectContainer" style="float:left;display:none;margin-right: 5px;">
                 <button  data-dojo-type="dijit/form/Button" type="button" id="dropDownImageList"><img alt="${config.i18n.singleLayerViewer.dropDown}" src="images/dropdownlist.png" id="switchDisplayImage" class="iconHeight"/></button>
             </div>
+            <div  style="float:right;display:inline-block;">
+                <button data-dojo-type="dijit/form/Button" type="button" id="refreshImageSliderBtn"><img alt="${config.i18n.singleLayerViewer.refresh}" src="images/refresh.png" class="iconHeight"/></button>
+            </div>
             <div id="dropDownOption" style="display: none;">
                 <select  id="imageSelectorDropDown" data-dojo-type="dijit/form/Select" style="/*width :50px;height: 12px;*/"></select>
             </div>
             <div  id='imageSliderDiv'>
-            </div> 
+            </div>
+
         </div>
         <div style="margin:5px;">
             <br/>

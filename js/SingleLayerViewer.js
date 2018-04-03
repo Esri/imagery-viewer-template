@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2018 Esri. All Rights Reserved.
+// Copyright 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -100,8 +100,14 @@ define([
             }));
             registry.byId("show").on("change", lang.hitch(this, function (value) {
                 this.layerInfos[this.primaryLayer.id].type = value;
+                if(value === "image"){
+                if(!this.primaryLayer.visible)
+                    this.primaryLayer.show();
+            }else
+                this.primaryLayer.hide();
                 this.sliderChange();
             }));
+            registry.byId("refreshImageSliderBtn").on("click", lang.hitch(this, this.imageSliderRefresh));
             registry.byId("imageSelector").on("change", lang.hitch(this, this.setFilterDiv));
             registry.byId("layerSelector").on("change", lang.hitch(this, this.selectLayer));
             this.fillLayerSelector();
@@ -123,10 +129,14 @@ define([
             this.resizeBtn();
             if (this.config.defaultLayer)
                 registry.byId("layerSelector").set("value", this.config.defaultLayer);
-
+            this.symbol = new SimpleFillSymbol();
+            this.symbol.setStyle(SimpleFillSymbol.STYLE_SOLID);
+            this.symbol.setOutline(new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 255, 255]), 2));
+            this.symbol.setColor(new Color([0, 255, 255, 0.2]));
+                                
         },
         fillLayerSelector: function () {
-            registry.byId("layerSelector").addOption({label: "None", value: "none"});
+            registry.byId("layerSelector").addOption({label: "Basemap", value: "none"});
             var layer;
             for (var a in this.layerInfos) {
                 layer = this.map.getLayer(a);
@@ -145,6 +155,16 @@ define([
                 connectId: ['dropDownImageList'],
                 position: ['below'],
                 label: this.i18n.dropDown
+            });
+            new Tooltip({
+                connectId: ["imageSelector"],
+                position: ['below'],
+                label: this.i18n.tooltip
+            });
+            new Tooltip({
+                connectId: ["refreshImageSliderBtn"],
+                position: ['after', 'below'],
+                label: this.i18n.refreshTooltip
             });
         },
         resizeBtn: function () {
@@ -169,10 +189,10 @@ define([
                 domStyle.set(subtractValue, "height", "15px");
             }
             if (this.config.display === "both") {
-                document.getElementById("imageSliderDiv").style.width = "85%";
+                //  document.getElementById("imageSliderDiv").style.width = "85%";
             } else if (this.config.display === "slider") {
-                document.getElementById("imageSliderDiv").style.width = "95%";
-                document.getElementById("imageSliderDiv").style.marginBottom = "13px";
+                //   document.getElementById("imageSliderDiv").style.width = "95%";
+                //   document.getElementById("imageSliderDiv").style.marginBottom = "13px";
             }
         },
         onOpen: function () {
@@ -513,7 +533,7 @@ define([
                 html.set(document.getElementById("imageRange"), this.i18n.date + ": <b>" + locale.format(new Date(this.orderedDates[index].value), {selector: "date", formatLength: "long"}) + "</b>");
             else
                 html.set(document.getElementById("imageRange"), this.imageField + ": <b>" + this.orderedDates[index].value + "</b>");
-            html.set(document.getElementById("imageCount"), "1");
+            html.set(document.getElementById("imageCount"), "1 " + this.i18n.imageLabel);
             this.hideLoading();
         },
         selectDisplayedImage: function () {
@@ -680,16 +700,17 @@ define([
                     this.map.graphics.clear();
                     var count = 0;
 
-                    if (this.primaryLayer.visible) {
+                    
                         for (var i = 0; i < featureSelect.length; i++) {
                             if (registry.byId("show").get("value") === "footprint") {
-                                var geometry = featureSelect[i].geometry;
-                                var sms = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 255, 255]), 2), new Color([0, 255, 255, 0.15]));
+                                var geometry = new Polygon(featureSelect[i].geometry.toJson());
                                 var attr = featureSelect[i].attributes;
                                 if (this.imageFieldType === "esriFieldTypeDate")
                                     attr[this.imageField] = locale.format(new Date(attr[this.imageField]), {selector: "date", formatLength: "long"});
+                                
                                 var infoTemplate = new InfoTemplate("Attributes", "${*}");
-                                var graphic = new Graphic(geometry, sms, attr, infoTemplate);
+                                var graphic = new Graphic(geometry, this.symbol, attr, infoTemplate);
+                                console.log(graphic);
                                 this.map.graphics.add(graphic);
                                 if (count === 19) {
                                     if (!this.responseAlert) {
@@ -701,9 +722,8 @@ define([
                             }
                             count++;
                         }
-                    }
-
-                    html.set(document.getElementById("imageCount"), "" + count + "");
+                    
+                    html.set(document.getElementById("imageCount"), "" + count + " " + this.i18n.imageLabel);
 
                     if (registry.byId("show").get("value") === "image") {
                         var mr = new MosaicRule();
@@ -713,8 +733,9 @@ define([
                         mr.lockRasterIds = this.featureIds;
                         this.primaryLayer.setMosaicRule(mr);
                     } else {
-                        var mr = new MosaicRule(this.layerInfos[this.primaryLayer.id].defaultMosaicRule);
-                        this.primaryLayer.setMosaicRule(mr);
+                        //var mr = new MosaicRule(this.layerInfos[this.primaryLayer.id].defaultMosaicRule);
+                        //this.primaryLayer.setMosaicRule(mr);
+                         this.primaryLayer.hide();
                     }
                 }
             }

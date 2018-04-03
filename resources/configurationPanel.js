@@ -44,6 +44,18 @@
                 "label":"Text color"
         },
         {
+        "type":"color",
+                "fieldName":"widgetTitleColor",
+                "tooltip":"Choose a title header color",
+                "label":"Tools title header color"
+        },
+        {
+        "type":"color",
+                "fieldName":"toolsIconColor",
+                "tooltip":"Choose an icon background color",
+                "label":"Icon background color"
+        },
+        {
         "type":"paragraph",
                 "value":"<span style='text-align: justify;font-family: verdana;'>Use the Custom css option to paste css that overwrites rules in the app.</span>"
         },
@@ -547,15 +559,6 @@
                                 "value":"esriSquareKilometers"
                         }
                         ]
-                },
-                {
-                "type":"boolean",
-                        "fieldName":"popupMeasurementFlag",
-                        "label":"Display Measure Results in a Pop-up."
-                },
-                {
-                "type":"paragraph",
-                        "value":"<p style='text-align:justify;font-family: verdana;'>If you check Display Measure Results in a Pop-up, the measurements will be displayed in a pop-up window instead of within the image measurement tool.</p>"
                 }
                 ]
         }
@@ -650,6 +653,8 @@
         "values":{
         "background":"#000",
                 "color":"#fff",
+                "widgetTitleColor":"#008299",
+                "toolsIconColor":"#008299",
                 "includelayeropacity":false,
                 "basemapFlag":false,
                 "bookmarkFlag": false,
@@ -680,7 +685,6 @@
                 "angularUnit":"esriDUDecimalDegrees",
                 "linearUnit":"esriMeters",
                 "areaUnit":"esriSquareMeters",
-                "popupMeasurementFlag":false,
                 "editFlag":false,
                 "featureLayers":"",
                 "featureLayersHeightField":"",
