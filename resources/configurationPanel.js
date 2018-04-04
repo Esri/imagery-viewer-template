@@ -47,7 +47,7 @@
         "type":"color",
                 "fieldName":"widgetTitleColor",
                 "tooltip":"Choose a title header color",
-                "label":"Tools title header color"
+                "label":"Widget header color"
         },
         {
         "type":"color",
@@ -245,47 +245,7 @@
 {
 "category": "Imagery",
         "fields": [
-        {
-        "type":"paragraph",
-                "value":"<p style='text-align: justify;font-family: verdana;'>Image Date will display the date of the most central image from the active layer in the theme header next to the app name.</p>"
-        },
-        {
-        "type":"conditional",
-                "condition":false,
-                "fieldName":"imageDateFlag",
-                "label":"Enable Image Date",
-                "items":[
-                {
-                "type": "string",
-                        "fieldName": "imageDateLabel",
-                        "label": "Label: ",
-                        "tooltip": "",
-                        "stringFieldOption": "textbox",
-                        "placeHolder": ""
-                },
-                {
-                "type":"paragraph",
-                        "value":"<p style='text-align: justify;font-family: verdana;margin-bottom:0px;'>Check the box next to all the imagery layers that will display a date when selected as the app's active layer, then select one date field for each layer.</p>"
-                },
-                {
-                "type":"multilayerandfieldselector",
-                        "fieldName":"imageDateLayer",
-                        "label":"Imagery Layers",
-                        "tooltip":"Select date field for each imagery layer.",
-                        "layerOptions":{
-                        "supportedTypes":[
-                                "ImageServiceLayer"
-                        ]
-                        },
-                        "fieldOptions":{
-                        "supportedTypes":[
-                                "esriFieldTypeDate"
-                        ]
-                        }
-                }
-                ]
-        },
-        {
+		{
         "type":"paragraph",
                 "value":"<p style='text-align: justify;font-family: verdana;margin-bottom:0px;'>The Layer Selector lets app users choose different imagery layers or particular images to view. A Single Layer Viewer will show only one imagery layer at a time. A Two-Layer Comparison Viewer will show two imagery layers, using a swipe tool to compare them.</p>"
         },
@@ -426,6 +386,46 @@
                         }
                 }
                 ]
+        },
+        {
+        "type":"paragraph",
+                "value":"<p style='text-align: justify;font-family: verdana;'>Image Date will display the date of the most central image from the active layer in the theme header next to the app name.</p>"
+        },
+        {
+        "type":"conditional",
+                "condition":false,
+                "fieldName":"imageDateFlag",
+                "label":"Enable Image Date",
+                "items":[
+                {
+                "type": "string",
+                        "fieldName": "imageDateLabel",
+                        "label": "Label: ",
+                        "tooltip": "",
+                        "stringFieldOption": "textbox",
+                        "placeHolder": ""
+                },
+                {
+                "type":"paragraph",
+                        "value":"<p style='text-align: justify;font-family: verdana;margin-bottom:0px;'>Check the box next to all the imagery layers that will display a date when selected as the app's active layer, then select one date field for each layer.</p>"
+                },
+                {
+                "type":"multilayerandfieldselector",
+                        "fieldName":"imageDateLayer",
+                        "label":"Imagery Layers",
+                        "tooltip":"Select date field for each imagery layer.",
+                        "layerOptions":{
+                        "supportedTypes":[
+                                "ImageServiceLayer"
+                        ]
+                        },
+                        "fieldOptions":{
+                        "supportedTypes":[
+                                "esriFieldTypeDate"
+                        ]
+                        }
+                }
+                ]
         }, {
         "type":"paragraph",
                 "value":"<p style='text-align:justify;font-family: verdana;'>The Image Measurement tool allows you to perform measurements on image services with mensuration capability. Mensuration applies geometric rules to find the height, area, or location of a feature.</p>"
@@ -562,6 +562,7 @@
                 }
                 ]
         }
+        
         ]
 },
 {
@@ -672,21 +673,21 @@
                 "secondaryLayer": {"id": null},
                 "displayOptions":"both",
                 "zoomLevel":8,
-                "searchScreenExtent":50,
+                "searchScreenExtent":15,
                 "distinctImages": false,
                 "enableAutoRefresh": false,
-                "imageSelectorLayer":"",
+                "imageSelectorLayer":"[]",
                 "imageDateFlag":false,
                 "imageDateLabel":"",
-                "imageDateLayer":"",
+                "imageDateLayer":"[]",
                 "exportFlag":false,
-                "exportType":"agol",
+                "exportType":"disk",
                 "measurementFlag":false,
                 "angularUnit":"esriDUDecimalDegrees",
                 "linearUnit":"esriMeters",
                 "areaUnit":"esriSquareMeters",
                 "editFlag":false,
-                "featureLayers":"",
+                "featureLayers":"[]",
                 "featureLayersHeightField":"",
                 "search":false,
                 "units":"english"

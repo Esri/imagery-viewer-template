@@ -195,14 +195,22 @@ define([
                 this.map.on("update-end", lang.hitch(this, this.hideLoading));
                 this.findAndReplaceCacheImageService();
                 window.addEventListener("resize", lang.hitch(this, this.resizeTemplate));
-
                 this.dockToolsActive = 0;
                 if (this.config.basemapFlag) {
                     domStyle.set("basemapContainer", "display", "block");
                     this.setupBasemap();
                 } else
                     domStyle.set("basemapContainer", "display", "none");
-                if (this.config.operationalLayersFlag) {
+                var layers = this.config.itemInfo.itemData.operationalLayers;
+                var layersFlag = false;
+                for (var a = layers.length - 1; a >= 0; a--) {
+                    var title = layers[a].title || layers[a].layerObject.name || layers[a].id;
+                    if ((layers[a].layerType && layers[a].layerType !== "ArcGISTiledImageServiceLayer") && (title && (title.charAt(title.length - 1)) !== "_") && (title && (title.substr(title.length - 2)) !== "__") && ((layers[a].layerObject && layers[a].layerObject.serviceDataType && layers[a].layerObject.serviceDataType.substr(0, 16) !== "esriImageService") || (layers[a].layerType && layers[a].layerType !== "ArcGISImageServiceLayer"))) {
+                        layersFlag = true;
+                        break;
+                    }
+                }
+                if (this.config.operationalLayersFlag && layersFlag) {
                     this.dockToolsActive++;
                     domStyle.set("dockContainer", "display", "block");
                     this.setupOperationalLayers();
@@ -231,13 +239,14 @@ define([
                     this.setupImageMeasurement();
                 } else
                     domStyle.set("measurementContainer", "display", "none");
-                if (this.config.editFlag) {
+                var featureLayers = JSON.parse(this.config.featureLayers);
+                if (this.config.editFlag && featureLayers && featureLayers.length > 0) {
                     this.dockToolsActive++;
                     domStyle.set("dockContainer", "display", "block");
                     this.setupEditor();
                 } else
                     domStyle.set("editorContainer", "display", "none");
-                if (this.config.bookmarkFlag)
+                if (this.config.bookmarkFlag && this.config.itemInfo.itemData.bookmarks)
                 {
                     this.dockToolsActive++;
                     domStyle.set("dockContainer", "display", "block");
@@ -675,7 +684,7 @@ define([
             this.setupToolContent("layerViewerContainer", 0, (viewerType === "singleLayerViewer" ? singleLayerViewerHtml : twoLayerViewerHtml), this.config.i18n[viewerType].title, "layerViewerNode", viewerType);
             var layers = this.config.itemInfo.itemData.operationalLayers;
             if (!this.config.primaryLayer.id && viewerType === "singleLayerViewer") {
-                for (var z = 0; z <= layers.length; z++) {
+                for (var z = layers.length - 1; z >= 0; z--) {
                     if ((layers[z].type && layers[z].type === 'ArcGISTiledImageServiceLayer') || (layers[z].type && layers[z].type === 'ArcGISImageServiceLayer') || (this.map.getLayer(layers[z].id).serviceDataType && this.map.getLayer(layers[z].id).serviceDataType.indexOf("esriImageService") !== -1)) {
                         this.config.primaryLayer.id = layers[z].id;
                         break;
@@ -695,6 +704,7 @@ define([
             if (this.config.imageSelectorLayer)
                 this.config.imageSelectorLayer = JSON.parse(this.config.imageSelectorLayer);
             var addLayer = true;
+
             for (var a = 0; a < layers.length; a++) {
                 if ((layers[a].type && layers[a].type === 'ArcGISTiledImageServiceLayer') || (layers[a].type && layers[a].type === 'ArcGISImageServiceLayer') || (this.map.getLayer(layers[a].id).serviceDataType && this.map.getLayer(layers[a].id).serviceDataType.indexOf("esriImageService") !== -1)) {
                     for (var b = 0; b < this.config.imageSelectorLayer.length; b++) {
@@ -719,22 +729,30 @@ define([
                             title: layers[a].title || layers[a].layerObject.name || layers[a].id
                         };
                     }
-                    if (viewerType === "singleLayerViewer") {
-                        if (layers[a].id !== this.config.primaryLayer.id)
-                            this.map.getLayer(layers[a].id).hide();
-                    } else {
-                        if (layers[a].id !== this.config.primaryLayer.id && layers[a].id !== this.config.secondaryLayer.id)
-                            this.map.getLayer(layers[a].id).hide();
+                    if (layers[a].id !== this.config.primaryLayer.id)
+                        this.map.getLayer(layers[a].id).hide();
+                    else {
+                        var primaryLayerIndex = a + 1;
+                        this.map.getLayer(layers[a].id).show();
                     }
+                    if (layers[a].id === this.config.secondaryLayer.id)
+                        var secondaryLayerIndex = a + 1;
+
                 }
             }
-
+            if (this.config.secondaryLayer.id) {
+                if (primaryLayerIndex < secondaryLayerIndex)
+                    this.map.reorderLayer(this.map.getLayer(this.config.secondaryLayer.id), primaryLayerIndex);
+                this.map.getLayer(this.config.secondaryLayer.id).show();
+            }
             if (viewerType === "singleLayerViewer")
                 this.layerViewerFunction = new SingleLayerViewer({map: this.map, config: temp, layers: layer, i18n: this.config.i18n[viewerType], main: this});
             else
                 this.layerViewerFunction = new TwoLayerViewer({map: this.map, config: temp, layers: layer, i18n: this.config.i18n[viewerType], main: this});
 
             this.addClickEvent("layerViewerContainer", this.layerViewerFunction, "layerViewerNode");
+
+
 
         },
         findField: function (fields, dataType, regExpr) {

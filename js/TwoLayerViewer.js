@@ -142,13 +142,13 @@ define([
             registry.byId("refreshImageSliderBtnRight").on("click", lang.hitch(this, this.imageSliderRefresh));
             registry.byId("leftLayer").on("click", lang.hitch(this, function () {
                 if (this.layerSwipe) {
-                    this.moveSwipe(this.map.width - 5, this.layerSwipe.invertPlacement, this.layerSwipe.layers);
+                    this.moveSwipe(this.map.width - 40, this.layerSwipe.invertPlacement, this.layerSwipe.layers);
                 }
                 this.setLayerProp("left");
             }));
             registry.byId("rightLayer").on("click", lang.hitch(this, function () {
                 if (this.layerSwipe) {
-                    this.moveSwipe(5, this.layerSwipe.invertPlacement, this.layerSwipe.layers);
+                    this.moveSwipe(40, this.layerSwipe.invertPlacement, this.layerSwipe.layers);
                 }
                 this.setLayerProp("right");
             }));
@@ -165,11 +165,11 @@ define([
                     this.currentLayerProp = this.rightLayerInfos[registry.byId("rightLayerSelector").get("value") + "_RightLayer"];
                     this.activeLayer = this.secondaryLayer;
                     this.checkLayerProp();
-                    /*  if (this.config.defaultLayer) {
+                      if (this.config.defaultLayer) {
                      this.setCurrentNodes("left");
                      registry.byId("leftLayerSelector").set("value", this.config.defaultLayer);
                      this.config.defaultLayer = null;
-                     }*/
+                     }
                 }));
             }
             this.setTooltips();
@@ -206,6 +206,7 @@ define([
             } else if (this.config.defaultLayer) {
                 this.setCurrentNodes("left");
                 registry.byId("leftLayerSelector").set("value", this.config.defaultLayer);
+                this.config.defaultLayer = null;
             } else
                 this.setCurrentNodes("left");
             setTimeout(lang.hitch(this, function () {
@@ -1125,9 +1126,9 @@ define([
                         }
                         if (!this.swipePosition) {
                             if (registry.byId("leftLayer").checked)
-                                this.swipePosition = this.map.width - 5;
+                                this.swipePosition = this.map.width - 40;
                             else
-                                this.swipePosition = 5;
+                                this.swipePosition = 40;
                         }
                         this.layerSwipe = new LayerSwipe({
                             type: "vertical",
