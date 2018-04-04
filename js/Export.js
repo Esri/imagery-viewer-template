@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2018 Esri. All Rights Reserved.
+// Copyright 2018 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ define([
     "dijit/registry",
     "dojo/_base/lang",
     "dojo/dom-style", "esri/geometry/webMercatorUtils",
-    "esri/request",
+    "esri/request", "esri/symbols/SimpleLineSymbol",
     "dojo/i18n!esri/nls/jsapi",
     'dojo/dom-construct', "esri/arcgis/Portal", "esri/Color", "esri/toolbars/draw", "dojo/dom-attr", "esri/layers/RasterFunction", "dijit/form/SimpleTextarea", "dijit/form/TextBox", "dijit/form/CheckBox"
 
@@ -29,7 +29,7 @@ define([
                 declare, Evented,
                 html,
                 registry,
-                lang, domStyle, webMercatorUtils, esriRequest, bundle, domConstruct, arcgisPortal, Color, Draw, domAttr, RasterFunction) {
+                lang, domStyle, webMercatorUtils, esriRequest, SimpleLineSymbol, bundle, domConstruct, arcgisPortal, Color, Draw, domAttr, RasterFunction) {
             return declare("application.Export", [Evented], {
                 constructor: function (parameters) {
                     var defaults = {
@@ -278,8 +278,20 @@ define([
                 activatePolygon: function () {
                     if (registry.byId("defineExtent").checked || registry.byId("defineAgolExtent").checked) {
                         this.map.setInfoWindowOnClick(false);
+                        if(registry.byId("defineExtent").checked){
+                        registry.byId("exportBtn").set("disabled", true);
+                        domStyle.set(document.getElementById("exportBtn"),"color","grey");
+                        }
+                        if(registry.byId("defineAgolExtent").checked){
+                        registry.byId("submitAgolBtn").set("disabled", true);
+                        domStyle.set(document.getElementById("submitAgolBtn"),"color","grey");
+                        }
                         this.toolbarForExport.activate(Draw.POLYGON);
                     } else {
+                        registry.byId("exportBtn").set("disabled", false);
+                        registry.byId("submitAgolBtn").set("disabled", false);
+                        domStyle.set(document.getElementById("exportBtn"),"color","#333");
+                        domStyle.set(document.getElementById("submitAgolBtn"),"color","#333");
                         this.toolbarForExport.deactivate();
                         this.map.setInfoWindowOnClick(true);
                         for (var k in this.map.graphics.graphics)
@@ -296,6 +308,10 @@ define([
                     }
                 },
                 getExtent: function (geometry) {
+                    registry.byId("exportBtn").set("disabled", false);
+                    registry.byId("submitAgolBtn").set("disabled", false);
+                    domStyle.set(document.getElementById("exportBtn"),"color","#333");
+                        domStyle.set(document.getElementById("submitAgolBtn"),"color","#333");
                     var geometry = geometry.geometry;
                     for (var k in this.map.graphics.graphics)
                     {
@@ -307,7 +323,7 @@ define([
                             }
                         }
                     }
-                    var symbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new Color([200, 0, 0]), 2);
+                    var symbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([200, 0, 0]), 2);
                     var graphic = new esri.Graphic(geometry, symbol);
                     this.map.graphics.add(graphic);
                     this.geometryClip = geometry;

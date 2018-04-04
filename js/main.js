@@ -70,7 +70,7 @@ define([
                 document.getElementById("titleText").style.color = this.config.color;
                 document.getElementById("primaryDate").style.color = this.config.color;
 
-
+                this.createCSSRules();
                 var toolContainers = document.getElementsByClassName("toolContainers");
                 for (var a = 0; a < toolContainers.length; a++) {
                     toolContainers[a].style.borderBottomColor = this.config.background;
@@ -126,6 +126,23 @@ define([
             }
             return promise;
         },
+        createCSSRules: function () {
+            var style = document.createElement('style');
+            style.type = "text/css";
+            document.getElementsByTagName('head')[0].appendChild(style);
+            var cssRules = {".titleBar": "width: 100%;height: 39px;background-color:" + this.config.widgetTitleColor + ";color:white;font-size: 1.3em;font-weight: bolder;",
+                ".basemapIcon:hover": "background-color: " + this.config.toolsIconColor + ";",
+                ".basemapSelected": "background-color: " + this.config.toolsIconColor + ";",
+                ".toolContainers:hover": "background-color: " + this.config.toolsIconColor + ";",
+                ".selected-widget": "background-color: " + this.config.toolsIconColor + ";",
+                ".claro .dijitDialogTitleBar": "background: " + this.config.widgetTitleColor + ";border: 0 none;border-bottom: 0 none;padding: 7px 10px;text-align: center;line-height: 16px;-webkit-box-sizing: content-box;box-sizing: content-box;font-weight: bolder;"
+            };
+            for (var a in cssRules) {
+                style.sheet.insertRule(a + "{" + cssRules[a] + "}", style.sheet.cssRules.length);
+            }
+
+
+        },
         reportError: function (error) {
             // remove loading class from body
             domClass.remove(document.body, "app-loading");
@@ -178,14 +195,22 @@ define([
                 this.map.on("update-end", lang.hitch(this, this.hideLoading));
                 this.findAndReplaceCacheImageService();
                 window.addEventListener("resize", lang.hitch(this, this.resizeTemplate));
-
                 this.dockToolsActive = 0;
                 if (this.config.basemapFlag) {
                     domStyle.set("basemapContainer", "display", "block");
                     this.setupBasemap();
                 } else
                     domStyle.set("basemapContainer", "display", "none");
-                if (this.config.operationalLayersFlag) {
+                var layers = this.config.itemInfo.itemData.operationalLayers;
+                var layersFlag = false;
+                for (var a = layers.length - 1; a >= 0; a--) {
+                    var title = layers[a].title || layers[a].layerObject.name || layers[a].id;
+                    if ((layers[a].layerType && layers[a].layerType !== "ArcGISTiledImageServiceLayer") && (title && (title.charAt(title.length - 1)) !== "_") && (title && (title.substr(title.length - 2)) !== "__") && ((layers[a].layerObject && layers[a].layerObject.serviceDataType && layers[a].layerObject.serviceDataType.substr(0, 16) !== "esriImageService") || (layers[a].layerType && layers[a].layerType !== "ArcGISImageServiceLayer"))) {
+                        layersFlag = true;
+                        break;
+                    }
+                }
+                if (this.config.operationalLayersFlag && layersFlag) {
                     this.dockToolsActive++;
                     domStyle.set("dockContainer", "display", "block");
                     this.setupOperationalLayers();
@@ -214,13 +239,14 @@ define([
                     this.setupImageMeasurement();
                 } else
                     domStyle.set("measurementContainer", "display", "none");
-                if (this.config.editFlag) {
+                var featureLayers = JSON.parse(this.config.featureLayers);
+                if (this.config.editFlag && featureLayers && featureLayers.length > 0) {
                     this.dockToolsActive++;
                     domStyle.set("dockContainer", "display", "block");
                     this.setupEditor();
                 } else
                     domStyle.set("editorContainer", "display", "none");
-                if (this.config.bookmarkFlag)
+                if (this.config.bookmarkFlag && this.config.itemInfo.itemData.bookmarks)
                 {
                     this.dockToolsActive++;
                     domStyle.set("dockContainer", "display", "block");
@@ -263,9 +289,9 @@ define([
                     }
                 }));
                 setTimeout(lang.hitch(this, function () {
-                    if (this.config.aboutOnByDefault)
+                    if (this.config.toolOnByDefault === "about" && this.config.aboutFlag)
                         dom.byId("aboutContainer").click();
-                    else if (this.config.layerOnByDefault)
+                    else if (this.config.toolOnByDefault === "layer" && this.config.layersFlag)
                         dom.byId("layerViewerContainer").click();
                 }), 1000);
                 return response;
@@ -608,7 +634,7 @@ define([
 
         },
         setupEditor: function () {
-            var html = "<div class='titleBar'><span class='titleBarTextSpan'>" + this.config.i18n.editor.title + "</span><button class='closeContainerButton'><img src='images/cancel.png' alt='X'/></button></div><br/><div style='margin:5px;overflow: auto;'><div id='templateDiv'></div><div id='editorDiv'></div><div id='errorEditor' style='color: #ee0000;'></div><br /></div>";
+            var html = "<div class='titleBar'><span class='titleBarTextSpan'>" + this.config.i18n.editor.title + "</span><button class='closeContainerButton'><img src='images/cancel.png' alt='X'/></button></div><br/><div style='margin:5px;overflow: auto;'>" + this.config.i18n.editor.text + "<div id='templateDiv' style='margin:5px;'></div><div id='editorDiv'></div><div id='errorEditor' style='color: #ee0000;'></div><br /></div>";
             this.setupToolContent("editorContainer", 3, html, this.config.i18n.editor.title, "editorNode", null);
             var layer = [], heightField;
 
@@ -641,8 +667,7 @@ define([
             var config = {
                 angularUnit: this.config.angularUnit,
                 linearUnit: this.config.linearUnit,
-                areaUnit: this.config.areaUnit,
-                displayMeasureResultInPopup: this.config.popupMeasurementFlag
+                areaUnit: this.config.areaUnit
             };
             this.measurementFunction = new Measurement({map: this.map, config: config});
             this.addClickEvent("measurementContainer", this.measurementFunction, "measurementNode");
@@ -658,13 +683,20 @@ define([
         setupLayerViewer: function (viewerType) {
             this.setupToolContent("layerViewerContainer", 0, (viewerType === "singleLayerViewer" ? singleLayerViewerHtml : twoLayerViewerHtml), this.config.i18n[viewerType].title, "layerViewerNode", viewerType);
             var layers = this.config.itemInfo.itemData.operationalLayers;
-
+            if (!this.config.primaryLayer.id && viewerType === "singleLayerViewer") {
+                for (var z = layers.length - 1; z >= 0; z--) {
+                    if ((layers[z].type && layers[z].type === 'ArcGISTiledImageServiceLayer') || (layers[z].type && layers[z].type === 'ArcGISImageServiceLayer') || (this.map.getLayer(layers[z].id).serviceDataType && this.map.getLayer(layers[z].id).serviceDataType.indexOf("esriImageService") !== -1)) {
+                        this.config.primaryLayer.id = layers[z].id;
+                        break;
+                    }
+                }
+            }
             var layer = [];
             var temp = {
                 defaultLayer: this.config.primaryLayer.id,
                 comparisonLayer: this.config.secondaryLayer.id,
                 display: this.config.displayOptions,
-                zoomLevel:this.config.zoomLevel,
+                zoomLevel: this.config.zoomLevel,
                 searchExtent: this.config.searchScreenExtent,
                 autoRefresh: this.config.enableAutoRefresh,
                 distinctImages: !this.config.distinctImages
@@ -672,8 +704,9 @@ define([
             if (this.config.imageSelectorLayer)
                 this.config.imageSelectorLayer = JSON.parse(this.config.imageSelectorLayer);
             var addLayer = true;
+
             for (var a = 0; a < layers.length; a++) {
-                if ((layers[a].type && layers[a].type === 'ArcGISTiledImageServiceLayer') || (layers[a].type && layers[a].type === 'ArcGISImageServiceLayer') || (this.map.getLayer(layers[a].id).serviceDataType && this.map.getLayer(layers[a].id).serviceDataType.substr(0, 16) === "esriImageService")) {
+                if ((layers[a].type && layers[a].type === 'ArcGISTiledImageServiceLayer') || (layers[a].type && layers[a].type === 'ArcGISImageServiceLayer') || (this.map.getLayer(layers[a].id).serviceDataType && this.map.getLayer(layers[a].id).serviceDataType.indexOf("esriImageService") !== -1)) {
                     for (var b = 0; b < this.config.imageSelectorLayer.length; b++) {
                         if (this.config.imageSelectorLayer[b].id === layers[a].id && /*this.config.imageSelectorLayer[b].fields.length > 0 &&*/ layers[a].layerObject) {
 
@@ -696,22 +729,30 @@ define([
                             title: layers[a].title || layers[a].layerObject.name || layers[a].id
                         };
                     }
-                    if(viewerType === "singleLayerViewer"){
-                    if(layers[a].id !== this.config.primaryLayer.id)
+                    if (layers[a].id !== this.config.primaryLayer.id)
                         this.map.getLayer(layers[a].id).hide();
-                }else{
-                    if(layers[a].id !== this.config.primaryLayer.id && layers[a].id !== this.config.secondaryLayer.id)
-                        this.map.getLayer(layers[a].id).hide();
-                }
+                    else {
+                        var primaryLayerIndex = a + 1;
+                        this.map.getLayer(layers[a].id).show();
+                    }
+                    if (layers[a].id === this.config.secondaryLayer.id)
+                        var secondaryLayerIndex = a + 1;
+
                 }
             }
-
+            if (this.config.secondaryLayer.id) {
+                if (primaryLayerIndex < secondaryLayerIndex)
+                    this.map.reorderLayer(this.map.getLayer(this.config.secondaryLayer.id), primaryLayerIndex);
+                this.map.getLayer(this.config.secondaryLayer.id).show();
+            }
             if (viewerType === "singleLayerViewer")
                 this.layerViewerFunction = new SingleLayerViewer({map: this.map, config: temp, layers: layer, i18n: this.config.i18n[viewerType], main: this});
             else
                 this.layerViewerFunction = new TwoLayerViewer({map: this.map, config: temp, layers: layer, i18n: this.config.i18n[viewerType], main: this});
 
             this.addClickEvent("layerViewerContainer", this.layerViewerFunction, "layerViewerNode");
+
+
 
         },
         findField: function (fields, dataType, regExpr) {
@@ -774,7 +815,7 @@ define([
                             openForFirstTime = false;
                             toolObject.postCreate();
                         }
-                        
+
                         domStyle.set(node, "display", "block");
                         if (toolObject)
                             toolObject.onOpen();
