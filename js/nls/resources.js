@@ -122,7 +122,10 @@ define({
             error3: "PixelSize of export is restricted to",
             error4: "for this extent.",
             modeOption1: "Save to Portal",
-            modeOption2: "Save to Disk"
+            modeOption2: "Save to Disk",
+            default:"Default",
+            utm: "WGS84 UTM Zone",
+            mercator: "WebMercatorAS"
         },
         imageDate: {
             label: "Image Date"

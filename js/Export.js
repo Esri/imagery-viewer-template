@@ -278,20 +278,20 @@ define([
                 activatePolygon: function () {
                     if (registry.byId("defineExtent").checked || registry.byId("defineAgolExtent").checked) {
                         this.map.setInfoWindowOnClick(false);
-                        if(registry.byId("defineExtent").checked){
-                        registry.byId("exportBtn").set("disabled", true);
-                        domStyle.set(document.getElementById("exportBtn"),"color","grey");
+                        if (registry.byId("defineExtent").checked) {
+                            registry.byId("exportBtn").set("disabled", true);
+                            domStyle.set(document.getElementById("exportBtn"), "color", "grey");
                         }
-                        if(registry.byId("defineAgolExtent").checked){
-                        registry.byId("submitAgolBtn").set("disabled", true);
-                        domStyle.set(document.getElementById("submitAgolBtn"),"color","grey");
+                        if (registry.byId("defineAgolExtent").checked) {
+                            registry.byId("submitAgolBtn").set("disabled", true);
+                            domStyle.set(document.getElementById("submitAgolBtn"), "color", "grey");
                         }
                         this.toolbarForExport.activate(Draw.POLYGON);
                     } else {
                         registry.byId("exportBtn").set("disabled", false);
                         registry.byId("submitAgolBtn").set("disabled", false);
-                        domStyle.set(document.getElementById("exportBtn"),"color","#333");
-                        domStyle.set(document.getElementById("submitAgolBtn"),"color","#333");
+                        domStyle.set(document.getElementById("exportBtn"), "color", "#333");
+                        domStyle.set(document.getElementById("submitAgolBtn"), "color", "#333");
                         this.toolbarForExport.deactivate();
                         this.map.setInfoWindowOnClick(true);
                         for (var k in this.map.graphics.graphics)
@@ -310,8 +310,8 @@ define([
                 getExtent: function (geometry) {
                     registry.byId("exportBtn").set("disabled", false);
                     registry.byId("submitAgolBtn").set("disabled", false);
-                    domStyle.set(document.getElementById("exportBtn"),"color","#333");
-                        domStyle.set(document.getElementById("submitAgolBtn"),"color","#333");
+                    domStyle.set(document.getElementById("exportBtn"), "color", "#333");
+                    domStyle.set(document.getElementById("submitAgolBtn"), "color", "#333");
                     var geometry = geometry.geometry;
                     for (var k in this.map.graphics.graphics)
                     {
@@ -358,16 +358,19 @@ define([
                     if (registry.byId("outputSp").getOptions())
                         registry.byId("outputSp").removeOption(registry.byId('outputSp').getOptions());
                     if (utm !== 1) {
-                        registry.byId("outputSp").addOption({label: "WGS84 UTM Zone " + (utm - 1) + "", value: wkid - 1});
+                        registry.byId("outputSp").addOption({label: this.i18n.utm + " " + (utm - 1) + "", value: wkid - 1});
                     } else
-                        registry.byId("outputSp").addOption({label: "WGS84 UTM Zone " + (utm + 59) + "", value: wkid + 59});
-                    registry.byId("outputSp").addOption({label: "WGS84 UTM Zone " + utm + "", value: wkid});
+                        registry.byId("outputSp").addOption({label: this.i18n.utm + " " + (utm + 59) + "", value: wkid + 59});
+                    registry.byId("outputSp").addOption({label: this.i18n.utm + " " + utm + "", value: wkid});
                     if (utm !== 60)
-                        registry.byId("outputSp").addOption({label: "WGS84 UTM Zone " + (utm + 1) + "", value: wkid + 1});
+                        registry.byId("outputSp").addOption({label: this.i18n.utm + " " + (utm + 1) + "", value: wkid + 1});
                     else
-                        registry.byId("outputSp").addOption({label: "WGS84 UTM Zone " + utm - 59 + "", value: wkid - 59});
+                        registry.byId("outputSp").addOption({label: this.i18n.utm + " " + utm - 59 + "", value: wkid - 59});
 
-                    registry.byId("outputSp").addOption({label: "WebMercatorAS", value: 102100});
+                    registry.byId("outputSp").addOption({label: this.i18n.mercator, value: 102100});
+
+                    if (this.imageServiceLayer.hasOwnProperty("spatialReference") && this.imageServiceLayer.spatialReference.wkid !== 102100)
+                        registry.byId("outputSp").addOption({label: this.i18n.default, value: this.imageServiceLayer.spatialReference.wkid});
                     var srsList = registry.byId("outputSp").getOptions();
                     var temp;
                     for (var a in srsList) {
@@ -396,7 +399,7 @@ define([
                             var bbox = (this.map.extent.xmin + ", " + this.map.extent.ymin + ", " + this.map.extent.xmax + ", " + this.map.extent.ymax).toString();
                             var width = (this.map.extent.xmax - this.map.extent.xmin);
                             var height = (this.map.extent.ymax - this.map.extent.ymin);
-                             var bboxSR = this.map.spatialReference;
+                            var bboxSR = this.map.spatialReference;
                         }
 
                         var pixelsize = parseFloat(registry.byId("pixelSize").get("value"));
@@ -413,7 +416,7 @@ define([
 
                         if ((width / pixelsize) > widthMax || (height / pixelsize) > widthMax) {
                             var size = "";
-                            document.getElementById("errorPixelSize").innerHTML = this.i18n.error3+" " + ps.toFixed(3) + " "+this.i18n.error4;
+                            document.getElementById("errorPixelSize").innerHTML = this.i18n.error3 + " " + ps.toFixed(3) + " " + this.i18n.error4;
                             domStyle.set("loadingExport", "display", "none");
                         } else {
                             var size = (parseInt(width / ps)).toString() + ", " + (parseInt(height / ps)).toString();
@@ -451,7 +454,7 @@ define([
                                 content: {
                                     f: "json",
                                     bbox: bbox,
-                                    bboxSR:JSON.stringify(bboxSR),
+                                    bboxSR: JSON.stringify(bboxSR),
                                     size: size,
                                     compression: compression,
                                     format: format,
