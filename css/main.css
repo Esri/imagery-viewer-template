@@ -391,7 +391,7 @@ body {
 }
 .LayerSwipe .vertical {
     background-color: azure;
-    width: 2px;
+    width: 6px;
     z-index: 1;
 }
 .LayerSwipe .horizontal {

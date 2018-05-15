@@ -233,7 +233,15 @@ define([
                     domStyle.set("exportContainer", "display", "none");
                 if (this.config.imageDateFlag)
                     this.setupImageDate();
-                if (this.config.measurementFlag) {
+                var measurementFlag = false;
+                for (var a = layers.length - 1; a >= 0; a--) {
+                    var title = layers[a].title || layers[a].layerObject.name || layers[a].id;
+                    if ((layers[a].layerType && layers[a].layerType === "ArcGISTiledImageServiceLayer") || ((layers[a].layerObject && layers[a].layerObject.serviceDataType && layers[a].layerObject.serviceDataType.substr(0, 16) === "esriImageService") || (layers[a].layerType && layers[a].layerType === "ArcGISImageServiceLayer"))) {
+                        measurementFlag = true;
+                        break;
+                    }
+                }
+                if (this.config.measurementFlag && measurementFlag) {
                     this.dockToolsActive++;
                     domStyle.set("dockContainer", "display", "block");
                     this.setupImageMeasurement();
@@ -844,7 +852,8 @@ define([
         addClickEvent: function (container, toolObject, node) {
             var openForFirstTime = true;
             on(dom.byId(container), "click", lang.hitch(this, function (event) {
-
+                if(registry.byId("basemapDialog") && registry.byId("basemapDialog").open)
+                registry.byId("basemapDialog").hide();
                 if (event.type === "click" || event.which === 13 || event.which === 32) {
                     if (domClass.contains(container, "selected-widget")) {
                         this.hideContentPanel();
