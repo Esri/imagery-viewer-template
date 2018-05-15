@@ -233,7 +233,15 @@ define([
                     domStyle.set("exportContainer", "display", "none");
                 if (this.config.imageDateFlag)
                     this.setupImageDate();
-                if (this.config.measurementFlag) {
+                var measurementFlag = false;
+                for (var a = layers.length - 1; a >= 0; a--) {
+                    var title = layers[a].title || layers[a].layerObject.name || layers[a].id;
+                    if ((layers[a].layerType && layers[a].layerType === "ArcGISTiledImageServiceLayer") || ((layers[a].layerObject && layers[a].layerObject.serviceDataType && layers[a].layerObject.serviceDataType.substr(0, 16) === "esriImageService") || (layers[a].layerType && layers[a].layerType === "ArcGISImageServiceLayer"))) {
+                        measurementFlag = true;
+                        break;
+                    }
+                }
+                if (this.config.measurementFlag && measurementFlag) {
                     this.dockToolsActive++;
                     domStyle.set("dockContainer", "display", "block");
                     this.setupImageMeasurement();
@@ -584,18 +592,35 @@ define([
             var layer = [];
             if (this.config.imageDateLayer) {
                 this.config.imageDateLayer = JSON.parse(this.config.imageDateLayer);
-                for (var a = 0; a < layers.length; a++) {
-                    for (var b = 0; b < this.config.imageDateLayer.length; b++) {
-                        if (this.config.imageDateLayer[b].id === layers[a].id && this.config.imageDateLayer[b].fields.length > 0) {
+            for (var a = 0; a < layers.length; a++) {
+                for (var b = 0; b < this.config.imageDateLayer.length; b++) {
+                    if (this.config.imageDateLayer[b].id === layers[a].id) {
+                        if (this.config.imageDateLayer[b].fields.length > 0) {
+                            var field = this.config.imageDateLayer[b].fields[0];
+                        } else {
+                            var field = this.findField(layers[a].layerObject.fields, "esriFieldTypeDate", new RegExp(/acq[a-z]*[_]?Date/i));
+                            if (!field) {
+                                for (var v in layers[a].layerObject.fields) {
+                                    if (layers[a].layerObject.fields[v].type === "esriFieldTypeDate") {
+                                        field = layers[a].layerObject.fields[v].name;
+                                        break;
+                                    }
+                                }
+
+                            }
+                        }
+                        if (field) {
                             var tempLayer = {
-                                dateField: this.config.imageDateLayer[b].fields[0],
+                                dateField: field,
                                 title: layers[a].title || layers[a].layerObject.name || layers[a].id
                             };
                             layer[layers[a].id] = tempLayer;
-                            break;
                         }
+                        break;
+
                     }
                 }
+            }
             }
 
             this.imageDate = new ImageDate({map: this.map, layers: layer, prefix: this.config.imageDateLabel, i18n: this.config.i18n.imageDate});
@@ -683,11 +708,25 @@ define([
         setupLayerViewer: function (viewerType) {
             this.setupToolContent("layerViewerContainer", 0, (viewerType === "singleLayerViewer" ? singleLayerViewerHtml : twoLayerViewerHtml), this.config.i18n[viewerType].title, "layerViewerNode", viewerType);
             var layers = this.config.itemInfo.itemData.operationalLayers;
+            if (this.config.imageSelectorLayer)
+                this.config.imageSelectorLayer = JSON.parse(this.config.imageSelectorLayer);
+            else
+                this.config.imageSelectorLayer = [];
             if (!this.config.primaryLayer.id && viewerType === "singleLayerViewer") {
                 for (var z = layers.length - 1; z >= 0; z--) {
                     if ((layers[z].type && layers[z].type === 'ArcGISTiledImageServiceLayer') || (layers[z].type && layers[z].type === 'ArcGISImageServiceLayer') || (this.map.getLayer(layers[z].id).serviceDataType && this.map.getLayer(layers[z].id).serviceDataType.indexOf("esriImageService") !== -1)) {
                         this.config.primaryLayer.id = layers[z].id;
                         break;
+                    }
+                }
+            }
+            if (this.config.imageSelectorLayer.length < 1) {
+                for (var z = layers.length - 1; z >= 0; z--) {
+                    if ((layers[z].type && layers[z].type === 'ArcGISTiledImageServiceLayer') || (layers[z].type && layers[z].type === 'ArcGISImageServiceLayer') || (this.map.getLayer(layers[z].id).serviceDataType && this.map.getLayer(layers[z].id).serviceDataType.indexOf("esriImageService") !== -1)) {
+                        this.config.imageSelectorLayer.push({
+                            id: layers[z].id,
+                            fields: []
+                        });
                     }
                 }
             }
@@ -701,18 +740,33 @@ define([
                 autoRefresh: this.config.enableAutoRefresh,
                 distinctImages: !this.config.distinctImages
             };
-            if (this.config.imageSelectorLayer)
-                this.config.imageSelectorLayer = JSON.parse(this.config.imageSelectorLayer);
+
             var addLayer = true;
 
             for (var a = 0; a < layers.length; a++) {
                 if ((layers[a].type && layers[a].type === 'ArcGISTiledImageServiceLayer') || (layers[a].type && layers[a].type === 'ArcGISImageServiceLayer') || (this.map.getLayer(layers[a].id).serviceDataType && this.map.getLayer(layers[a].id).serviceDataType.indexOf("esriImageService") !== -1)) {
                     for (var b = 0; b < this.config.imageSelectorLayer.length; b++) {
                         if (this.config.imageSelectorLayer[b].id === layers[a].id && /*this.config.imageSelectorLayer[b].fields.length > 0 &&*/ layers[a].layerObject) {
-
+                            if (this.config.imageSelectorLayer[b].fields.length > 0) {
+                                var field = this.config.imageSelectorLayer[b].fields[0];
+                            } else {
+                                var field = this.findField(layers[a].layerObject.fields, "esriFieldTypeDate", new RegExp(/acq[a-z]*[_]?Date/i));
+                                if (!field) {
+                                    for (var v in layers[a].layerObject.fields) {
+                                        if (layers[a].layerObject.fields[v].type === "esriFieldTypeDate") {
+                                            field = layers[a].layerObject.fields[v].name;
+                                            break;
+                                        }
+                                    }
+                                    if (!field)
+                                        field = this.findField(layers[a].layerObject.fields, "esriFieldTypeString", new RegExp(/Name/i));
+                                    if (!field)
+                                        field = layers[a].layerObject.fields[0].name;
+                                }
+                            }
                             var tempLayer = {
                                 imageSelector: true,
-                                imageField: this.config.imageSelectorLayer[b].fields.length > 0 ? this.config.imageSelectorLayer[b].fields[0] : (this.findField(layers[a].layerObject.fields, "esriFieldTypeDate", new RegExp(/acq[a-z]*[_]?Date/i))),
+                                imageField: field,
                                 objectID: this.findField(layers[a].layerObject.fields, "esriFieldTypeOID", new RegExp(/O[a-z]*[_]?ID/i)),
                                 category: this.findField(layers[a].layerObject.fields, "esriFieldTypeInteger", new RegExp(/Cate[a-z]*/i)),
                                 title: layers[a].title || layers[a].layerObject.name || layers[a].id
@@ -798,7 +852,8 @@ define([
         addClickEvent: function (container, toolObject, node) {
             var openForFirstTime = true;
             on(dom.byId(container), "click", lang.hitch(this, function (event) {
-
+                if(registry.byId("basemapDialog") && registry.byId("basemapDialog").open)
+                registry.byId("basemapDialog").hide();
                 if (event.type === "click" || event.which === 13 || event.which === 32) {
                     if (domClass.contains(container, "selected-widget")) {
                         this.hideContentPanel();

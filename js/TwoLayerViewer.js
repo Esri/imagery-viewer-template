@@ -148,7 +148,7 @@ define([
             }));
             registry.byId("rightLayer").on("click", lang.hitch(this, function () {
                 if (this.layerSwipe) {
-                    this.moveSwipe(40, this.layerSwipe.invertPlacement, this.layerSwipe.layers);
+                    this.moveSwipe(document.getElementById("toolsContentContainer").clientWidth ? document.getElementById("toolsContentContainer").clientWidth + 15: 40, this.layerSwipe.invertPlacement, this.layerSwipe.layers);
                 }
                 this.setLayerProp("right");
             }));
@@ -179,8 +179,11 @@ define([
                 domStyle.set("imageSelectContainer", "display", "inline-block");
                 domStyle.set("imageSelectContainerRight", "display", "inline-block");
             } else {
-                if (this.config.display === "dropdown")
-                    this.imageDisplayFormat();
+                if (this.config.display === "dropdown"){
+                   domClass.add(registry.byId("dropDownImageList").domNode, "dropDownSelected");
+                   domClass.add(registry.byId("dropDownImageListRight").domNode, "dropDownSelected");
+                }
+                    
                 domStyle.set("imageSelectContainer", "display", "none");
                 domStyle.set("imageSelectContainerRight", "display", "none");
             }
@@ -209,6 +212,8 @@ define([
                 this.config.defaultLayer = null;
             } else
                 this.setCurrentNodes("left");
+            
+            
             setTimeout(lang.hitch(this, function () {
                 this.refreshSwipe();
             }), 500);
@@ -1128,7 +1133,7 @@ define([
                             if (registry.byId("leftLayer").checked)
                                 this.swipePosition = this.map.width - 40;
                             else
-                                this.swipePosition = 40;
+                                this.swipePosition = document.getElementById("toolsContentContainer").clientWidth ? document.getElementById("toolsContentContainer").clientWidth + 15: 40;
                         }
                         this.layerSwipe = new LayerSwipe({
                             type: "vertical",
