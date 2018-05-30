@@ -2,7 +2,7 @@
 <div class="titleBar"><span class="titleBarTextSpan">${config.i18n.singleLayerViewer.title}</span><button class="closeContainerButton"><img src="images/cancel.png" alt="X"/></button></div><br />
 <div style="margin: 5px;overflow: auto;">
     <label for="layerSelector">${config.i18n.singleLayerViewer.layer}: </label><select id="layerSelector" data-dojo-type="dijit/form/Select"></select>
-
+    <div id="renderer" style="display: none;"><br><label for="layerRenderer">${config.i18n.singleLayerViewer.renderer}: </label><select id="layerRenderer" data-dojo-type="dijit/form/Select"></select></div>
     <div id="imageSelectCheckBox" style="display: none;">
         <br />
         <input data-dojo-type="dijit/form/CheckBox" id="imageSelector"/> <label for="imageSelector">${config.i18n.singleLayerViewer.enable}</label>
@@ -30,20 +30,22 @@
         </div>
         <div style="margin:5px;">
             <br/>
-            ${config.i18n.singleLayerViewer.show}: 
-            <select  id="show" data-dojo-type="dijit/form/Select" style="/*width:50px;height:12px;*/">
-                <option value="image">${config.i18n.singleLayerViewer.showOption1}</option>
-                <option value="footprint">${config.i18n.singleLayerViewer.showOption2}</option>
-            </select>
             <div id='ageDiv' style='display: none;'>
-                &nbsp;${config.i18n.singleLayerViewer.age}: 
-                <input  id="subtractValue" data-dojo-type="dijit/form/NumberSpinner" data-dojo-props="intermediateChanges:true, constraints:{min:0,max:31}, value:0" style="width:60px;height:28px;"/>
+                ${config.i18n.singleLayerViewer.age}: 
+                <input  id="subtractValue" data-dojo-type="dijit/form/NumberSpinner" data-dojo-props="intermediateChanges:true, constraints:{places:0}, value:0" style="width:60px;height:28px;"/>
                 <select  id="subtractDateString" data-dojo-type="dijit/form/Select" style="/*width:50px;height:12px;*/">
                     <option value="days" selected>${config.i18n.singleLayerViewer.ageOption1}</option>
                     <option value="weeks">${config.i18n.singleLayerViewer.ageOption2}</option>
                     <option value="months">${config.i18n.singleLayerViewer.ageOption3}</option>
                     <option value="years">${config.i18n.singleLayerViewer.ageOption4}</option>
                 </select> </div>
+            <div id="showImageFootprint" style="display: none;margin-top: 5px">
+                ${config.i18n.singleLayerViewer.show}: 
+                <select  id="show" data-dojo-type="dijit/form/Select">
+                    <option value="image">${config.i18n.singleLayerViewer.showOption1}</option>
+                    <option value="footprint">${config.i18n.singleLayerViewer.showOption2}</option>
+                </select>
+            </div>
         </div>
     </div>
     <div>

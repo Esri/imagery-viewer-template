@@ -630,7 +630,7 @@ define([
         },
         setupOperationalLayers: function () {
             var html = '<div class="titleBar"><span class="titleBarTextSpan">' + this.config.i18n.operationalLayers.title + '</span><button class="closeContainerButton"><img src="images/cancel.png" alt="X"/></button></div><br /><div style="margin: 5px;overflow: auto;"><div id="operationalLayerList"></div><br /></div>';
-            this.setupToolContent("operationalLayersContainer", 2, html, this.config.i18n.operationalLayers.title, "operationalLayersNode", null);
+            this.setupToolContent("operationalLayersContainer", 4, html, this.config.i18n.operationalLayers.title, "operationalLayersNode", null);
             var layers = this.config.itemInfo.itemData.operationalLayers;
             var layersList = [];
             for (var a = layers.length - 1; a >= 0; a--) {
@@ -660,7 +660,7 @@ define([
         },
         setupEditor: function () {
             var html = "<div class='titleBar'><span class='titleBarTextSpan'>" + this.config.i18n.editor.title + "</span><button class='closeContainerButton'><img src='images/cancel.png' alt='X'/></button></div><br/><div style='margin:5px;overflow: auto;'>" + this.config.i18n.editor.text + "<div id='templateDiv' style='margin:5px;'></div><div id='editorDiv'></div><div id='errorEditor' style='color: #ee0000;'></div><br /></div>";
-            this.setupToolContent("editorContainer", 3, html, this.config.i18n.editor.title, "editorNode", null);
+            this.setupToolContent("editorContainer", 2, html, this.config.i18n.editor.title, "editorNode", null);
             var layer = [], heightField;
 
             if (this.config.featureLayers) {
@@ -688,7 +688,7 @@ define([
         },
         setupImageMeasurement: function () {
             var html = "<div class='titleBar'><span class='titleBarTextSpan'>" + this.config.i18n.measurement.title + "</span><button class='closeContainerButton'><img src='images/cancel.png' alt='X'/></button></div><br/><div id='measurementDivContainer' style='margin:5px;overflow: auto;'><div id='measureWidgetDiv'></div><div id='errorMeasurementDiv' style='color: #ee0000;'>" + this.config.i18n.measurement.error + "</div></div><br/>";
-            this.setupToolContent("measurementContainer", 1, html, this.config.i18n.measurement.title, "measurementNode", null);
+            this.setupToolContent("measurementContainer", 3, html, this.config.i18n.measurement.title, "measurementNode", null);
             var config = {
                 angularUnit: this.config.angularUnit,
                 linearUnit: this.config.linearUnit,
@@ -704,9 +704,16 @@ define([
                 exportMode: this.config.exportType, i18n: this.config.i18n.export, portalUrl: this.config.sharinghost});
 
             this.addClickEvent("exportContainer", this.exportFunction, "exportNode");
+            if (window.document.dir === "rtl") {
+                    var list = document.getElementsByClassName("listExpandBtn")[0];
+                    list.style.float = "left";
+                    
+                }
         },
         setupLayerViewer: function (viewerType) {
-            this.setupToolContent("layerViewerContainer", 0, (viewerType === "singleLayerViewer" ? singleLayerViewerHtml : twoLayerViewerHtml), this.config.i18n[viewerType].title, "layerViewerNode", viewerType);
+            if(viewerType === "singleLayerViewer")
+                this.config.secondaryLayer.id = null;
+            this.setupToolContent("layerViewerContainer", 1, (viewerType === "singleLayerViewer" ? singleLayerViewerHtml : twoLayerViewerHtml), this.config.i18n[viewerType].title, "layerViewerNode", viewerType);
             var layers = this.config.itemInfo.itemData.operationalLayers;
             if (this.config.imageSelectorLayer)
                 this.config.imageSelectorLayer = JSON.parse(this.config.imageSelectorLayer);
@@ -730,6 +737,7 @@ define([
                     }
                 }
             }
+            
             var layer = [];
             var temp = {
                 defaultLayer: this.config.primaryLayer.id,
@@ -738,9 +746,12 @@ define([
                 zoomLevel: this.config.zoomLevel,
                 searchExtent: this.config.searchScreenExtent,
                 autoRefresh: this.config.enableAutoRefresh,
-                distinctImages: !this.config.distinctImages
+                distinctImages: !this.config.distinctImages,
+                showRendering: this.config.renderingFlag,
+                showRange: this.config.rangeFlag,
+                showFootprint: this.config.showFlag
             };
-
+            
             var addLayer = true;
 
             for (var a = 0; a < layers.length; a++) {
@@ -825,7 +836,7 @@ define([
             return initialVal;
         },
         setupBookmark: function () {
-            this.setupToolContent("bookmarkContainer", 4, bookmarkHtml, this.config.i18n.bookmark.title, "bookmarkNode", "bookmark");
+            this.setupToolContent("bookmarkContainer", 0, bookmarkHtml, this.config.i18n.bookmark.title, "bookmarkNode", "bookmark");
             this.bookmarkFunction = new Bookmark({map: this.map, bookmarks: this.config.itemInfo.itemData.bookmarks ? this.config.itemInfo.itemData.bookmarks : [], i18n: this.config.i18n.bookmark, extent: this.map.extent});
             this.addClickEvent("bookmarkContainer", this.bookmarkFunction, "bookmarkNode");
         },

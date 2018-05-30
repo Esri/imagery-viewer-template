@@ -7,6 +7,7 @@
     <br /><br />
     <div id="leftLayerDiv">
         <label for="leftLayerSelector">${config.i18n.twoLayerViewer.layer}: </label><select id="leftLayerSelector" data-dojo-type="dijit/form/Select"></select>
+        <div id="leftRenderer" style="display: none;"><br><label for="leftLayerRenderer">${config.i18n.twoLayerViewer.renderer}: </label><select id="leftLayerRenderer" data-dojo-type="dijit/form/Select"></select></div>
         <div id="imageSelectCheckBox" style="display: none;">
             <br />
             <input data-dojo-type="dijit/form/CheckBox" id="imageSelector"/> <label for="imageSelector">${config.i18n.twoLayerViewer.enable}</label>
@@ -35,26 +36,29 @@
             </div>
             <div style="margin:5px;">
                 <br/>
-                ${config.i18n.twoLayerViewer.show}: 
-                <select  id="show" data-dojo-type="dijit/form/Select" style="/*width:50px;height:12px;*/">
-                    <option value="image">${config.i18n.twoLayerViewer.showOption1}</option>
-                    <option value="footprint">${config.i18n.twoLayerViewer.showOption2}</option>
-                </select>
                 <div id='ageDiv' style='display: none;'>
-                    &nbsp;${config.i18n.twoLayerViewer.age}: 
-                    <input  id="subtractValue" data-dojo-type="dijit/form/NumberSpinner" data-dojo-props="intermediateChanges:true, constraints:{min:0,max:31}, value:0" style="width:60px;height:28px;"/>
+                    ${config.i18n.twoLayerViewer.age}: 
+                    <input  id="subtractValue" data-dojo-type="dijit/form/NumberSpinner" data-dojo-props="intermediateChanges:true, constraints:{places: 0}, value:0" style="width:60px;height:28px;"/>
                     <select  id="subtractDateString" data-dojo-type="dijit/form/Select" style="/*width:50px;height:12px;*/">
                         <option value="days" selected>${config.i18n.twoLayerViewer.ageOption1}</option>
                         <option value="weeks">${config.i18n.twoLayerViewer.ageOption2}</option>
                         <option value="months">${config.i18n.twoLayerViewer.ageOption3}</option>
                         <option value="years">${config.i18n.twoLayerViewer.ageOption4}</option>
                     </select> </div>
+                 <div id="showImageFootprint" style="display: none;margin-top: 5px;">
+                ${config.i18n.twoLayerViewer.show}: 
+                <select  id="show" data-dojo-type="dijit/form/Select">
+                    <option value="image">${config.i18n.twoLayerViewer.showOption1}</option>
+                    <option value="footprint">${config.i18n.twoLayerViewer.showOption2}</option>
+                </select>
+                 </div>
             </div>
         </div>
         <div id="errorDiv" style="color: #ee0000;"></div>
     </div>
     <div id="rightLayerDiv" style="display: none;">
         <label for="rightLayerSelector">${config.i18n.twoLayerViewer.layer}: </label><select id="rightLayerSelector" data-dojo-type="dijit/form/Select"></select>
+        <div id="rightRenderer" style="display: none;"><br><label for="rightLayerRenderer">${config.i18n.twoLayerViewer.renderer}: </label><select id="rightLayerRenderer" data-dojo-type="dijit/form/Select"></select></div>
         <div id="imageSelectCheckBoxRight" style="display: none;">
             <br />
             <input data-dojo-type="dijit/form/CheckBox" id="imageSelectorRight"/> <label for="imageSelector">${config.i18n.twoLayerViewer.enable}</label>
@@ -83,20 +87,22 @@
             </div>
             <div style="margin:5px;">
                 <br/>
-                ${config.i18n.twoLayerViewer.show}: 
-                <select  id="showRight" data-dojo-type="dijit/form/Select" style="/*width:50px;height:12px;*/">
-                    <option value="image">${config.i18n.twoLayerViewer.showOption1}</option>
-                    <option value="footprint">${config.i18n.twoLayerViewer.showOption2}</option>
-                </select>
                 <div id='ageDivRight' style='display: none;'>
-                    &nbsp;${config.i18n.twoLayerViewer.age}: 
-                    <input  id="subtractValueRight" data-dojo-type="dijit/form/NumberSpinner" data-dojo-props="intermediateChanges:true, constraints:{min:0,max:31}, value:0" style="width:60px;height:28px;"/>
+                    ${config.i18n.twoLayerViewer.age}: 
+                    <input  id="subtractValueRight" data-dojo-type="dijit/form/NumberSpinner" data-dojo-props="intermediateChanges:true, constraints:{places: 0}, value:0" style="width:60px;height:28px;"/>
                     <select  id="subtractDateStringRight" data-dojo-type="dijit/form/Select" style="/*width:50px;height:12px;*/">
                         <option value="days" selected>${config.i18n.twoLayerViewer.ageOption1}</option>
                         <option value="weeks">${config.i18n.twoLayerViewer.ageOption2}</option>
                         <option value="months">${config.i18n.twoLayerViewer.ageOption3}</option>
                         <option value="years">${config.i18n.twoLayerViewer.ageOption4}</option>
                     </select> </div>
+                <div id="showImageFootprintRight" style="display: none;margin-top: 5px;">
+                ${config.i18n.twoLayerViewer.show}: 
+                <select  id="showRight" data-dojo-type="dijit/form/Select">
+                    <option value="image">${config.i18n.twoLayerViewer.showOption1}</option>
+                    <option value="footprint">${config.i18n.twoLayerViewer.showOption2}</option>
+                </select>
+                </div>
             </div>
         </div>
         <div id="errorDivRight" style="color: #ee0000;"></div>
