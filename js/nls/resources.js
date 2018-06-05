@@ -126,6 +126,7 @@ define({
             error3: "PixelSize of export is restricted to",
             error4: "for this extent.",
             error5: "Please enter a valid numeric value.",
+            error6: "Your image can't be exported at this time.",
             advance: "Advanced save options",
             modeOption1: "Save to portal",
             modeOption2: "Save to disk",
