@@ -132,6 +132,7 @@ define([
                     }
                 },
                 setSavingType: function () {
+                    domStyle.set("extentCheckBoxContainer","display","block");
                     if (this.exportMode === "both") {
                         domStyle.set("selectExportDisplay", "display", "block");
                         if (registry.byId("saveAndExportOption").get("value") === "agol")
@@ -439,26 +440,24 @@ define([
                         } else {
                             var size = (parseInt(width / pixelSize)).toString() + ", " + (parseInt(height / pixelSize)).toString();
                             document.getElementById("errorPixelSize").innerHTML = "";
-
-                            if (this.imageServiceLayer.renderingRule) {
-                                var raster = registry.byId("renderer").checked ? this.imageServiceLayer.renderingRule : new RasterFunction({"rasterFunction": "None"});
-                                var renderingRule = raster;
+                            
+                            if (registry.byId("renderer").checked) {
+                                var renderingRule =  this.imageServiceLayer.renderingRule;
                             } else
-                                var renderingRule = null;
+                                var renderingRule = new RasterFunction({"rasterFunction": "None"});
                             if (registry.byId("defineExtent").checked) {
-
                                 var rasterClip = new RasterFunction();
                                 rasterClip.functionName = "Clip";
                                 var clipArguments = {};
                                 clipArguments.ClippingGeometry = this.geometryClip;
                                 clipArguments.ClippingType = 1;
-                                if (raster)
-                                    clipArguments.Raster = raster;
+                                if (renderingRule)
+                                    clipArguments.Raster = renderingRule;
                                 rasterClip.functionArguments = clipArguments;
 
-                                var renderingRule = JSON.stringify(rasterClip.toJson());
+                               renderingRule = JSON.stringify(rasterClip.toJson());
                             } else {
-                                var renderingRule = renderingRule ? JSON.stringify(renderingRule.toJson()) : null;
+                                renderingRule = renderingRule ? JSON.stringify(renderingRule.toJson()) : null;
                             }
                             
                             var format = "tiff";
@@ -556,6 +555,7 @@ define([
                         domStyle.set("exportSaveContainer", "display", "none");
                         domStyle.set("saveAgolContainer", "display", "none");
                         domStyle.set("selectExportDisplay", "display", "none");
+                        domStyle.set("extentCheckBoxContainer","display","none");
                     }
                 },
                 showLoading: function () {

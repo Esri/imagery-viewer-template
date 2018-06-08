@@ -1456,17 +1456,17 @@ define([
         },
         refreshSwipe: function () {
             if (this.primaryLayer || this.secondaryLayer) {
-                if (this.primaryLayer && this.secondaryLayer && this.primaryLayer.id === this.secondaryLayer.id.split("_RightLayer")[0] && (JSON.stringify(this.primaryLayer.mosaicRule) === JSON.stringify(this.secondaryLayer.mosaicRule) || (!this.primaryLayer.mosaicRule && JSON.stringify(this.primaryLayer.defaultMosaicRule) === JSON.stringify(this.secondaryLayer.mosaicRule)))) {
+                if (this.primaryLayer && this.secondaryLayer && this.primaryLayer.id === this.secondaryLayer.id.split("_RightLayer")[0] && (JSON.stringify(this.primaryLayer.mosaicRule) === JSON.stringify(this.secondaryLayer.mosaicRule) || (!this.primaryLayer.mosaicRule && JSON.stringify(this.primaryLayer.defaultMosaicRule) === JSON.stringify(this.secondaryLayer.mosaicRule))) && (JSON.stringify(this.primaryLayer.renderingRule) === JSON.stringify(this.secondaryLayer.renderingRule))) {
                     document.getElementById("errorSwipeDiv").innerHTML = this.i18n.identicalLayerError;
                     if (this.layerSwipe) {
                         this.swipePosition = this.layerSwipe.domNode.children[0].offsetLeft;
                         this.layerSwipe.destroy();
                         this.layerSwipe = null;
                     }
-                    this.previousLayerInfo = {primary: this.primaryLayer ? {id: this.primaryLayer.id, mosaicRule: this.primaryLayer.mosaicRule} : {id: null, mosaicRule: null}, secondary: this.secondaryLayer ? {id: this.secondaryLayer.id, mosaicRule: this.secondaryLayer.mosaicRule} : {id: null, mosaicRule: null}};
+                    this.previousLayerInfo = {primary: this.primaryLayer ? {id: this.primaryLayer.id, mosaicRule: this.primaryLayer.mosaicRule, renderer : this.primaryLayer.renderingRule} : {id: null, mosaicRule: null, renderer: null}, secondary: this.secondaryLayer ? {id: this.secondaryLayer.id, mosaicRule: this.secondaryLayer.mosaicRule, renderer: this.secondaryLayer.renderingRule} : {id: null, mosaicRule: null, renderer:null}};
                 } else {
                     document.getElementById("errorSwipeDiv").innerHTML = "";
-                    if ((this.primaryLayer && (this.primaryLayer.id !== this.previousLayerInfo.primary.id || JSON.stringify(this.primaryLayer.mosaicRule) !== JSON.stringify(this.previousLayerInfo.primary.mosaicRule))) || (this.secondaryLayer && (this.secondaryLayer.id !== this.previousLayerInfo.secondary.id || JSON.stringify(this.secondaryLayer.mosaicRule) !== JSON.stringify(this.previousLayerInfo.secondary.mosaicRule))) || (!this.primaryLayer && this.previousLayerInfo.primary.id) || (!this.secondaryLayer && this.previousLayerInfo.secondary.id)) {
+                    if ((this.primaryLayer && (this.primaryLayer.id !== this.previousLayerInfo.primary.id || JSON.stringify(this.primaryLayer.mosaicRule) !== JSON.stringify(this.previousLayerInfo.primary.mosaicRule) || JSON.stringify(this.primaryLayer.renderingRule) !== JSON.stringify(this.previousLayerInfo.primary.renderer))) || (this.secondaryLayer && (this.secondaryLayer.id !== this.previousLayerInfo.secondary.id || JSON.stringify(this.secondaryLayer.mosaicRule) !== JSON.stringify(this.previousLayerInfo.secondary.mosaicRule) || JSON.stringify(this.secondaryLayer.renderingRule) !== JSON.stringify(this.previousLayerInfo.secondary.renderer))) || (!this.primaryLayer && this.previousLayerInfo.primary.id) || (!this.secondaryLayer && this.previousLayerInfo.secondary.id)) {
                         if (this.layerSwipe) {
                             this.swipePosition = this.layerSwipe.domNode.children[0].offsetLeft;
                             this.layerSwipe.destroy();
@@ -1494,17 +1494,17 @@ define([
                             layers: [layer]
                         }, dom.byId("swipewidget"));
                         this.layerSwipe.startup();
-                        this.previousLayerInfo = {primary: this.primaryLayer ? {id: this.primaryLayer.id, mosaicRule: this.primaryLayer.mosaicRule} : {id: null, mosaicRule: null}, secondary: this.secondaryLayer ? {id: this.secondaryLayer.id, mosaicRule: this.secondaryLayer.mosaicRule} : {id: null, mosaicRule: null}};
+                        this.previousLayerInfo = {primary: this.primaryLayer ? {id: this.primaryLayer.id, mosaicRule: this.primaryLayer.mosaicRule, renderer: this.primaryLayer.renderingRule} : {id: null, mosaicRule: null, renderer: null}, secondary: this.secondaryLayer ? {id: this.secondaryLayer.id, mosaicRule: this.secondaryLayer.mosaicRule, renderer: this.secondaryLayer.renderingRule} : {id: null, mosaicRule: null,renderer: null}};
                     }
                 }
             } else if (this.layerSwipe) {
                 document.getElementById("errorSwipeDiv").innerHTML = "";
                 this.layerSwipe.destroy();
                 this.layerSwipe = null;
-                this.previousLayerInfo = {primary: {id: null, mosaicRule: null}, secondary: {id: null, mosaicRule: null}};
+                this.previousLayerInfo = {primary: {id: null, mosaicRule: null, renderer: null}, secondary: {id: null, mosaicRule: null, renderer: null}};
             } else {
                 document.getElementById("errorSwipeDiv").innerHTML = "";
-                this.previousLayerInfo = {primary: {id: null, mosaicRule: null}, secondary: {id: null, mosaicRule: null}};
+                this.previousLayerInfo = {primary: {id: null, mosaicRule: null, renderer: null}, secondary: {id: null, mosaicRule: null, renderer: null}};
             }
         },
         moveSwipe: function (value, invertPlacement, layers) {

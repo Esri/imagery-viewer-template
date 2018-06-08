@@ -54,7 +54,7 @@ define({
     "displayOptions": "both",
     "zoomLevel": 8,
     "searchScreenExtent": 15,
-    "enableAutoRefresh": false,
+    "enableAutoRefresh": true,
     "distinctImages": false,
      "advanceOptions":false,
     "renderingFlag": true,
