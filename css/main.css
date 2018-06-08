@@ -295,21 +295,6 @@ body {
     background-color: transparent;
     z-index: 10;
 }
-.titleHeader {
-    padding: 0.8em 0px;
-    cursor: pointer;
-    width: 100%;
-    text-align: justify;
-    background: white;
-    border: 0px solid transparent;
-    font: inherit;
-}
-.listExpandBtn {
-    float: right;
-    font-size: 1.5em;
-    line-height: 0.9;
-
-}
 .claro .dijitTabListContainer-top {
     position: relative;
 }
@@ -406,7 +391,7 @@ body {
 }
 .LayerSwipe .vertical {
     background-color: azure;
-    width: 3px;
+    width: 6px;
     z-index: 1;
 }
 .LayerSwipe .horizontal {
@@ -437,7 +422,14 @@ body {
     font-weight: bolder;
 }*/
 
-
+#tooltipDisplayOrder .dijitTooltipContainer, #stretchTooltipContainer .dijitTooltipContainer {
+    background: #333;
+    -webkit-border-radius: 0;
+    border-radius: 0px;
+    color:white;
+    outline: none;
+    border: 0px solid transparent;
+}
 
 .claro .dijitDialogTitle {
     color: white;
@@ -750,19 +742,19 @@ body {
     top: 45px;
     left:-384px;
     position: absolute;
-    width:400px;
+    width:400px;//0%;
     display: block;
     background-color: white;
+
     z-index: 1;
+    //border-radius: 5px;
     opacity: 0;
     visibility: hidden;
-    overflow:hidden;
+    overflow:auto;
+    // white-space:nowrap;
     max-height: 85%;
-    transition:0.5s;
-}
-.widgetContainer {
-    margin: 5px;
     overflow-y: auto;
+    transition:0.5s;
 }
 #toolsContentContainer .dijitDialogTitleBar {
     display:none;
@@ -885,7 +877,7 @@ body {
     font-weight: bolder;
 }
 */
-#aboutContainer {
+#basemapContainer {
     display: block;
     width: 30px;
     height: 30px;
@@ -943,11 +935,8 @@ body {
 /*.selected-widget {
     background-color:#008299;
 }*/
-#aboutDialog .dijitDialogPaneContent {
+#basemapDialog .dijitDialogPaneContent {
     height: calc(100% - 50px);
-}
-.aboutIcon {
-    height: 100%;
 }
 .closeContainerButton {
     float: right;
@@ -1326,7 +1315,7 @@ body {
     font-size:inherit;
     background: transparent;
     text-align: center;
-    width: 110px;
+    width: 100%;
     overflow: hidden;
     display: block;
 }
@@ -1483,3 +1472,4 @@ body {
 .input-section{
     /*margin:0 auto;*/
 }
+

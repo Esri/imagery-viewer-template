@@ -16,22 +16,21 @@
 define([
     'dojo/_base/declare', "dojo/Evented",
     "dojo/html",
-    "dojo/dom-class",
     "dijit/registry",
     "dojo/_base/lang",
     "dojo/dom-style", "esri/geometry/webMercatorUtils",
     "esri/SpatialReference", "esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "dojo/Deferred", "esri/geometry/Extent", "esri/geometry/Polygon",
     "esri/request", "esri/symbols/SimpleLineSymbol",
     "dojo/i18n!esri/nls/jsapi",
-    'dojo/dom-construct', "esri/arcgis/Portal", "esri/Color", "esri/toolbars/draw", "dojo/dom-attr", "esri/layers/RasterFunction", "dijit/form/SimpleTextarea", "dijit/form/TextBox", "dijit/form/CheckBox", "dijit/form/NumberTextBox"
+    'dojo/dom-construct', "esri/arcgis/Portal", "esri/Color", "esri/toolbars/draw", "dojo/dom-attr", "esri/layers/RasterFunction", "dijit/form/SimpleTextarea", "dijit/form/TextBox", "dijit/form/CheckBox"
 
 
 ],
         function (
                 declare, Evented,
-                html, domClass,
+                html,
                 registry,
-                lang, domStyle, webMercatorUtils, SpatialReference, GeometryService, ProjectParameters, Deferred, Extent, Polygon, esriRequest, SimpleLineSymbol, bundle, domConstruct, arcgisPortal, Color, Draw, domAttr, RasterFunction) {
+                lang, domStyle, webMercatorUtils,SpatialReference, GeometryService, ProjectParameters, Deferred, Extent, Polygon, esriRequest, SimpleLineSymbol, bundle, domConstruct, arcgisPortal, Color, Draw, domAttr, RasterFunction) {
             return declare("application.Export", [Evented], {
                 constructor: function (parameters) {
                     var defaults = {
@@ -52,7 +51,29 @@ define([
                         if (value === "agol") {
                             domStyle.set("saveAgolContainer", "display", "block");
                             domStyle.set("exportSaveContainer", "display", "none");
+                            registry.byId("defineExtent").set("checked", false);
+                            if (registry.byId("defineAgolExtent").checked) {
+                                this.toolbarForExport.activate(Draw.POLYGON);
+                                this.map.setInfoWindowOnClick(false);
+                            }
+                            for (var k in this.map.graphics.graphics)
+                            {
+                                if (this.map.graphics.graphics[k].geometry.type === "polygon") {
+                                    if (this.map.graphics.graphics[k].symbol.color.r === 200)
+                                    {
+                                        this.map.graphics.remove(this.map.graphics.graphics[k]);
+                                        break;
+                                    }
+                                }
+                            }
+                            this.geometry = null;
                         } else {
+
+                            registry.byId("defineAgolExtent").set("checked", false);
+                            if (registry.byId("defineExtent").checked) {
+                                this.toolbarForExport.activate(Draw.POLYGON);
+                                this.map.setInfoWindowOnClick(false);
+                            }
                             domStyle.set("saveAgolContainer", "display", "none");
                             domStyle.set("exportSaveContainer", "display", "block");
                         }
@@ -67,6 +88,7 @@ define([
                     }));
                     registry.byId("exportBtn").on("click", lang.hitch(this, this.exportLayer));
                     registry.byId("defineExtent").on("change", lang.hitch(this, this.activatePolygon));
+                    registry.byId("defineAgolExtent").on("change", lang.hitch(this, this.activatePolygon));
                     if (this.map) {
                         this.map.on("update-start", lang.hitch(this, this.showLoading));
                         this.map.on("update-end", lang.hitch(this, this.hideLoading));
@@ -76,21 +98,7 @@ define([
                         this.toolbarForExport = new Draw(this.map);
                         dojo.connect(this.toolbarForExport, "onDrawComplete", lang.hitch(this, this.getExtent));
                     }
-                    document.getElementById("advanceSaveBtn").addEventListener("click", lang.hitch(this, this.expandMenu));
                     this.resizeContainer();
-                    this.geometryService = new GeometryService("https://utility.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
-                },
-                expandMenu: function () {
-                    var node = document.getElementById("advanceSaveBtn").children[1];
-                    if (domClass.contains(node, "launchpad-icon-arrow-right")) {
-                        domClass.remove(node, "launchpad-icon-arrow-right");
-                        domClass.add(node, "launchpad-icon-arrow-down");
-                        domStyle.set("advanceSaveContainer", "display", "block");
-                    } else {
-                        domStyle.set("advanceSaveContainer", "display", "none");
-                        domClass.remove(node, "launchpad-icon-arrow-down");
-                        domClass.add(node, "launchpad-icon-arrow-right");
-                    }
                 },
                 resizeContainer: function () {
                     if (window.innerWidth > 1200) {
@@ -101,6 +109,7 @@ define([
                         document.getElementById("itemDescription").style.height = "80px";
                         document.getElementById("itemTitle").style.height = "40px";
                         document.getElementById("itemTags").style.height = "40px";
+                        document.getElementById("pixelSize").style.width = "100px";
                     } else if (window.innerWidth > 1000) {
                         document.getElementById("itemTitle").style.width = "180px";
                         document.getElementById("itemTags").style.width = "180px";
@@ -108,6 +117,7 @@ define([
                         document.getElementById("itemDescription").style.height = "70px";
                         document.getElementById("itemTitle").style.height = "36px";
                         document.getElementById("itemTags").style.height = "36px";
+                        document.getElementById("pixelSize").style.width = "90px";
                     } else if (window.innerWidth > 800) {
                         document.getElementById("itemTitle").style.width = "160px";
                         document.getElementById("itemTags").style.width = "160px";
@@ -115,6 +125,7 @@ define([
                         document.getElementById("itemDescription").style.height = "60px";
                         document.getElementById("itemTitle").style.height = "32px";
                         document.getElementById("itemTags").style.height = "32px";
+                        document.getElementById("pixelSize").style.width = "80px";
                     } else if (window.innerWidth > 600) {
                         document.getElementById("itemTitle").style.width = "140px";
                         document.getElementById("itemTags").style.width = "140px";
@@ -122,6 +133,7 @@ define([
                         document.getElementById("itemDescription").style.height = "50px";
                         document.getElementById("itemTitle").style.height = "28px";
                         document.getElementById("itemTags").style.height = "28px";
+                        document.getElementById("pixelSize").style.width = "70px";
                     } else {
                         document.getElementById("itemTitle").style.width = "120px";
                         document.getElementById("itemTags").style.width = "120px";
@@ -129,10 +141,10 @@ define([
                         document.getElementById("itemDescription").style.height = "40px";
                         document.getElementById("itemTitle").style.height = "24px";
                         document.getElementById("itemTags").style.height = "24px";
+                        document.getElementById("pixelSize").style.width = "60px";
                     }
                 },
                 setSavingType: function () {
-                    domStyle.set("extentCheckBoxContainer","display","block");
                     if (this.exportMode === "both") {
                         domStyle.set("selectExportDisplay", "display", "block");
                         if (registry.byId("saveAndExportOption").get("value") === "agol")
@@ -154,17 +166,18 @@ define([
                         var info = {};
                         info.levelChange = true;
                         this.updateValues(info);
-                        if (!this.extentchangeHandler)
-                            this.extentchangeHandler = this.map.on("extent-change", lang.hitch(this, this.updateValues));
+                        if(!this.extentchangeHandler)
+                        this.extentchangeHandler = this.map.on("extent-change", lang.hitch(this, this.updateValues));
                     }
 
                 },
                 onClose: function () {
-                    if (this.extentchangeHandler) {
+                    if(this.extentchangeHandler){
                         this.extentchangeHandler.remove();
                         this.extentchangeHandler = null;
                     }
                     registry.byId("defineExtent").set("checked", false);
+                    registry.byId("defineAgolExtent").set("checked", false);
                 },
                 saveLayerToArcGIS: function () {
 
@@ -176,7 +189,7 @@ define([
                         var spatialReference = this.map.extent.spatialReference.wkid;
                         var mosaicRule = this.imageServiceLayer.mosaicRule ? this.imageServiceLayer.mosaicRule.toJson() : null;
                         var bandIds = this.imageServiceLayer.bandIds ? [this.imageServiceLayer.bandIds] : [];
-                        if (registry.byId("defineExtent").checked) {
+                        if (registry.byId("defineAgolExtent").checked) {
 
                             var rasterClip = new RasterFunction();
                             rasterClip.functionName = "Clip";
@@ -251,7 +264,7 @@ define([
                     }
                 },
                 updateValues: function (info) {
-                    this.project(this.map.extent, "extent").then(lang.hitch(this, function (extent) {
+                     this.project(this.map.extent, "extent").then(lang.hitch(this, function (extent) {
 
                         if (extent !== "error") {
                             this.mapExtent = extent;
@@ -266,25 +279,26 @@ define([
                                 var psy = height / widthMax;
                                 var servicePixel = (this.imageServiceLayer && this.imageServiceLayer.pixelSizeX) ? this.imageServiceLayer.pixelSizeX : 0;
                                 var ps = Math.max(psx, psy, servicePixel);
-                                var ps = parseFloat(ps);
+                                var ps = parseFloat(ps) + 0.001;
                                 registry.byId("pixelSize").set("value", ps.toFixed(3));
-                                registry.byId("pixelSize").set("constraints", {min: parseFloat(ps.toFixed(3)), place: 0});
-                                registry.byId("pixelSize").set("rangeMessage", this.i18n.error3 + " " + ps.toFixed(3) + " " + this.i18n.error4);
-                                this.currentPixelSize = ps;
                             }
                         }
-                        this.previousSpatialReference = registry.byId("outputSp").get("value");
-                        this.getUTMZones(extent);
-
+                            this.previousSpatialReference = registry.byId("outputSp").get("value");
+                            this.getUTMZones(extent);
+                        
                     }));
                 },
                 activatePolygon: function () {
-                    if (registry.byId("defineExtent").checked) {
+                    if (registry.byId("defineExtent").checked || registry.byId("defineAgolExtent").checked) {
                         this.map.setInfoWindowOnClick(false);
-                           registry.byId("exportBtn").set("disabled", true);
+                        if (registry.byId("defineExtent").checked) {
+                            registry.byId("exportBtn").set("disabled", true);
                             domStyle.set(document.getElementById("exportBtn"), "color", "grey");
+                        }
+                        if (registry.byId("defineAgolExtent").checked) {
                             registry.byId("submitAgolBtn").set("disabled", true);
                             domStyle.set(document.getElementById("submitAgolBtn"), "color", "grey");
+                        }
                         this.toolbarForExport.activate(Draw.POLYGON);
                     } else {
                         registry.byId("exportBtn").set("disabled", false);
@@ -335,43 +349,40 @@ define([
                             var psy = height / this.map.width;
                             var servicePixel = (this.imageServiceLayer && this.imageServiceLayer.pixelSizeX) ? this.imageServiceLayer.pixelSizeX : 0;
                             var ps = Math.max(psx, psy, servicePixel);
-                            var ps = parseFloat(ps);
+                            var ps = parseFloat(ps) + 0.001;
                             registry.byId("pixelSize").set("value", ps.toFixed(3));
-                            registry.byId("pixelSize").set("constraints", {min: parseFloat(ps.toFixed(3)), place: 0});
-                            registry.byId("pixelSize").set("rangeMessage", this.i18n.error3 + " " + ps.toFixed(3) + " " + this.i18n.error4);
-                            this.currentPixelSize = ps;
                         }
                     }));
                 },
                 getUTMZones: function (extent) {
                     if (registry.byId("outputSp").getOptions())
                         registry.byId("outputSp").removeOption(registry.byId('outputSp').getOptions());
-
+                    
                     if (extent !== "error") {
-                        var mapCenter = extent.getCenter();
-                        var y = Math.pow(2.718281828, (mapCenter.y / 3189068.5));
+                    var mapCenter = extent.getCenter();
+                    var y = Math.pow(2.718281828, (mapCenter.y / 3189068.5));
 
-                        var sinvalue = (y - 1) / (y + 1);
-                        var y1 = Math.asin(sinvalue) / 0.017453292519943295;
+                    var sinvalue = (y - 1) / (y + 1);
+                    var y1 = Math.asin(sinvalue) / 0.017453292519943295;
 
-                        var x = mapCenter.x / 6378137.0;
-                        x = x / 0.017453292519943295;
-                        var utm = parseInt((x + 180) / 6) + 1;
-                        if (y1 > 0)
-                            var wkid = 32600 + utm;
-                        else
-                            var wkid = 32500 + utm;
-
-                        if (utm !== 1) {
-                            registry.byId("outputSp").addOption({label: this.i18n.utm + " " + (utm - 1) + "", value: wkid - 1});
-                        } else
-                            registry.byId("outputSp").addOption({label: this.i18n.utm + " " + (utm + 59) + "", value: wkid + 59});
-                        registry.byId("outputSp").addOption({label: this.i18n.utm + " " + utm + "", value: wkid});
-                        if (utm !== 60)
-                            registry.byId("outputSp").addOption({label: this.i18n.utm + " " + (utm + 1) + "", value: wkid + 1});
-                        else
-                            registry.byId("outputSp").addOption({label: this.i18n.utm + " " + utm - 59 + "", value: wkid - 59});
-                    } else {
+                    var x = mapCenter.x / 6378137.0;
+                    x = x / 0.017453292519943295;
+                    var utm = parseInt((x + 180) / 6) + 1;
+                    if (y1 > 0)
+                        var wkid = 32600 + utm;
+                    else
+                        var wkid = 32500 + utm;
+                    
+                    if (utm !== 1) {
+                        registry.byId("outputSp").addOption({label: this.i18n.utm + " " + (utm - 1) + "", value: wkid - 1});
+                    } else
+                        registry.byId("outputSp").addOption({label: this.i18n.utm + " " + (utm + 59) + "", value: wkid + 59});
+                    registry.byId("outputSp").addOption({label: this.i18n.utm + " " + utm + "", value: wkid});
+                    if (utm !== 60)
+                        registry.byId("outputSp").addOption({label: this.i18n.utm + " " + (utm + 1) + "", value: wkid + 1});
+                    else
+                        registry.byId("outputSp").addOption({label: this.i18n.utm + " " + utm - 59 + "", value: wkid - 59});
+                }else {
                         var wkid = this.map.extent.spatialReference.wkid;
                         registry.byId("outputSp").addOption({label: "WKID : " + wkid, value: wkid});
                     }
@@ -434,32 +445,48 @@ define([
                             var height = (this.mapExtent.ymax - this.mapExtent.ymin);
                             var bboxSR = this.mapExtent.spatialReference;
                         }
-                        var pixelSize = (parseFloat(registry.byId("pixelSize").get("value")) || this.currentPixelSize);
-                        if (pixelSize < this.currentPixelSize) {
+
+                        var pixelsize = parseFloat(registry.byId("pixelSize").get("value"));
+
+                        var widthMax = this.map.width;
+                        var heightMax = this.map.height;
+
+                        var psx = width / widthMax;
+                        var psy = height / widthMax;
+
+                        if (pixelsize === "")
+                            pixelsize = psx;
+                        var ps = Math.max(psx, psy, pixelsize);
+
+                        if ((width / pixelsize) > widthMax || (height / pixelsize) > widthMax) {
+                            var size = "";
+                            document.getElementById("errorPixelSize").innerHTML = this.i18n.error3 + " " + ps.toFixed(3) + " " + this.i18n.error4;
                             domStyle.set("loadingExport", "display", "none");
                         } else {
-                            var size = (parseInt(width / pixelSize)).toString() + ", " + (parseInt(height / pixelSize)).toString();
+                            var size = (parseInt(width / ps)).toString() + ", " + (parseInt(height / ps)).toString();
                             document.getElementById("errorPixelSize").innerHTML = "";
-                            
-                            if (registry.byId("renderer").checked) {
-                                var renderingRule =  this.imageServiceLayer.renderingRule;
+
+                            if (this.imageServiceLayer.renderingRule) {
+                                var raster = registry.byId("renderer").checked ? this.imageServiceLayer.renderingRule : new RasterFunction({"rasterFunction": "None"});
+                                var renderingRule = raster;
                             } else
-                                var renderingRule = new RasterFunction({"rasterFunction": "None"});
+                                var renderingRule = null;
                             if (registry.byId("defineExtent").checked) {
+
                                 var rasterClip = new RasterFunction();
                                 rasterClip.functionName = "Clip";
                                 var clipArguments = {};
                                 clipArguments.ClippingGeometry = this.geometryClip;
                                 clipArguments.ClippingType = 1;
-                                if (renderingRule)
-                                    clipArguments.Raster = renderingRule;
+                                if (raster)
+                                    clipArguments.Raster = raster;
                                 rasterClip.functionArguments = clipArguments;
 
-                               renderingRule = JSON.stringify(rasterClip.toJson());
+                                var renderingRule = JSON.stringify(rasterClip.toJson());
                             } else {
-                                renderingRule = renderingRule ? JSON.stringify(renderingRule.toJson()) : null;
+                                var renderingRule = renderingRule ? JSON.stringify(renderingRule.toJson()) : null;
                             }
-                            
+
                             var format = "tiff";
                             var compression = "LZ77";
                             var mosaicRule = this.imageServiceLayer.mosaicRule ? JSON.stringify(this.imageServiceLayer.mosaicRule.toJson()) : null;
@@ -490,31 +517,9 @@ define([
 
                                 domAttr.set("linkDownload", "href", data.href);
 
-                                var http = new XMLHttpRequest();
-                                http.open("GET", data.href, true);
-                                http.responseType = "blob";
-                                var global = this;
-                                http.onload = function () {
-                                    domAttr.set("linkDownload", "target", "_self");
-                                    if (this.status === 200) {
-                                        domAttr.set("linkDownload", "href", URL.createObjectURL(http.response));
-                                        (document.getElementById("linkDownload")).click();
-                                    } else {
-                                        document.getElementById("errorPixelSize").innerHTML = global.i18n.error6;
-                                        setTimeout(function () {
-                                            document.getElementById("errorPixelSize").innerHTML = "";
-                                        }, 5000);
-                                    }
-                                    global.hideLoading();
-                                };
-                                http.onerror = function () {
-                                    document.getElementById("errorPixelSize").innerHTML = global.i18n.error6;
-                                    setTimeout(function () {
-                                        document.getElementById("errorPixelSize").innerHTML = "";
-                                    }, 5000);
-                                    global.hideLoading();
-                                };
-                                http.send();
+                                domAttr.set("linkDownload", "target", "_self");
+                                (document.getElementById("linkDownload")).click();
+                                this.hideLoading();
 
                             }), lang.hitch(this, function (error) {
                                 this.hideLoading();
@@ -545,7 +550,7 @@ define([
                         }
                     }
                     if (this.imageServiceLayer) {
-                        html.set(document.getElementById("exportLayerTitle"), this.i18n.layer+": <b>" + (this.imageServiceLayer.arcgisProps ? this.imageServiceLayer.arcgisProps.title : (this.imageServiceLayer.title || this.imageServiceLayer.name || this.imageServiceLayer.id)) + "</b>");
+                        html.set(document.getElementById("exportLayerTitle"), "Layer: <b>" + (this.imageServiceLayer.arcgisProps ? this.imageServiceLayer.arcgisProps.title : (this.imageServiceLayer.title || this.imageServiceLayer.name || this.imageServiceLayer.id)) + "</b>");
                         document.getElementById("exportLayerTitle").style.color = "black";
                         this.setSavingType();
 
@@ -555,7 +560,6 @@ define([
                         domStyle.set("exportSaveContainer", "display", "none");
                         domStyle.set("saveAgolContainer", "display", "none");
                         domStyle.set("selectExportDisplay", "display", "none");
-                        domStyle.set("extentCheckBoxContainer","display","none");
                     }
                 },
                 showLoading: function () {
