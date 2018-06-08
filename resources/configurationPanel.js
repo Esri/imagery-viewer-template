@@ -9,14 +9,14 @@
         },
         {
         "placeHolder":"Enter the title",
-                "label":"Title:",
+                "label":"Title for ArcGIS Online item:",
                 "fieldName":"title",
                 "type":"string",
                 "tooltip":"Provide App Name"
         },
         {
         "placeHolder":"Description",
-                "label":"Description:",
+                "label":"Description for ArcGIS Online item:",
                 "fieldName":"description",
                 "type":"string",
                 "tooltip":"Provide exciting info for the App title tooltip.",
@@ -71,35 +71,30 @@
 {
 "category": "Options",
         "fields": [
-            {
-                "type":"options",
-                        "fieldName":"toolOnByDefault",
-                        "label":"Specify active tool at app startup",
-                        "tooltip":"",
-                        "options":[
-                        {
-                        "label":"None",
-                                "value":"none"
-                        },
-                        {
-                        "label":"Layer Selector",
-                                "value":"layer"
-                        },
-                        {
-                        "label":"About",
-                                "value":"about"
-                        }
-                        ]
-                },
         {
-        "type":"paragraph",
-                "value":"<span style='text-align: justify;font-family: verdana;'>Use the About tool to give your app context. Use this widget to explain to the user what the purpose of the app is and how to get started. Click 'Turn on the About widget when the app starts' to make your About text active any time a person opens your app.</span>"
+        "type":"options",
+                "fieldName":"toolOnByDefault",
+                "label":"Pick a tool to open automatically when the app loads:",
+                "options":[
+                {
+                "label":"None",
+                        "value":"none"
+                },
+                {
+                "label":"Layer Selector",
+                        "value":"layer"
+                },
+                {
+                "label":"About",
+                        "value":"about"
+                }
+                ]
         },
         {
         "type": "conditional",
                 "condition": false,
                 "fieldName": "aboutFlag",
-                "label": "Enable about tool",
+                "label": "Add the About tool to tell users what your app does",
                 "items": [
                 {
                 "type": "string",
@@ -112,16 +107,14 @@
         },
         {
         "type":"boolean",
-                "label":"Enable Basemap Gallery",
-                "fieldName":"basemapFlag",
-                "tooltip":"Basemap Selector"
+                "label":"Add the Basemap Gallery to let users choose a basemap",
+                "fieldName":"basemapFlag"
         },
         {
         "type":"conditional",
                 "condition":false,
                 "fieldName":"scalebarFlag",
-                "label":"Enable Scalebar",
-                "tooltip":"Display Scalebar",
+                "label":"Add a scalebar to your map",
                 "items":[
                 {
                 "type":"options",
@@ -194,40 +187,29 @@
                 ]
         },
         {
-        "type":"paragraph",
-                "value":"<span style='text-align: justify;font-family: verdana;'>Enable the Bookmark tool to let users select any bookmarks that are saved as a part of your web map. Additionally, users can add temporary bookmarks while they use the app (these will disappear if the app is closed or refreshed).</span>"
-        },
-        {
         "type":"boolean",
-                "label": "Enable Bookmark tool",
-                "fieldName": "bookmarkFlag",
-                "tooltip": "Bookmarks"
-        },
-        {
-        "type":"paragraph",
-                "value":"<p style='text-align: justify;font-family: verdana;margin:20px 0px 0px 0px;'>The Export tool saves the topmost visible imagery layer, either to the user's ArcGIS Online account as an imagery layer item or to the user's computer as a TIFF file of the current area of interest.</p>"
+                "label": "Add the Bookmark tool to access your web map's bookmarks",
+                "fieldName": "bookmarkFlag"
         },
         {
         "type":"conditional",
                 "condition":false,
-                "label":"Enable Export Tool",
+                "label":"Add the Export tool to save imagery layers",
                 "fieldName":"exportFlag",
                 "items":[
-                {
-                "type":"paragraph",
-                        "value":"<p style='text-align: justify;font-family: verdana;margin-bottom:0px;'>Select which export options will be available to the user.</p>"
-                },
+
                 {
                 "type":"options",
                         "fieldName":"exportType",
                         "label":"Set default Mode: ",
+                        "tooltip":"Let users export images to their local machine or to their ArcGIS Online portal",
                         "options":[
                         {
-                        "label":"Save to Portal",
+                        "label":"Save to portal",
                                 "value":"agol"
                         },
                         {
-                        "label":"Save to Disk",
+                        "label":"Save to disk",
                                 "value":"disk"
                         },
                         {
@@ -245,21 +227,16 @@
 {
 "category": "Imagery",
         "fields": [
-		{
-        "type":"paragraph",
-                "value":"<p style='text-align: justify;font-family: verdana;margin-bottom:0px;'>The Layer Selector lets app users choose different imagery layers or particular images to view. A Single Layer Viewer will show only one imagery layer at a time. A Two-Layer Comparison Viewer will show two imagery layers, using a swipe tool to compare them.</p>"
-        },
         {
         "type": "conditional",
                 "condition": false,
                 "fieldName": "layersFlag",
-                "tooltip": "Enable Layer Selector",
-                "label": "Enable Layer Selector",
+                "label": "Add the Imagery Layer Selector to your app",
                 "items": [
                 {
                 "type": "radio",
                         "fieldName":"viewerTool",
-                        "tooltip": "Select layer viewer type",
+                        "tooltip": "Let users view either one imagery layer at a time, or two layers using a swipe tool.",
                         "label": "Type: ",
                         "items": [
                         {
@@ -268,20 +245,16 @@
                                 "checked": true
                         },
                         {
-                        "label": "Two-Layer Comparison Viewer",
+                        "label": "Two-Layer Viewer with Swipe",
                                 "value":"multi"
                         }
                         ]
                 },
                 {
-                "type":"paragraph",
-                        "value":"<p style='text-align:justify;font-family:verdana;margin-bottom:0px;'>Use the dropdown lists to set the default layer for single layer viewer or to set the left Image and right image for two-layer comparison viewer in the app.</p>"
-                },
-                {
                 "type":"layerAndFieldSelector",
                         "fieldName":"primaryLayer",
                         "label": "Layer(Default/Left Image): ",
-                        "tooltip":"Select the default or left image layer",
+                        "tooltip":"Choose a default imagery layer for your app.",
                         "layerOptions":{
                         "supportedTypes":[
                                 "ImageServiceLayer"
@@ -292,7 +265,7 @@
                 "type":"layerAndFieldSelector",
                         "fieldName":"secondaryLayer",
                         "label":"Layer(Right Image): ",
-                        "tooltip":"Select the right image layer",
+                        "tooltip":"Only for the two-layer viewer. Choose a default comparison image.",
                         "layerOptions":{
                         "supportedTypes":[
                                 "ImageServiceLayer"
@@ -300,68 +273,18 @@
                         }
                 },
                 {
-                "type":"options",
-                        "fieldName":"displayOptions",
-                        "tooltip":"",
-                        "label":"Display:",
-                        "options":[
-                        {
-                        "label":"Slider",
-                                "value":"slider"
-                        },
-                        {
-                        "label":"Dropdown List",
-                                "value":"dropdown"
-                        },
-                        {
-                        "label":"Slider and Dropdown List",
-                                "value":"both"
-                        }
-                        ]
-                },
-                {
-                "type":"Number",
-                        "fieldName":"zoomLevel",
-                        "label":"Minimum Zoom Level",
-                        "tooltip":"",
-                        "constraints":{
-                        "min":0,
-                                "max":23,
-                                "places":0
-                        }
-                },
-                {
-                "type":"Number",
-                        "fieldName":"searchScreenExtent",
-                        "label":"Search Screen Extent (%)",
-                        "tooltip":"",
-                        "constraints":{
-                        "min":1,
-                                "max":100,
-                                "places":0
-                        }
-                },
-                {
-                "type":"boolean",
-                        "fieldName":"distinctImages",
-                        "label":"List each image separately",
-                        "tooltip":"If turned on, slider or dropdown will not merge all the images together with same attribute value."
-                },
-                {
-                "type":"boolean",
-                        "fieldName":"enableAutoRefresh",
-                        "label":"Enable AutoRefresh",
-                        "toottip":""
-                },
-                {
                 "type":"paragraph",
-                        "value":"<p style='text-align: justify;font-family: verdana;margin:20px 0px -10px; 0px;'>Help app users search for specific images. If you want a layer to be searchable, choose one attribute below for users to search. (For example, to explore imagery chronologically, choose an attribute like Acquisition Date.)</p>"
+                        "value":"<p style='text-align: justify;font-family: verdana;margin:20px 0px -10px; 0px;'><u>Note</u>:  If \"Select Layer\" is choosen, the user will see the web map's basemap.</p>"
+                },
+                {
+                "type":"boolean",
+                        "label": "Add a Renderer dropdown so users can view templates from the image service",
+                        "fieldName": "renderingFlag"
                 },
                 {
                 "type":"multilayerandfieldselector",
                         "fieldName":"imageSelectorLayer",
-                        "label":"Imagery Layers",
-                        "tooltip":"Set imagery layers properties.",
+                        "label":"Choose which layers will be searchable for specific images, then choose one field per layer that users can use to search (e.g. search by Acquisition Date)",
                         "layerOptions":{
                         "supportedTypes":[
                                 "ImageServiceLayer"
@@ -384,18 +307,91 @@
                                 "esriFieldTypeXML"
                         ]
                         }
+                },
+                {
+                "type": "conditional",
+                        "condition": false,
+                        "fieldName": "advanceOptions",
+                        "label": "Add advanced image search options to the Imagery Layer Selector tool",
+                        "items": [
+                        {
+                        "type":"Number",
+                                "fieldName":"zoomLevel",
+                                "label":"Minimum Zoom Level",
+                                "tooltip":"A higher number requires users to zoom in more before they can search for images.",
+                                "constraints":{
+                                "min":0,
+                                        "max":23,
+                                        "places":0
+                                }
+                        },
+                        {
+                        "type":"paragraph",
+                                "value":"<p style='text-align: justify;font-family: verdana;margin:20px 0px -10px; 0px;'><u>Note</u>:  Use Minimum Zoom Level to limit requests to the server for images, and to focus users on the appropriate scale for your app.</p>"
+                        },
+                        {
+                        "type":"Number",
+                                "fieldName":"searchScreenExtent",
+                                "label":"Search Screen Extent (%)",
+                                "tooltip":"A lower % will only search for images at the center of the screen extent.",
+                                "constraints":{
+                                "min":1,
+                                        "max":100,
+                                        "places":0
+                                }
+                        },
+                        {
+                        "type":"boolean",
+                                "fieldName":"distinctImages",
+                                "label":"List each image separately in search results"
+                        },
+                        {
+                        "type":"boolean",
+                                "fieldName":"enableAutoRefresh",
+                                "label":"Automatically refresh search results if the user pans or zooms"
+                        },
+                        {
+                        "type":"boolean",
+                                "fieldName":"rangeFlag",
+                                "label":"Add a Search Range to let users search a range of dates for images"
+                        },
+                        {
+                        "type":"boolean",
+                                "fieldName":"showFlag",
+                                "label":"Let users toggle between viewing images and footprints"
+                        },
+                        {
+                        "type":"options",
+                                "fieldName":"displayOptions",
+                                "tooltip":"Display search results on slider,dropdown, or both.",
+                                "label":"Decide how users choose which images to analyze:",
+                                "options":[
+                                {
+                                "label":"Slider",
+                                        "value":"slider"
+                                },
+                                {
+                                "label":"Dropdown List",
+                                        "value":"dropdown"
+                                },
+                                {
+                                "label":"Slider and Dropdown List",
+                                        "value":"both"
+                                }
+                                ]
+                        }
+
+
+
+                        ]
                 }
                 ]
-        },
-        {
-        "type":"paragraph",
-                "value":"<p style='text-align: justify;font-family: verdana;'>Image Date will display the date of the most central image from the active layer in the theme header next to the app name.</p>"
         },
         {
         "type":"conditional",
                 "condition":false,
                 "fieldName":"imageDateFlag",
-                "label":"Enable Image Date",
+                "label":"Show the active image's date in the app header",
                 "items":[
                 {
                 "type": "string",
@@ -426,15 +422,12 @@
                         }
                 }
                 ]
-        }, {
-        "type":"paragraph",
-                "value":"<p style='text-align:justify;font-family: verdana;'>The Image Measurement tool allows you to perform measurements on image services with mensuration capability. Mensuration applies geometric rules to find the height, area, or location of a feature.</p>"
         },
         {
         "type":"conditional",
                 "condition":false,
                 "fieldName":"measurementFlag",
-                "label":"Enable Image Measurement",
+                "label":"Add the Image Measurement tool",
                 "items":[
                 {
                 "type":"paragraph",
@@ -562,36 +555,28 @@
                 }
                 ]
         }
-        
+
         ]
 },
 {
 "category":"Operational Layers",
         "fields":[
-        {
-        "type":"paragraph",
-                "value":"<p style='text-align: justify;font-family: verdana;'>The Operational Layers tool allows users to change the visibility of non-imagery layers (feature layers or tile layers, for example), as well as to view the legend of each non-imagery layer. This tool is not required if the user will be working with one operational layer and not turning it on and off.</p>"
-        },
+
         {
         "type":"boolean",
                 "fieldName":"operationalLayersFlag",
-                "label":"Enable Operational Layers tool"
-        },
-        {
-        "type":"paragraph",
-                "value":"<p style='text-align:justify;font-family: verdana;margin-bottom:0px;'>The Editor tool allows users to edit feature layers (to pinpoint locations, delineate boundaries, or add additional notes, among other uses).<br><br><br>Enable the Editor tool and select the feature layers that users will be able to edit in-app. This tool requires <a href='http://doc.arcgis.com/en/arcgis-online/share-maps/manage-hosted-feature-layers.htm' target='_blank'>editable hosted feature layers</a> in the app's web map.</p>"
+                "label":"Add the Operational Layers tool so users can turn non-imagery layers on and off"
         },
         {
         "type":"conditional",
                 "condition":false,
                 "fieldName":"editFlag",
-                "label":"Enable Edit Tool",
+                "label":"Add the Editor tool so users can edit hosted feature layers in-app",
                 "items":[
                 {
-                "label":"Turn on the layers to allow editing.<br />For each editable feature layer, select the feature layer field in which to record the date from the active image. (optional)",
+                "label":"Turn on at least one feature layer(s) to allow editing.<br />Optional: Select a field to record the active image's date for each feature the user adds.",
                         "fieldName":"featureLayers",
                         "type":"multilayerandfieldselector",
-                        "tooltip":"Select the feature layer field in which to record the date from the active image.",
                         "layerOptions":{
                         "supportedTypes":[
                                 "FeatureLayer"
@@ -604,10 +589,9 @@
                         }
                 },
                 {
-                "label":"For each editable feature layer, select the feature layer field in which to record the height from the active image. (optional)",
+                "label":"Optional: Select a layer and field to record the active image's height for each feature the user adds(if the imagery supports it).",
                         "fieldName":"featureLayersHeightField",
                         "type":"multilayerandfieldselector",
-                        "tooltip":"Select the feature layer field in which to record the height from the active image.",
                         "layerOptions":{
                         "supportedTypes":[
                                 "FeatureLayer"
@@ -624,20 +608,20 @@
                         }
                 }
                 ]
+        },
+        {
+        "type":"paragraph",
+                "value":"<p style='text-align: justify;font-family: verdana;margin:20px 0px -10px; 0px;'><u>Note</u>:  The Editor tool requires <a href='http://doc.arcgis.com/en/arcgis-online/manage-data/manage-hosted-feature-layers.htm' target='_blank'>editable hosted feature layers</a> in the app's web map.</p>"
         }
         ]
 }, {
 "category": "Search",
         "fields": [
         {
-        "type":"paragraph",
-                "value":"<span style='text-align: justify;font-family: verdana;'>Enable search to allow users to find a location or data in the map. Configure the search settings to refine the experience in your app by setting the default search resource, placeholder text, etc.</span>"
-        },
-        {
         "type":"conditional",
                 "condition":false,
                 "fieldName":"search",
-                "label":"Enable search tool",
+                "label":"Add the Search tool so users can search for a location or data in the app",
                 "items":[
                 {
                 "type":"search",
@@ -675,7 +659,11 @@
                 "zoomLevel":8,
                 "searchScreenExtent":15,
                 "distinctImages": false,
-                "enableAutoRefresh": false,
+                "renderingFlag": false,
+                "advanceOptions":false,
+                "showFlag": false,
+                "rangeFlag":false,
+                "enableAutoRefresh": true,
                 "imageSelectorLayer":"[]",
                 "imageDateFlag":false,
                 "imageDateLabel":"",
