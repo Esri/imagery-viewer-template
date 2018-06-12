@@ -117,8 +117,9 @@ define([
             registry.byId("show").on("change", lang.hitch(this, function (value) {
                 this.leftLayerInfos[this.primaryLayer.id].type = value;
                 if (value === "image") {
-                    if (!this.primaryLayer.visible)
+                    if (!this.primaryLayer.visible){
                         this.primaryLayer.show();
+                    }
                 } else
                     this.primaryLayer.hide();
                 this.valueSelected = registry.byId("imageSelectorDropDown").get("value");
@@ -127,8 +128,10 @@ define([
             registry.byId("showRight").on("change", lang.hitch(this, function (value) {
                 this.rightLayerInfos[this.secondaryLayer.id].type = value;
                 if (value === "image") {
-                    if (!this.secondaryLayer.visible)
+                    if (!this.secondaryLayer.visible){
                         this.secondaryLayer.show();
+                         
+                    }
                 } else
                     this.secondaryLayer.hide();
                 this.valueSelectedRight = registry.byId("imageSelectorDropDownRight").get("value");
@@ -1456,14 +1459,20 @@ define([
         },
         refreshSwipe: function () {
             if (this.primaryLayer || this.secondaryLayer) {
-                if (this.primaryLayer && this.secondaryLayer && this.primaryLayer.id === this.secondaryLayer.id.split("_RightLayer")[0] && (JSON.stringify(this.primaryLayer.mosaicRule) === JSON.stringify(this.secondaryLayer.mosaicRule) || (!this.primaryLayer.mosaicRule && JSON.stringify(this.primaryLayer.defaultMosaicRule) === JSON.stringify(this.secondaryLayer.mosaicRule))) && (JSON.stringify(this.primaryLayer.renderingRule) === JSON.stringify(this.secondaryLayer.renderingRule))) {
-                    document.getElementById("errorSwipeDiv").innerHTML = this.i18n.identicalLayerError;
+                
+                if (this.primaryLayer && this.secondaryLayer && (this.primaryLayer.id === this.secondaryLayer.id.split("_RightLayer")[0] && (JSON.stringify(this.primaryLayer.mosaicRule) === JSON.stringify(this.secondaryLayer.mosaicRule) || (!this.primaryLayer.mosaicRule && JSON.stringify(this.primaryLayer.defaultMosaicRule) === JSON.stringify(this.secondaryLayer.mosaicRule))) && (JSON.stringify(this.primaryLayer.renderingRule) === JSON.stringify(this.secondaryLayer.renderingRule)) || !this.primaryLayer.visible || !this.secondaryLayer.visible)) {
                     if (this.layerSwipe) {
                         this.swipePosition = this.layerSwipe.domNode.children[0].offsetLeft;
                         this.layerSwipe.destroy();
                         this.layerSwipe = null;
                     }
+                    if(this.primaryLayer.visible && this.secondaryLayer.visible){
+                    document.getElementById("errorSwipeDiv").innerHTML = this.i18n.identicalLayerError;
                     this.previousLayerInfo = {primary: this.primaryLayer ? {id: this.primaryLayer.id, mosaicRule: this.primaryLayer.mosaicRule, renderer : this.primaryLayer.renderingRule} : {id: null, mosaicRule: null, renderer: null}, secondary: this.secondaryLayer ? {id: this.secondaryLayer.id, mosaicRule: this.secondaryLayer.mosaicRule, renderer: this.secondaryLayer.renderingRule} : {id: null, mosaicRule: null, renderer:null}};
+                }else {
+                    document.getElementById("errorSwipeDiv").innerHTML = "";    
+                    this.previousLayerInfo = {primary: {id: null, mosaicRule: null, renderer: null}, secondary:  {id: null, mosaicRule: null, renderer:null}};
+                }
                 } else {
                     document.getElementById("errorSwipeDiv").innerHTML = "";
                     if ((this.primaryLayer && (this.primaryLayer.id !== this.previousLayerInfo.primary.id || JSON.stringify(this.primaryLayer.mosaicRule) !== JSON.stringify(this.previousLayerInfo.primary.mosaicRule) || JSON.stringify(this.primaryLayer.renderingRule) !== JSON.stringify(this.previousLayerInfo.primary.renderer))) || (this.secondaryLayer && (this.secondaryLayer.id !== this.previousLayerInfo.secondary.id || JSON.stringify(this.secondaryLayer.mosaicRule) !== JSON.stringify(this.previousLayerInfo.secondary.mosaicRule) || JSON.stringify(this.secondaryLayer.renderingRule) !== JSON.stringify(this.previousLayerInfo.secondary.renderer))) || (!this.primaryLayer && this.previousLayerInfo.primary.id) || (!this.secondaryLayer && this.previousLayerInfo.secondary.id)) {
