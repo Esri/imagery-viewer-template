@@ -20,7 +20,7 @@ define([
     "dojo/_base/lang",
     "dojo/_base/kernel",
     "dojo/on",
-    "dojo/query", "dijit/focus",
+    "dojo/query", "dijit/focus","dojo/dom-attr",
     "dojo/Deferred",
     "esri/dijit/Scalebar",
     "esri/dijit/Search", "esri/tasks/locator", "application/SearchSources",
@@ -39,7 +39,7 @@ define([
     "dojo/domReady!"
 ], function (
         declare, lang, kernel,
-        on, query, focus,
+        on, query, focus,domAttr,
         Deferred, Scalebar, Search, Locator, SearchSources,
         dom, ArcGISImageServiceLayer, domConstruct, domStyle, html, domClass, Dialog, parser,
         registry, exportHtml, bookmarkHtml, singleLayerViewerHtml, twoLayerViewerHtml, Tooltip,
@@ -196,6 +196,8 @@ define([
                 this.findAndReplaceCacheImageService();
                 window.addEventListener("resize", lang.hitch(this, this.resizeTemplate));
                 this.dockToolsActive = 0;
+                 
+               
                 if (this.config.basemapFlag) {
                     this.dockToolsActive++;
                     domStyle.set("dockContainer", "display", "block");
@@ -262,14 +264,14 @@ define([
                     this.setupBookmark();
                 } else
                     domStyle.set("bookmarkContainer", "display", "none");
-                if (this.config.aboutFlag)
+               
+               if (this.config.aboutFlag)
                 {
-                    this.dockToolsActive++;
                     domStyle.set("aboutContainer", "display", "block");
                     this.setupAbout();
                 } else
                     domStyle.set("aboutContainer", "display", "none");
-
+                
                 this.setVisibilityEventOnImageryLayer();
                 this._setupAppTools();
                 this._updateTheme();
@@ -552,9 +554,11 @@ define([
                 content: "<div id='aboutDivContainer'></div>",
                 style: "background-color:white;",
                 id: "aboutDialog",
-                draggable: false
+                draggable: false,
+                onFocus: function(){}
             });
-            aboutDialog.closeButtonNode.tabIndex = 0;
+                
+                domAttr.remove(aboutDialog.closeButtonNode,"tabIndex");
             new Tooltip({
                 connectId: ["aboutContainer"],
                 label: this.config.i18n.about.title,
@@ -582,6 +586,7 @@ define([
                         domClass.add("aboutIconNode", "aboutSelected");
                         registry.byId("aboutDialog").show();
                         domConstruct.destroy("aboutDialog_underlay");
+
                         if (window.document.dir === "ltr") {
                             domStyle.set("aboutDialog", "left", "auto");
                             domStyle.set("aboutDialog", "right", "20px");
