@@ -16,7 +16,11 @@
  */
 define({
   "map": {
-    "error": "Kan ikke oprette kort"
+    "error": "Kan ikke oprette kort",
+    "licenseError": {
+      "message": "Din konto har ikke licens til at bruge Konfigurérbare apps, der ikke er offentlige. Bed din organisationsadministrator om at knytte dig til en brugertype, der omfatter Essential Apps eller en add-on Essential Apps-licens.",
+      "title": "Ikke licenseret"
+    }
   },
   "nav": {
     "close": "Luk"
@@ -28,40 +32,18 @@ define({
     "title": "Operationelle lag",
     "error": "Ingen operationelle lag i kortet."
   },
-  "layerSelector": {
-    "active": "Aktivt lag",
-    "comparison": "Sammenligningslag",
-    "other": "Andet",
-    "result": "Resultat",
-    "title": "Lagvælger",
-    "resultSave": "Tilføj resultatlaget i listen med sammenligningslag",
-    "copy": "Kopiér det aktive lag til sammenligningslaget.",
-    "swap": "Ombyt det aktive lag og sammenligningslaget."
-  },
-  "renderer": {
-    "title": "Gengivelsesværktøj",
-    "stretch": "Stretch-parametre",
-    "stretchType": "Stretch-type:",
-    "dra": "DRA",
-    "draText": "Forbedrede Dynamisk justering af område-opdateringer baseret på den aktuelle visning",
-    "gamma": "Gamma",
-    "apply": "Anvend",
-    "top": "Udeluk top",
-    "bottom": "Udeluk bund",
-    "topText": " Udeluk top x-procent af histogram",
-    "bottomText": " Udeluk bund x-procent af histogram",
-    "stdDev": "# af std.-afvigelse",
-    "layer": "Aktuelt lag",
-    "error": "Ingen synlige billedlag i kortet."
-  },
-  "imageSelector": {
-    "title": "Billedvælger",
-    "enable": "Aktivér billedvælger",
+  "singleLayerViewer": {
+    "title": "Billedlagsvælger",
+    "enable": "Søg efter individuelle billeder",
+    "tooltip": "Aktivér søgning efter bestemte billeder.",
     "secondary": "Indstil det aktive lag som sammenligningslag.",
     "dropDown": "Vis billeder i rulleliste.",
-    "refresh": "Opdatér forespørgsel baseret på den aktuelle udstrækning.",
+    "refresh": "Knappen Opdatér",
+    "refreshTooltip": "Opdatér forespørgsel baseret på den aktuelle udstrækning.",
+    "renderer": "Gengivelse",
+    "layer": "Lag",
     "show": "Vis",
-    "age": "Alder",
+    "age": "Søgeområde",
     "zoom": "Zoom ind for at vælge billeder.",
     "error": "Ingen synlige billedlag i kortet.",
     "error1": "Felt er ikke specificeret.",
@@ -70,24 +52,58 @@ define({
     "error4": "Kan ikke udføre handling for laget.",
     "error5": "Tjenester før version 10.2.1 understøttes ikke.",
     "error6": "Ingen scener i aktuel udstrækning.",
-    "error7": "Det valgte antal fodaftryk overskrider 20. Kun de første 20 fodaftryk vises. Tryk på OK for ikke at advare igen.",
-    "slider": "Vis billeder på skyder."
+    "error7": "Det valgte antal fodaftryk overskrider 20. Kun de første 20 fodaftryk vises. Tryk på OK for ikke at få denne advarsel igen.",
+    "slider": "Vis billeder på skyder.",
+    "ageOption1": "Dag(e)",
+    "ageOption2": "Uge(r)",
+    "ageOption3": "Måned(er)",
+    "ageOption4": "År",
+    "showOption1": "Billede",
+    "showOption2": "Fodaftryk",
+    "date": "Dato(er)",
+    "imageLabel": "billede(r)",
+    "default": "Standard"
   },
-  "changeDetection": {
-    "title": "Ændringsdetektering",
-    "mode": "Tilstand",
-    "method": "Metode",
-    "positive": "Positiv forskel",
-    "negative": "Negativ forskel",
-    "threshold": "Tærskel",
-    "difference": "Forskel",
-    "apply": "Anvend",
-    "error": "Ændringsdetektering arbejder med to billeder fra forskellige datoer fra den samme tjeneste.<br />Brug først Billedvælgeren til at definere det ene billede,<br />klik derefter på knappen <img src='images/down.png' height='14'/>, og vælg det andet billede.<br />Returnér til dette kontrolelement for at fortsætte med ændringsdetektering."
+  "twoLayerViewer": {
+    "title": "Lagvælger",
+    "enable": "Søg efter individuelle billeder",
+    "tooltip": "Aktivér søgning efter bestemte billeder.",
+    "secondary": "Indstil det aktive lag som sammenligningslag.",
+    "dropDown": "Vis billeder i rulleliste.",
+    "refresh": "Knappen Opdatér",
+    "refreshTooltip": "Opdatér forespørgsel baseret på den aktuelle udstrækning.",
+    "renderer": "Gengivelse",
+    "layer": "Lag",
+    "show": "Vis",
+    "age": "Søgeområde",
+    "zoom": "Zoom ind for at vælge billeder.",
+    "error": "Ingen synlige billedlag i kortet.",
+    "error1": "Felt er ikke specificeret.",
+    "error2": "Intet OBJECTID-felt.",
+    "error3": "Intet kategorifelt.",
+    "error4": "Kan ikke udføre handling for laget.",
+    "error5": "Tjenester før version 10.2.1 understøttes ikke.",
+    "error6": "Ingen scener i aktuel udstrækning.",
+    "error7": "Det valgte antal fodaftryk overskrider 20. Kun de første 20 fodaftryk vises. Tryk på OK for ikke at få denne advarsel igen.",
+    "slider": "Vis billeder på skyder.",
+    "ageOption1": "Dag(e)",
+    "ageOption2": "Uge(r)",
+    "ageOption3": "Måned(er)",
+    "ageOption4": "År",
+    "showOption1": "Billede",
+    "showOption2": "Fodaftryk",
+    "left": "Venstre billede",
+    "right": "Højre billede",
+    "identicalLayerError": "Venstre og højre billede er identiske.",
+    "date": "Dato(er)",
+    "imageLabel": "billede(r)",
+    "default": "Standard"
   },
   "editor": {
     "title": "Redigering",
-    "error": "Intet redigeringslag valgt.",
-    "error1": "Adgang nægtet. Lagene kan ikke redigeres."
+    "error": "Der blev ikke fundet noget redigeringslag.",
+    "error1": "Adgang nægtet. Lagene kan ikke redigeres.",
+    "text": "Vælg et symbol, og klik på kortet."
   },
   "measurement": {
     "title": "Billedmåling",
@@ -95,25 +111,50 @@ define({
   },
   "export": {
     "title": "Eksportér",
-    "mode": "Tilstand",
-    "titleText": "Titel",
+    "mode": "Gem position",
+    "titleText": "Titel (obligatorisk)",
     "description": "Beskrivelse",
-    "tags": "\"Tags\"",
-    "submit": "Send",
+    "tags": "Nøgleord (obligatorisk)",
+    "preview": "Eksempel",
+    "submit": "Gem",
+    "cancel": "Annuller",
     "pixel": "Pixelstørrelse",
     "outsr": "Output-spatial reference",
-    "renderer": "Aktuelt gengivelsesværktøj",
-    "extent": "Definér udstrækning",
-    "text": "Hvis Aktuelt gengivelsesværktøj markeres, eksporteres gengivelsen<br />, ellers vil de oprindelige dataværdier<br/>blive eksporteret.",
+    "renderer": "TIFF-downloadindstillinger",
+    "formatText1": "Som vist",
+    "formatText2": "Rå data (alle bånd)",
+    "extent": "Tegn polygon for at definere udstrækning",
+    "drawText": "(klik på billede for at starte)",
+    "text": "De rå data kan ikke vises med standard-fotovisningsprogrammer. Åbn med ArcGIS Pro.",
     "error": "Ingen synlige billedlag på kortet.",
     "error1": "Titel er påkrævet.",
-    "error2": "Nøgleord er påkrævet."
+    "error2": "Nøgleord er påkrævet.",
+    "error3": "Pixelstørrelsen på eksporten er begrænset til",
+    "error4": "for denne udstrækning",
+    "error5": "Angiv en gyldig numerisk værdi.",
+    "error6": "Dit billede kan ikke eksporteres på nuværende tidspunkt.",
+    "thumbnailError": "Intet miniaturebillede er tilgængeligt",
+    "advance": "Avancerede lagringsindstillinger",
+    "modeOption1": "Gem på portal",
+    "modeOption2": "Gem på disk",
+    "default": "Standard",
+    "utm": "WGS84 UTM zone",
+    "layer": "Lag",
+    "mercator": "WebMercatorAS",
+    "folder": "Vælg mappe"
   },
-  "compare": {
-    "title": "Sammenlign",
-    "slider": "Skydekontrol for gennemsigtighed",
-    "hSwipe": "Stryg vandret",
-    "vSwipe": "Stryg lodret",
-    "error": "Ingen synlige billedlag findes til sammenligning."
+  "imageDate": {
+    "label": "Billeddato"
+  },
+  "about": {
+    "title": "Om"
+  },
+  "bookmark": {
+    "title": "Bogmærker",
+    "selectBookmark": "Vælg bogmærker",
+    "default": "Standard",
+    "add": "Tilføj bogmærker",
+    "addTitle": "Indtast titel",
+    "addBtn": "Tilføj midlertidig"
   }
 });

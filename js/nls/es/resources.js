@@ -16,7 +16,11 @@
  */
 define({
   "map": {
-    "error": "No se puede crear el mapa"
+    "error": "No se puede crear el mapa",
+    "licenseError": {
+      "message": "Su cuenta no tiene licencia para utilizar aplicaciones configurables que no son públicas. Pídale al administrador de su organización que le asigne un tipo de usuario que incluya aplicaciones esenciales o una licencia complementaria de aplicaciones esenciales.",
+      "title": "Sin licencia"
+    }
   },
   "nav": {
     "close": "Cerrar"
@@ -28,40 +32,18 @@ define({
     "title": "Capas operativas",
     "error": "No hay capas operativas en el mapa."
   },
-  "layerSelector": {
-    "active": "Capa activa",
-    "comparison": "Capa de comparación",
-    "other": "Otro",
-    "result": "Resultado",
-    "title": "Selector de capas",
-    "resultSave": "Agregar la capa Resultado a la lista de capas de comparación",
-    "copy": "Copiar la capa activa a la capa de comparación.",
-    "swap": "Intercambiar la capa activa y la capa de comparación."
-  },
-  "renderer": {
-    "title": "Renderizador",
-    "stretch": "Parámetros de extensión",
-    "stretchType": "Tipo de extensión",
-    "dra": "DRA",
-    "draText": "Realce de las actualizaciones de Ajuste de rango dinámico en la vista actual",
-    "gamma": "Gamma",
-    "apply": "Aplicar",
-    "top": "Excluir superior",
-    "bottom": "Excluir inferior",
-    "topText": " Excluir el x por ciento superior del histograma",
-    "bottomText": " Excluir el x por ciento inferior del histograma",
-    "stdDev": "N.º de desv. est.",
-    "layer": "Capa actual",
-    "error": "Capas de imágenes no visibles en el mapa."
-  },
-  "imageSelector": {
-    "title": "Selector de imágenes",
-    "enable": "Activar selector de imágenes",
+  "singleLayerViewer": {
+    "title": "Selector de capas de imágenes",
+    "enable": "Buscar imágenes individuales",
+    "tooltip": "Habilítelo para buscar imágenes específicas.",
     "secondary": "Usar la activa como Capa de comparación.",
     "dropDown": "Mostrar imágenes en la lista desplegable.",
-    "refresh": "Actualizar la consulta basándose en la extensión actual.",
+    "refresh": "Botón Refrescar",
+    "refreshTooltip": "Actualizar la consulta basándose en la extensión actual.",
+    "renderer": "Representación",
+    "layer": "Capa",
     "show": "Mostrar",
-    "age": "Edad",
+    "age": "Rango de búsqueda",
     "zoom": "Acercar para seleccionar imágenes.",
     "error": "Capas de imágenes no visibles en el mapa.",
     "error1": "Campo no especificado.",
@@ -71,23 +53,57 @@ define({
     "error5": "Servicios anteriores a 10.2.1 no compatibles.",
     "error6": "Sin escenas en la extensión actual.",
     "error7": "El número de huellas seleccionadas rebasa las 20. Solo se visualizarán las primeras 20. Pulse Aceptar para no volver a ver esta advertencia.",
-    "slider": "Mostrar imágenes en un control deslizante."
+    "slider": "Mostrar imágenes en un control deslizante.",
+    "ageOption1": "Días",
+    "ageOption2": "Semana(s)",
+    "ageOption3": "Mes(es)",
+    "ageOption4": "Año(s)",
+    "showOption1": "Imagen",
+    "showOption2": "Huella",
+    "date": "Fecha(s)",
+    "imageLabel": "imagen(es)",
+    "default": "Predeterminado"
   },
-  "changeDetection": {
-    "title": "Detección de cambio",
-    "mode": "Modo",
-    "method": "Método",
-    "positive": "Diferencia positiva",
-    "negative": "Diferencia negativa",
-    "threshold": "Umbral",
-    "difference": "Diferencia",
-    "apply": "Aplicar",
-    "error": "La Detección de cambios funciona con dos imágenes de distintas fechas y del mismo servicio.<br />Primero use el Selector de imágenes para definir una imagen,<br />luego haga clic en el botón <img src='images/down.png' height='14'/>y seleccione la segunda imagen.<br />Vuelva a este control para ejecutar la detección de cambio."
+  "twoLayerViewer": {
+    "title": "Selector de capas",
+    "enable": "Buscar imágenes individuales",
+    "tooltip": "Habilítelo para buscar imágenes específicas.",
+    "secondary": "Usar la activa como Capa de comparación.",
+    "dropDown": "Mostrar imágenes en la lista desplegable.",
+    "refresh": "Botón Refrescar",
+    "refreshTooltip": "Actualizar la consulta basándose en la extensión actual.",
+    "renderer": "Representación",
+    "layer": "Capa",
+    "show": "Mostrar",
+    "age": "Rango de búsqueda",
+    "zoom": "Acercar para seleccionar imágenes.",
+    "error": "Capas de imágenes no visibles en el mapa.",
+    "error1": "Campo no especificado.",
+    "error2": "Sin campo OBJECTID.",
+    "error3": "Sin campo Categoría.",
+    "error4": "Imposible realizar una acción para la capa.",
+    "error5": "Servicios anteriores a 10.2.1 no compatibles.",
+    "error6": "Sin escenas en la extensión actual.",
+    "error7": "El número de huellas seleccionadas rebasa las 20. Solo se visualizarán las primeras 20. Pulse Aceptar para no volver a ver esta advertencia.",
+    "slider": "Mostrar imágenes en un control deslizante.",
+    "ageOption1": "Días",
+    "ageOption2": "Semana(s)",
+    "ageOption3": "Mes(es)",
+    "ageOption4": "Año(s)",
+    "showOption1": "Imagen",
+    "showOption2": "Huella",
+    "left": "Imagen izquierda",
+    "right": "Imagen derecha",
+    "identicalLayerError": "Las imágenes izquierda y derecha son idénticas.",
+    "date": "Fecha(s)",
+    "imageLabel": "imagen(es)",
+    "default": "Predeterminado"
   },
   "editor": {
     "title": "Editor",
-    "error": "No seleccionó ninguna capa de edición.",
-    "error1": "Acceso denegado. No es posible editar las capas."
+    "error": "No se encontró ninguna capa de edición.",
+    "error1": "Acceso denegado. Las capas no se pueden editar.",
+    "text": "Seleccione un símbolo y haga clic en el mapa."
   },
   "measurement": {
     "title": "Medición de imagen",
@@ -95,25 +111,50 @@ define({
   },
   "export": {
     "title": "Exportar",
-    "mode": "Modo",
-    "titleText": "Título",
+    "mode": "Guardar ubicación",
+    "titleText": "Título (obligatorio)",
     "description": "Descripción",
-    "tags": "Etiquetas",
-    "submit": "Enviar",
+    "tags": "Etiquetas (obligatorias)",
+    "preview": "Previsualización",
+    "submit": "Guardar",
+    "cancel": "Cancelar",
     "pixel": "Tamaño de píxel",
     "outsr": "Referencia espacial de salida",
-    "renderer": "Renderizador actual",
-    "extent": "Definir extensión",
-    "text": "Si Renderizador actual está activado, se exporta la representación en pantalla<br />; de lo contrario, se exportan los valores originales de los datos<br/>.",
+    "renderer": "Opciones de descarga de TIFF",
+    "formatText1": "Como se muestra",
+    "formatText2": "Datos sin procesar (todas las bandas)",
+    "extent": "Dibujar polígono para definir la extensión",
+    "drawText": "(haga clic en la imagen para empezar)",
+    "text": "No es posible mostrar los datos sin procesar con visores de imágenes estándar. Abrir con ArcGIS Pro.",
     "error": "No hay capas de imágenes visibles en el mapa.",
     "error1": "Se requiere un título.",
-    "error2": "Se requieren una o varias etiquetas."
+    "error2": "Se requieren una o varias etiquetas.",
+    "error3": "Valor PixelSize de la exportación restringido a",
+    "error4": "para esta extensión.",
+    "error5": "Introduzca un valor numérico válido.",
+    "error6": "No es posible exportar su imagen en estos momentos.",
+    "thumbnailError": "Vista en miniatura no disponible",
+    "advance": "Opciones avanzadas de guardado",
+    "modeOption1": "Guardar en el portal",
+    "modeOption2": "Guardar en el disco",
+    "default": "Predeterminado",
+    "utm": "Zona UTM WGS84",
+    "layer": "Capa",
+    "mercator": "WebMercatorAS",
+    "folder": "Seleccionar carpeta"
   },
-  "compare": {
-    "title": "Comparar",
-    "slider": "Control deslizante de transparencia",
-    "hSwipe": "Barrido horizontal",
-    "vSwipe": "Barrido vertical",
-    "error": "No hay capas de imágenes visibles disponibles para su comparación."
+  "imageDate": {
+    "label": "Fecha de imágenes"
+  },
+  "about": {
+    "title": "Acerca de"
+  },
+  "bookmark": {
+    "title": "Marcadores",
+    "selectBookmark": "Seleccionar marcadores",
+    "default": "Predeterminado",
+    "add": "Agregar marcadores",
+    "addTitle": "Introducir título",
+    "addBtn": "Agregar temporal"
   }
 });

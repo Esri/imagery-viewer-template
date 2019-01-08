@@ -16,52 +16,34 @@
  */
 define({
   "map": {
-    "error": "Impossibile creare la mappa"
+    "error": "Impossibile creare la mappa",
+    "licenseError": {
+      "message": "L’account non dispone della licenza per l’uso di app configurabili non pubbliche. È necessario richiedere all’amministratore dell'organizzazione l’assegnazione di un tipo di utente che includa le app essenziali o una licenza aggiuntiva per le app essenziali.",
+      "title": "Non Licenziato"
+    }
   },
   "nav": {
-    "close": "Chiudi"
+    "close": "Chiudere"
   },
   "basemap": {
-    "title": "Galleria di mappe di base"
+    "title": "Galleria di basemap"
   },
   "operationalLayers": {
     "title": "Layer operativi",
     "error": "Nessun layer operativo nella mappa."
   },
-  "layerSelector": {
-    "active": "Layer attivo",
-    "comparison": "Layer di confronto",
-    "other": "Altro",
-    "result": "Risultato",
-    "title": "Selettore layer",
-    "resultSave": "Aggiungi il layer del risultato nell’elenco dei layer di confronto",
-    "copy": "Copia layer attivo nel layer di confronto.",
-    "swap": "Passa al layer attivo e di confronto."
-  },
-  "renderer": {
-    "title": "Renderer",
-    "stretch": "Parametri di estensione",
-    "stretchType": "Tipo di estensione",
-    "dra": "DRA",
-    "draText": "La regolazione dell’intervallo dinamico aggiorna i miglioramenti sulla base della vista attuale",
-    "gamma": "Gamma",
-    "apply": "Applica",
-    "top": "Escludi parte superiore",
-    "bottom": "Escludi parte inferiore",
-    "topText": " Escludi parte superiore per percentuale di istogramma",
-    "bottomText": " Escludi parte inferiore per percentuale di istogramma",
-    "stdDev": "# di dev. std.",
-    "layer": "Layer corrente",
-    "error": "Nessun layer di immagine visibile nella mappa."
-  },
-  "imageSelector": {
-    "title": "Selettore immagini",
-    "enable": "Attiva selettore immagini",
+  "singleLayerViewer": {
+    "title": "Selettore di Imagery layer",
+    "enable": "Cerca immagini singole",
+    "tooltip": "Abilitare la ricerca di immagini specifiche.",
     "secondary": "Imposta attivo come layer di confronto.",
     "dropDown": "Mostra immagini nell’elenco a discesa.",
-    "refresh": "Aggiorna query sulla base dell'estensione attuale.",
+    "refresh": "Pulsante Aggiorna",
+    "refreshTooltip": "Aggiorna query sulla base dell'estensione attuale.",
+    "renderer": "Rendering",
+    "layer": "Layer",
     "show": "Mostra",
-    "age": "Età",
+    "age": "Cerca gamma",
     "zoom": "Effettua uno zoom in sulle immagini selezionate.",
     "error": "Nessun layer di immagine visibile nella mappa.",
     "error1": "Campo non specificato.",
@@ -70,24 +52,58 @@ define({
     "error4": "Impossibile eseguire un’azione per il layer.",
     "error5": "Servizi precedenti alla versione 10.2.1 non supportati.",
     "error6": "Nessuna scena nell’estensione attuale.",
-    "error7": "Il numero di footprint selezionati supera 20. Solo i primi 20 vengono visualizzati. Premere OK per non mostrare più l'avviso.",
-    "slider": "Mostra immagini sul cursore."
+    "error7": "Il numero di aree occupate selezionate supera i 20. Vengono visualizzate solo le prime 20. Premere OK per non avvisare di nuovo.",
+    "slider": "Mostra immagini sul cursore.",
+    "ageOption1": "Giorno/i",
+    "ageOption2": "Settimana/e",
+    "ageOption3": "Mese/i",
+    "ageOption4": "Anno/i",
+    "showOption1": "Immagine",
+    "showOption2": "Footprint",
+    "date": "Data/i",
+    "imageLabel": "immagine/i",
+    "default": "Predefinito"
   },
-  "changeDetection": {
-    "title": "Modifica rilevamento",
-    "mode": "Modalità",
-    "method": "Metodo",
-    "positive": "Differenza positiva",
-    "negative": "Differenza negativa",
-    "threshold": "Soglia",
-    "difference": "Differenza",
-    "apply": "Applica",
-    "error": "L’opzione Modifica rilevamento funziona con due immagini di date diverse dallo stesso servizio.<br />Utilizzare prima il Selettore immagini per definire un’immagine,<br />quindi fare clic sul tasto <img src='images/down.png' height='14'/> e selezionare la seconda immagine.<br />Tornare in questa impostazione per procedere con la modifica."
+  "twoLayerViewer": {
+    "title": "Selettore layer",
+    "enable": "Cerca immagini singole",
+    "tooltip": "Abilitare la ricerca di immagini specifiche.",
+    "secondary": "Imposta attivo come layer di confronto.",
+    "dropDown": "Mostra immagini nell’elenco a discesa.",
+    "refresh": "Pulsante Aggiorna",
+    "refreshTooltip": "Aggiorna query sulla base dell'estensione attuale.",
+    "renderer": "Rendering",
+    "layer": "Layer",
+    "show": "Mostra",
+    "age": "Cerca gamma",
+    "zoom": "Effettua uno zoom in sulle immagini selezionate.",
+    "error": "Nessun layer di immagine visibile nella mappa.",
+    "error1": "Campo non specificato.",
+    "error2": "Nessun campo OBJECTID.",
+    "error3": "Nessun campo categoria.",
+    "error4": "Impossibile eseguire un’azione per il layer.",
+    "error5": "Servizi precedenti alla versione 10.2.1 non supportati.",
+    "error6": "Nessuna scena nell’estensione attuale.",
+    "error7": "Il numero di aree occupate selezionate supera i 20. Vengono visualizzate solo le prime 20. Premere OK per non avvisare di nuovo.",
+    "slider": "Mostra immagini sul cursore.",
+    "ageOption1": "Giorno/i",
+    "ageOption2": "Settimana/e",
+    "ageOption3": "Mese/i",
+    "ageOption4": "Anno/i",
+    "showOption1": "Immagine",
+    "showOption2": "Footprint",
+    "left": "Immagine sinistra",
+    "right": "Immagine destra",
+    "identicalLayerError": "Le immagini sinistra e destra sono identiche.",
+    "date": "Data/i",
+    "imageLabel": "immagine/i",
+    "default": "Predefinito"
   },
   "editor": {
     "title": "Editor",
-    "error": "Nessun layer di modifica selezionato.",
-    "error1": "Accesso negato. I layer non possono essere modificati."
+    "error": "Nessun layer di modifica trovato.",
+    "error1": "Accesso negato. Impossibile modificare i layer.",
+    "text": "Selezionare un simbolo e fare clic sulla mappa."
   },
   "measurement": {
     "title": "Misurazione immagine",
@@ -95,25 +111,50 @@ define({
   },
   "export": {
     "title": "Esporta",
-    "mode": "Modalità",
-    "titleText": "Titolo",
+    "mode": "Salva posizione",
+    "titleText": "Titolo (obbligatorio)",
     "description": "Descrizione",
-    "tags": "Tag",
-    "submit": "Invia",
+    "tags": "Tag (obbligatori)",
+    "preview": "Anteprima",
+    "submit": "Salva",
+    "cancel": "Cancella",
     "pixel": "Dimensione pixel",
     "outsr": "Riferimento spaziale di output",
-    "renderer": "Renderer attuale",
-    "extent": "Definisci estensione",
-    "text": "Se il Renderer attuale viene selezionato, il rendering<br /> viene esportato, insieme ai valori dei dati originali<br/>.",
+    "renderer": "Opzioni di download TIFF",
+    "formatText1": "Come mostrato",
+    "formatText2": "Dati grezzi (tutte le bande)",
+    "extent": "Disegna poligono per definire l'estensione",
+    "drawText": "(fai clic sull’immagine per iniziare)",
+    "text": "I dati grezzi non possono essere visualizzati con dei visualizzatori di foto standard. Apri con ArcGIS Pro.",
     "error": "Nessun layer di immagine visibile nella mappa.",
     "error1": "Titolo obbligatorio.",
-    "error2": "Tag obbligatori."
+    "error2": "Tag obbligatori.",
+    "error3": "PixelSize di esportazione è limitato a",
+    "error4": "per questa estensione.",
+    "error5": "Immettere un valore numerico valido.",
+    "error6": "L’immagine non può essere esportata al momento.",
+    "thumbnailError": "Nessuna anteprima disponibile",
+    "advance": "Opzioni di salvataggio avanzate",
+    "modeOption1": "Salva sul portale",
+    "modeOption2": "Salva sul disco",
+    "default": "Predefinito",
+    "utm": "Zona UTM WGS84",
+    "layer": "Layer",
+    "mercator": "WebMercatorAS",
+    "folder": "Seleziona cartella"
   },
-  "compare": {
-    "title": "Confronta",
-    "slider": "Cursore trasparenza",
-    "hSwipe": "Scorrimento orizzontale",
-    "vSwipe": "Scorrimento verticale",
-    "error": "Nessun layer di immagine visibile disponibile per il confronto."
+  "imageDate": {
+    "label": "Data immagine"
+  },
+  "about": {
+    "title": "Informazioni su"
+  },
+  "bookmark": {
+    "title": "Segnalibri",
+    "selectBookmark": "Seleziona segnalibri",
+    "default": "Predefinito",
+    "add": "Aggiungi segnalibri",
+    "addTitle": "Immettere titolo",
+    "addBtn": "Aggiungi temporaneo"
   }
 });

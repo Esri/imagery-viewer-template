@@ -84,6 +84,7 @@ define([
         mapZoomFactor: 2.0,
         previousValue: null,
         mapWidthPanFactor: 0.75,
+        worldImagery: "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer",
         postCreate: function () {
             domConstruct.place('<img id="loadingSingleLayerViewer" style="position: absolute;top:0;bottom: 0;left: 0;right: 0;margin:auto;z-index:100;" src="images/loading.gif">', "layerViewerNode");
             domStyle.set("loadingSingleLayerViewer", "display", "none");
@@ -215,16 +216,24 @@ define([
                 this.primaryLayer.hide();
             if (value === "none") {
                 this.primaryLayer = null;
+                this.map.primaryLayer = null;
                 domStyle.set("imageSelectCheckBox", "display", "none");
                 domStyle.set("renderer", "display", "none");
                 registry.byId("imageSelector").set("checked", false);
             } else {
                 this.valueSelected = null;
                 this.primaryLayer = this.map.getLayer(value);
+                this.map.primaryLayer = value;
                 this.primaryLayer.show();
                 if (!this.layerInfos[value].imageSelector) {
                     domStyle.set("imageSelectCheckBox", "display", "none");
                     registry.byId("imageSelector").set("checked", false);
+                    this.defaultMosaicRule = this.layerInfos[value].defaultMosaicRule;
+                    this.defaultRenderer = this.layerInfos[value].defaultRenderer;
+                    this.defaultBandIds = this.layerInfos[value].defaultBandIds;
+                    this.defaultRenderingRule = this.layerInfos[value].defaultRenderingRule;
+                    if(this.config.showRendering)
+                    this.populateRendererList();
                 } else {
                     domStyle.set("imageSelectCheckBox", "display", "block");
                     this.defaultMosaicRule = this.layerInfos[value].defaultMosaicRule;
@@ -316,7 +325,7 @@ define([
                         registry.byId("imageSelector").set("checked", false);
                         registry.byId("imageSelector").set("disabled", true);
                         if (!this.layerInfos[this.primaryLayer.id].imageField) {
-                            html.set(document.getElementById("errorDiv"), this.i18n.error1);
+                            html.set(document.getElementById("errorDiv"), "");
                         } else if (!this.layerInfos[this.primaryLayer.id].objectID) {
                             html.set(document.getElementById("errorDiv"), this.i18n.error2);
                         } else {
@@ -456,7 +465,7 @@ define([
                 query.outFields = [this.imageField];
                 if (this.layerInfos[this.primaryLayer.id].defaultMosaicRule && this.layerInfos[this.primaryLayer.id].defaultMosaicRule.where)
                     var layerFilter = this.layerInfos[this.primaryLayer.id].defaultMosaicRule.where;
-                query.where = layerFilter ? this.categoryField + " = 1 AND " + layerFilter : this.categoryField + " = 1";
+                query.where = layerFilter ? this.categoryField + " = 1 AND (" + layerFilter+")" : this.categoryField + " = 1";
                 query.orderByFields = [this.imageField];
                 query.returnGeometry = true;
                 this.showLoading();

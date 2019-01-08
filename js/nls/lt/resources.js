@@ -16,7 +16,11 @@
  */
 define({
   "map": {
-    "error": "Žemėlapio sukurti nepavyko"
+    "error": "Žemėlapio sukurti nepavyko",
+    "licenseError": {
+      "message": "Jūsų paskyra nelicencijuota naudoti ne viešas konfigūruojamas aplikacijas. Kreipkitės į organizacijos administratorių, kad paskirtų jums vartotojo tipą, kuris turi svarbiausias aplikacijas, arba suteiktų jums papildomą svarbiausių aplikacijų licenciją.",
+      "title": "Nelicencijuota"
+    }
   },
   "nav": {
     "close": "Uždaryti"
@@ -28,40 +32,18 @@ define({
     "title": "Darbiniai sluoksniai",
     "error": "Žemėlapyje darbinių sluoksnių nėra."
   },
-  "layerSelector": {
-    "active": "Aktyvus sluoksnis",
-    "comparison": "Palyginimo sluoksnis",
-    "other": "Kita",
-    "result": "Rezultatas",
-    "title": "Sluoksnių pasirinkimo priemonė",
-    "resultSave": "Įtraukti rezultatų sluoksnį į palyginimo sluoksnių sąrašą",
-    "copy": "Nukopijuoti aktyvų sluoksnį į palyginimo sluoksnį.",
-    "swap": "Sukeisti aktyvų sluoksnį su palyginimo sluoksniu."
-  },
-  "renderer": {
-    "title": "Vaizdavimas",
-    "stretch": "Ištempimo parametrai",
-    "stretchType": "Ištempimo tipas",
-    "dra": "DRA",
-    "draText": "Dinamiškai keičiamas rėžis atnaujina išplėtimą, pagrįstą esamu rodiniu",
-    "gamma": "Gama",
-    "apply": "Taikyti",
-    "top": "Pašalinti didžiausius",
-    "bottom": "Pašalinti mažiausius",
-    "topText": " Pašalinti histogramos x didžiausius proc.",
-    "bottomText": " Pašalinti histogramos x mažiausius proc.",
-    "stdDev": "# stand. nuokr.",
-    "layer": "Esamas sluoksnis",
-    "error": "Žemėlapyje matomų atvaizdų sluoksnių nėra."
-  },
-  "imageSelector": {
-    "title": "Atvaizdų pasirinkimo priemonė",
-    "enable": "Įgalinti atvaizdų pasirinkimo priemonę",
+  "singleLayerViewer": {
+    "title": "Vaizdų sluoksnių pasirinkimo priemonė",
+    "enable": "Ieškoti atskirų vaizdų",
+    "tooltip": "Įgalinti konkrečių atvaizdų paiešką.",
     "secondary": "Nustatyti aktyvų sluoksnį kaip pasirinkimo sluoksnį.",
     "dropDown": "Rodyti atvaizdus išplečiamajame sąraše.",
-    "refresh": "Atnaujinti užklausą pagal esamą aprėptį.",
+    "refresh": "Atnaujinimo mygtukas",
+    "refreshTooltip": "Atnaujinti užklausą pagal esamą aprėptį.",
+    "renderer": "Atvaizdavimas",
+    "layer": "Sluoksnis",
     "show": "Rodyti",
-    "age": "Naujumas",
+    "age": "Paieškos intervalas",
     "zoom": "Didinti, norint pasirinkti atvaizdus.",
     "error": "Žemėlapyje matomų atvaizdų sluoksnių nėra.",
     "error1": "Nenurodytas laukas.",
@@ -70,24 +52,58 @@ define({
     "error4": "Nepavyko atlikti veiksmo sluoksnyje.",
     "error5": "Paslaugos, kurių versija ankstesnė negu 10.2.1, nepalaikomos.",
     "error6": "Esamoje aprėptyje scenų nėra.",
-    "error7": "Pasirinktas kontūrų skaičius viršija 20. Bus rodomi tik pirmieji 20. Jei tolesnių priminimų nereikia, paspauskite Gerai.",
-    "slider": "Rodyti atvaizdus slankiklyje."
+    "error7": "Pasirinktų aprėpiamų erdvių skaičius viršija 20. Bus rodomos tik pirmosios 20. Paspauskite Gerai, kad nebematytumėte šio įspėjimo.",
+    "slider": "Rodyti atvaizdus slankiklyje.",
+    "ageOption1": "Diena (-os)",
+    "ageOption2": "Savaitė (-ės)",
+    "ageOption3": "Mėnuo (-esiai)",
+    "ageOption4": "Metai",
+    "showOption1": "Vaizdas",
+    "showOption2": "Aprėpiama erdvė",
+    "date": "Data (-os)",
+    "imageLabel": "atvaizdas (-ai)",
+    "default": "Numatytas"
   },
-  "changeDetection": {
-    "title": "Keisti kryptį",
-    "mode": "Režimas",
-    "method": "Būdas",
-    "positive": "Teigiamas skirtumas",
-    "negative": "Neigiamas skirtumas",
-    "threshold": "Ribinė vertė",
-    "difference": "Skirtumas",
-    "apply": "Taikyti",
-    "error": "Parinktis Keisti kryptį veikia su dviem skirtingų datų atvaizdais iš tos pačios paslaugos.<br />Pirmiausia, naudodami atvaizdų pasirinkimo priemonę, nurodykite vieną atvaizdą,<br />tada spustelėkite mygtuką <img src='images/down.png' height='14'/> ir pasirinkite antrąjį atvaizdą.<br />Grįžkite į šį valdiklį, kai norėsite pakeisti kryptį."
+  "twoLayerViewer": {
+    "title": "Sluoksnių pasirinkimo priemonė",
+    "enable": "Ieškoti atskirų vaizdų",
+    "tooltip": "Įgalinti konkrečių atvaizdų paiešką.",
+    "secondary": "Nustatyti aktyvų sluoksnį kaip pasirinkimo sluoksnį.",
+    "dropDown": "Rodyti atvaizdus išplečiamajame sąraše.",
+    "refresh": "Atnaujinimo mygtukas",
+    "refreshTooltip": "Atnaujinti užklausą pagal esamą aprėptį.",
+    "renderer": "Atvaizdavimas",
+    "layer": "Sluoksnis",
+    "show": "Rodyti",
+    "age": "Paieškos intervalas",
+    "zoom": "Didinti, norint pasirinkti atvaizdus.",
+    "error": "Žemėlapyje matomų atvaizdų sluoksnių nėra.",
+    "error1": "Nenurodytas laukas.",
+    "error2": "Nėra lauko OBJECTID.",
+    "error3": "Nėra kategorijos lauko.",
+    "error4": "Nepavyko atlikti veiksmo sluoksnyje.",
+    "error5": "Paslaugos, kurių versija ankstesnė negu 10.2.1, nepalaikomos.",
+    "error6": "Esamoje aprėptyje scenų nėra.",
+    "error7": "Pasirinktų aprėpiamų erdvių skaičius viršija 20. Bus rodomos tik pirmosios 20. Paspauskite Gerai, kad nebematytumėte šio įspėjimo.",
+    "slider": "Rodyti atvaizdus slankiklyje.",
+    "ageOption1": "Diena (-os)",
+    "ageOption2": "Savaitė (-ės)",
+    "ageOption3": "Mėnuo (-esiai)",
+    "ageOption4": "Metai",
+    "showOption1": "Vaizdas",
+    "showOption2": "Aprėpiama erdvė",
+    "left": "Kairysis atvaizdas",
+    "right": "Dešinysis atvaizdas",
+    "identicalLayerError": "Kairysis ir dešinysis atvaizdai yra identiški.",
+    "date": "Data (-os)",
+    "imageLabel": "atvaizdas (-ai)",
+    "default": "Numatytas"
   },
   "editor": {
     "title": "Redaktorius",
-    "error": "Nepasirinktas redagavimo sluoksnis.",
-    "error1": "Prieiga nesuteikta. Sluoksnių redaguoti negalima."
+    "error": "Nerastas redagavimo sluoksnis.",
+    "error1": "Prieiga uždrausta. Sluoksnių negalima redaguoti.",
+    "text": "Pasirinkite simbolį ir spustelėkite žemėlapyje."
   },
   "measurement": {
     "title": "Atvaizdo matavimas",
@@ -95,25 +111,50 @@ define({
   },
   "export": {
     "title": "Eksportuoti",
-    "mode": "Režimas",
-    "titleText": "Pavadinimas",
+    "mode": "Įrašyti vietą",
+    "titleText": "Antraštė (būtina)",
     "description": "Aprašymas",
-    "tags": "Raktažodžiai",
-    "submit": "Pateikti",
+    "tags": "Raktažodžiai (būtini).",
+    "preview": "Peržiūra",
+    "submit": "Išsaugoti",
+    "cancel": "Atšaukti",
     "pixel": "Pikselių dydis",
     "outsr": "Išvesties koordinačių sistema",
-    "renderer": "Dabartinė atvaizdavimo priemonė",
-    "extent": "Nurodykite aprėptį",
-    "text": "Jei Dabartinė atvaizdavimo priemonė yra pažymėta, eksportuojamas atvaizdavimas<br />. Kitu atveju bus eksportuotos pradinės duomenų reikšmės<br/>.",
+    "renderer": "TIFF atsisiuntimo parinktys",
+    "formatText1": "Kaip parodyta",
+    "formatText2": "Neapdoroti duomenys (visi kanalai)",
+    "extent": "Brėžkite aprėpties poligoną",
+    "drawText": "(paspauskite vaizdą norėdami pradėti)",
+    "text": "Standartinės nuotraukų peržiūros priemonės negali rodyti neapdorotų duomenų. Atverti naudojant ArcGIS Pro",
     "error": "Žemėlapyje matomų atvaizdų sluoksnių nėra.",
     "error1": "Būtinas pavadinimas.",
-    "error2": "Būtinas raktažodis (-iai)."
+    "error2": "Būtinas raktažodis (-iai).",
+    "error3": "Eksportuoto failo dydis pikseliais apribotas",
+    "error4": "šiai aprėpčiai.",
+    "error5": "Įveskite leistiną skaitinę reikšmę.",
+    "error6": "Šiuo metu jūsų vaizdo eksportuoti neįmanoma.",
+    "thumbnailError": "Nėra miniatiūros",
+    "advance": "Išplėstinės įrašymo parinktys",
+    "modeOption1": "Įrašyti į portalą",
+    "modeOption2": "Įrašyti į diską",
+    "default": "Numatytas",
+    "utm": "WGS84 UTM zona",
+    "layer": "Sluoksnis",
+    "mercator": "WebMercatorAS",
+    "folder": "Pasirinkti aplanką"
   },
-  "compare": {
-    "title": "Palyginimas",
-    "slider": "Skaidrus slankiklis",
-    "hSwipe": "Horizontalus slankiklis",
-    "vSwipe": "Vertikalus slankiklis",
-    "error": "Matomų atvaizdų sluoksnių palyginimui nėra."
+  "imageDate": {
+    "label": "Atvaizdo data"
+  },
+  "about": {
+    "title": "Apie"
+  },
+  "bookmark": {
+    "title": "Žymos",
+    "selectBookmark": "Pasirinkite žymas",
+    "default": "Numatytas",
+    "add": "Pridėkite žymų",
+    "addTitle": "Įveskite pavadinimą",
+    "addBtn": "Pridėkite laikiną"
   }
 });

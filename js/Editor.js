@@ -21,8 +21,8 @@ define([
     "dojo/_base/lang",
     'dojo/dom-class',
     "dojo/dom-construct",
-    "dojo/dom", "esri/renderers/jsonUtils",  'dojo/json',
-    "dojo/html", "dijit/focus",
+    "dojo/dom", "esri/renderers/jsonUtils", 'dojo/json',
+    "dojo/html", "dijit/focus", "esri/dijit/LayerSwipe",
     "dojo/dom-style",
 ],
         function (
@@ -33,7 +33,7 @@ define([
                 lang,
                 domClass,
                 domConstruct,
-                dom, rendererJsonUtils,Json, html, focus, domStyle) {
+                dom, rendererJsonUtils, Json, html, focus, LayerSwipe, domStyle) {
             return declare("application.Editor", [Evented], {
                 constructor: function (parameters) {
                     var defaults = {
@@ -49,7 +49,7 @@ define([
                     domConstruct.place('<img id="loadingEditor" style="position: absolute;top:0;bottom: 0;left: 0;right: 0;margin:auto;z-index:100;" src="images/loading.gif">', "editorContainer");
                     this.hideLoading();
                     this.editableLayers = [], this.templateLayers = [];
-                    this._layerInfoParamArrayUseForRervertRenderer  = [];
+                    this._layerInfoParamArrayUseForRervertRenderer = [];
 
                     if (this.itemInfo) {
                         array.forEach(this.itemInfo, lang.hitch(this, function (layer) {
@@ -60,7 +60,7 @@ define([
                                 });
                                 this.templateLayers.push(layer.layerObject);
                                 this.layerFields[layer.layerObject.id] = {date: layer.dateField, height: layer.heightField};
-                                layer.layerObject.on("edits-complete", lang.hitch(this, function(){
+                                layer.layerObject.on("edits-complete", lang.hitch(this, function () {
                                     layer.layerObject.refresh();
                                 }));
                             }
@@ -146,7 +146,7 @@ define([
 
                         this.editor.templatePicker.on("selection-change", lang.hitch(this, this.fillDefaultValues));
 
-                          this.editor.templatePicker.update(true);
+                        this.editor.templatePicker.update(true);
                     }
                 },
                 changeToServiceRenderer: function (settings) {
@@ -202,6 +202,8 @@ define([
                 },
                 onOpen: function () {
                     if (this.editableLayers.length > 0) {
+                        if (this.map.swipe && this.map.swipe.state)
+                            this.createSwipe();
                         this.editable = true;
                         dom.byId("errorEditor").innerHTML = "";
                         this.createEditor();
@@ -213,17 +215,19 @@ define([
 
                         this.map.setInfoWindowOnClick(true);
                     }
-
-
-
-
-
                 },
                 onClose: function () {
                     if (this.editor) {
                         this._destroyEditor();
                         this.editor = null;
                     }
+                    if (this.layerSwipe) {
+                        this.swipePosition = this.layerSwipe.domNode.children[0].offsetLeft;
+                        this.map.swipe = {position: this.swipePosition, state: true, layers: this.layerSwipe.layers, invert: this.layerSwipe.invertPlacement};
+                        this.layerSwipe.destroy();
+                        this.layerSwipe = null;
+                    } else
+                        this.map.swipe = {position: null, state: false, layers: null, invert: false};
                     this.revertToLayerRenderer();
                     this.map.setInfoWindowOnClick(true);
                 },
@@ -235,6 +239,17 @@ define([
                         }
                     }, this);
                     this._layerInfoParamArrayUseForRervertRenderer = [];
+                },
+                createSwipe: function () {
+                    domConstruct.place("<div id='swipewidget'></div>", "mapDiv_root", "first");
+                    this.layerSwipe = new LayerSwipe({
+                        type: "vertical",
+                        map: this.map,
+                        left: this.map.swipe.position,
+                        invertPlacement: this.map.swipe.invert,
+                        layers: this.map.swipe.layers
+                    }, dom.byId("swipewidget"));
+                    this.layerSwipe.startup();
                 },
                 showLoading: function () {
 

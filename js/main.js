@@ -50,6 +50,7 @@ define([
         config: {},
         containers: [],
         regExp: /\$([^}]+)\}/g,
+        worldImagery:"https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer",
         startup: function (config) {
             // Set lang attribute to current locale
             document.documentElement.lang = kernel.locale;
@@ -607,6 +608,12 @@ define([
             if (this.config.imageDateLayer) {
                 this.config.imageDateLayer = JSON.parse(this.config.imageDateLayer);
                 for (var a = 0; a < layers.length; a++) {
+                    if(layers[a].url === this.worldImagery){
+                    layer[layers[a].id] = {
+                            dateField: "SRC_DATE2",
+                            title: layers[a].title || layers[a].layerObject.name || layers[a].id
+                        };
+                } else {
                     for (var b = 0; b < this.config.imageDateLayer.length; b++) {
                         if (this.config.imageDateLayer[b].id === layers[a].id) {
                             if (this.config.imageDateLayer[b].fields.length > 0) {
@@ -636,7 +643,8 @@ define([
                     }
                 }
             }
-
+            }
+            
             this.imageDate = new ImageDate({map: this.map, layers: layer, prefix: this.config.imageDateLabel, i18n: this.config.i18n.imageDate});
             this.imageDate.postCreate();
             this.imageDate.onOpen();
@@ -769,7 +777,12 @@ define([
             var addLayer = true;
 
             for (var a = 0; a < layers.length; a++) {
-                if ((layers[a].type && layers[a].type === 'ArcGISTiledImageServiceLayer') || (layers[a].type && layers[a].type === 'ArcGISImageServiceLayer') || (this.map.getLayer(layers[a].id).serviceDataType && this.map.getLayer(layers[a].id).serviceDataType.indexOf("esriImageService") !== -1)) {
+                if(layers[a].url === this.worldImagery){
+                    layer[layers[a].id] = {
+                            imageSelector: false,
+                            title: layers[a].title || layers[a].layerObject.name || layers[a].id
+                        };
+                }else if ((layers[a].type && layers[a].type === 'ArcGISTiledImageServiceLayer') || (layers[a].type && layers[a].type === 'ArcGISImageServiceLayer') || (this.map.getLayer(layers[a].id).serviceDataType && this.map.getLayer(layers[a].id).serviceDataType.indexOf("esriImageService") !== -1)) {
                     for (var b = 0; b < this.config.imageSelectorLayer.length; b++) {
                         if (this.config.imageSelectorLayer[b].id === layers[a].id && /*this.config.imageSelectorLayer[b].fields.length > 0 &&*/ layers[a].layerObject) {
                             if (this.config.imageSelectorLayer[b].fields.length > 0) {
@@ -877,8 +890,6 @@ define([
         addClickEvent: function (container, toolObject, node) {
             var openForFirstTime = true;
             on(dom.byId(container), "click", lang.hitch(this, function (event) {
-//                if(registry.byId("basemapDialog") && registry.byId("basemapDialog").open)
-//                registry.byId("basemapDialog").hide();
                 if (event.type === "click" || event.which === 13 || event.which === 32) {
                     if (domClass.contains(container, "selected-widget")) {
                         this.hideContentPanel();

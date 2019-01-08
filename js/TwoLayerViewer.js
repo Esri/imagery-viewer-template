@@ -15,7 +15,7 @@
 ///////////////////////////////////////////////////////////////////////////
 define([
     "dojo/_base/declare",
-    "dojo/_base/lang", "dojo/Evented",
+    "dojo/_base/lang", "dojo/Evented", "dojo/_base/connect",
     "dijit/registry",
     "dojo/html",
     "dojo/dom-class",
@@ -39,9 +39,11 @@ define([
     "esri/geometry/mathUtils",
     "dojo/dom-style",
     "esri/layers/ArcGISImageServiceLayer",
+    "esri/layers/ArcGISTiledMapServiceLayer",
     "esri/layers/ImageServiceParameters",
     "esri/tasks/ImageServiceIdentifyTask",
     "esri/tasks/ImageServiceIdentifyParameters",
+    "esri/dijit/PopupTemplate",
     "esri/layers/RasterFunction",
     "esri/geometry/Polygon",
     "esri/geometry/Point",
@@ -53,12 +55,12 @@ define([
     "dijit/form/TextBox",
     "dijit/form/DropDownButton",
     "dijit/TooltipDialog",
-], function (declare, lang, Evented, registry,
+], function (declare, lang, Evented, connect, registry,
         html,
         domClass,
         dom,
         MosaicRule,
-        Query, QueryTask, Extent, locale, html, LayerSwipe, domConstruct, HorizontalSlider, HorizontalRule, HorizontalRuleLabels, Graphic, SimpleLineSymbol, SimpleFillSymbol, Color, InfoTemplate, mathUtils, domStyle, ArcGISImageServiceLayer, ImageServiceParameters, ImageServiceIdentifyTask, ImageServiceIdentifyParameters, RasterFunction, Polygon, Point, esriRequest, Tooltip) {
+        Query, QueryTask, Extent, locale, html, LayerSwipe, domConstruct, HorizontalSlider, HorizontalRule, HorizontalRuleLabels, Graphic, SimpleLineSymbol, SimpleFillSymbol, Color, InfoTemplate, mathUtils, domStyle, ArcGISImageServiceLayer, ArcGISTiledMapServiceLayer, ImageServiceParameters, ImageServiceIdentifyTask, ImageServiceIdentifyParameters, PopupTemplate, RasterFunction, Polygon, Point, esriRequest, Tooltip) {
 
     return declare("application.TwoLayerViewer", [Evented], {
         constructor: function (parameters) {
@@ -87,6 +89,7 @@ define([
         mapWidthPanFactor: 0.75,
         previousLayerInfo: {primary: {id: null, mosaicRule: null}, secondary: {id: null, mosaicRule: null}},
         swipePosition: null,
+        worldImagery: "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer",
         postCreate: function () {
             domConstruct.place('<img id="loadingTwoLayerViewer" style="position: absolute;top:0;bottom: 0;left: 0;right: 0;margin:auto;z-index:100;" src="images/loading.gif">', "layerViewerNode");
             domStyle.set("loadingTwoLayerViewer", "display", "none");
@@ -117,7 +120,7 @@ define([
             registry.byId("show").on("change", lang.hitch(this, function (value) {
                 this.leftLayerInfos[this.primaryLayer.id].type = value;
                 if (value === "image") {
-                    if (!this.primaryLayer.visible){
+                    if (!this.primaryLayer.visible) {
                         this.primaryLayer.show();
                     }
                 } else
@@ -128,9 +131,9 @@ define([
             registry.byId("showRight").on("change", lang.hitch(this, function (value) {
                 this.rightLayerInfos[this.secondaryLayer.id].type = value;
                 if (value === "image") {
-                    if (!this.secondaryLayer.visible){
+                    if (!this.secondaryLayer.visible) {
                         this.secondaryLayer.show();
-                         
+
                     }
                 } else
                     this.secondaryLayer.hide();
@@ -145,7 +148,7 @@ define([
             registry.byId("refreshImageSliderBtnRight").on("click", lang.hitch(this, this.imageSliderRefreshRight));
             registry.byId("leftLayer").on("click", lang.hitch(this, function () {
                 if (this.layerSwipe) {
-                    this.moveSwipe(this.map.width - 40, this.layerSwipe.invertPlacement, this.layerSwipe.layers);
+                    this.moveSwipe(document.getElementById("aboutDialog") && document.getElementById("aboutDialog").clientWidth ? this.map.width - document.getElementById("aboutDialog").clientWidth - 35 : this.map.width - 40, this.layerSwipe.invertPlacement, this.layerSwipe.layers);
                 }
                 domStyle.set("rightLayerDiv", "display", "none");
                 domStyle.set("leftLayerDiv", "display", "block");
@@ -164,6 +167,7 @@ define([
                 this.map.on("extent-change", lang.hitch(this, this.mapExtentChange));
                 this.map.on("update-start", lang.hitch(this, this.showLoading));
                 this.map.on("update-end", lang.hitch(this, this.hideLoading));
+
                 this.addLayerHandler = this.map.on("layer-add", lang.hitch(this, function () {
                     this.currentLayerPropRight = this.rightLayerInfos[registry.byId("rightLayerSelector").get("value") + "_RightLayer"];
                     this.checkLayerPropRight();
@@ -206,14 +210,37 @@ define([
                 registry.byId("leftLayerSelector").set("value", this.config.defaultLayer);
 
             }
-            if(this.config.showFootprint){
-                domStyle.set("showImageFootprint","display","block");
-                domStyle.set("showImageFootprintRight","display","block");
+            if (this.config.showFootprint) {
+                domStyle.set("showImageFootprint", "display", "block");
+                domStyle.set("showImageFootprintRight", "display", "block");
             }
             this.main.resizeTemplate();
             setTimeout(lang.hitch(this, function () {
                 this.refreshSwipe();
             }), 500);
+
+            var popup = this.map.infoWindow;
+            connect.connect(popup, "onDfdComplete", lang.hitch(this, function (e) {
+                if (this.layerSwipe && popup && popup.location && popup.features) {
+                    var showFeatures = [];
+                    var screenPoint = this.map.toScreen(popup.location);
+                    if (screenPoint.x <= this.layerSwipe.domNode.children[0].offsetLeft) {
+                        var layerId = this.secondaryLayer ? this.secondaryLayer.id : "";
+                    } else
+                        var layerId = this.primaryLayer ? this.primaryLayer.id : "";
+
+
+                    for (var b = popup.features.length - 1; b >= 0; b--) {
+                        if (popup.features[b]._layer.id === layerId) {
+                            popup.features.splice(b, 1);
+                            popup.count--;
+                        } else
+                            showFeatures.push(popup.features[b]);
+                    }
+                    if (!popup.deferreds)
+                        popup.setFeatures(showFeatures);
+                }
+            }));
 
         },
         fillLayerSelector: function () {
@@ -293,7 +320,8 @@ define([
                 };
                 this.previousExtentChangeLevel = this.previousInfo.level;
             }
-
+            if (this.map.swipe && this.map.swipe.state)
+                this.swipePosition = this.map.swipe.position;
             if (!this.addLayerHandler) {
                 this.addLayerHandler = this.map.on("layer-add", lang.hitch(this, function () {
                     this.currentLayerPropRight = registry.byId("rightLayerSelector").get("value") !== "none" ? this.rightLayerInfos[registry.byId("rightLayerSelector").get("value") + "_RightLayer"] : null;
@@ -316,6 +344,7 @@ define([
             if (value === "none") {
                 this.clearGraphics();
                 this.primaryLayer = null;
+                this.map.primaryLayer = null;
                 domStyle.set("imageSelectCheckBox", "display", "none");
                 registry.byId("imageSelector").set("checked", false);
                 domStyle.set("leftRenderer", "display", "none");
@@ -323,9 +352,10 @@ define([
             } else {
                 this.currentLayerProp = value !== "none" ? this.leftLayerInfos[value] : null;
                 this.valueSelected = null;
+                this.map.primaryLayer = value;
                 this.primaryLayer = this.map.getLayer(value);
-                if(this.config.showRendering)
-                this.populateRendererList();
+                if (this.config.showRendering)
+                    this.populateRendererList();
                 this.primaryLayer.show();
                 this.checkLayerProp();
             }
@@ -360,12 +390,14 @@ define([
             if (this.primaryLayer) {
                 if (value === "default") {
                     this.primaryLayer.setBandIds(this.defaultBandIds, true);
+                    this.primaryLayer.setRenderer(this.defaultRenderer, true);
                     this.primaryLayer.setRenderingRule(this.defaultRenderingRule, true);
-                    this.primaryLayer.setRenderer(this.defaultRenderer);
+                    this.primaryLayer.refresh();
                 } else {
                     this.primaryLayer.setBandIds([], true);
-                    this.primaryLayer.setRenderer(null);
-                    this.primaryLayer.setRenderingRule(new RasterFunction({"rasterFunction": value}));
+                    this.primaryLayer.setRenderer(null, true);
+                    this.primaryLayer.setRenderingRule(new RasterFunction({"rasterFunction": value}), true);
+                    this.primaryLayer.refresh();
                 }
             }
         },
@@ -377,6 +409,7 @@ define([
             if (value === "none") {
                 this.clearGraphicsRight();
                 this.secondaryLayer = null;
+                this.map.secondaryLayer = null;
                 domStyle.set("imageSelectCheckBoxRight", "display", "none");
                 registry.byId("imageSelectorRight").set("checked", false);
                 domStyle.set("rightRenderer", "display", "none");
@@ -385,44 +418,54 @@ define([
 
                 this.valueSelectedRight = null;
                 var layer = this.map.getLayer(value);
-                var params = new ImageServiceParameters();
+                this.map.secondaryLayer = value + "_RightLayer";
+
                 this.currentLayerPropRight = value !== "none" ? this.rightLayerInfos[value + "_RightLayer"] : null;
-                if(this.config.showRendering)
-                this.populateRendererListRight(layer);
-                params.mosaicRule = this.rightLayerInfos[value + "_RightLayer"].defaultMosaicRule;
 
-                if (layer.renderingRule) {
-                    params.renderingRule = layer.renderingRule;
-                }
-                if (layer.bandIds) {
-                    params.bandIds = layer.bandIds;
-                }
-                if (layer.format) {
-                    params.format = layer.format;
-                }
-                if (layer.interpolation) {
-                    params.interpolation = layer.interpolation;
-                }
-                if (layer.compressionQuality)
-                    params.compressionQuality = layer.compressionQuality;
-                if (layer.timeInfo && layer.timeInfo.timeExtent)
-                    params.timeExtent = layer.timeInfo.timeExtent;
-                var popupInfo = "";
-                if (layer.popupInfo) {
-                    popupInfo = new PopupTemplate(layer.popupInfo);
-                }
+                if (this.config.showRendering)
+                    this.populateRendererListRight(layer);
+                if (layer.url.indexOf(this.worldImagery) !== -1) {
+                    this.secondaryLayer = new ArcGISTiledMapServiceLayer(layer.url, {
+                        id: layer.id + "_RightLayer"
+                    });
+                } else {
+                    var params = new ImageServiceParameters();
+                    params.mosaicRule = this.rightLayerInfos[value + "_RightLayer"].defaultMosaicRule;
 
-                this.secondaryLayer = new ArcGISImageServiceLayer(
-                        layer.url,
-                        {
-                            id: layer.id + "_RightLayer",
-                            imageServiceParameters: params,
-                            visible: true,
-                            infoTemplate: popupInfo,
-                            opacity: layer.opacity,
-                            useMapTime: layer.useMapTime,
-                            useMapImage: layer.useMapImage
-                        });
+                    if (layer.renderingRule) {
+                        params.renderingRule = layer.renderingRule;
+                    }
+                    if (layer.bandIds) {
+                        params.bandIds = layer.bandIds;
+                    }
+                    if (layer.format) {
+                        params.format = layer.format;
+                    }
+                    if (layer.interpolation) {
+                        params.interpolation = layer.interpolation;
+                    }
+                    if (layer.compressionQuality)
+                        params.compressionQuality = layer.compressionQuality;
+                    if (layer.timeInfo && layer.timeInfo.timeExtent)
+                        params.timeExtent = layer.timeInfo.timeExtent;
+                    var popupInfo = "";
+
+                    if (layer.infoTemplate) {
+                        popupInfo = layer.infoTemplate;
+                    }
+
+                    this.secondaryLayer = new ArcGISImageServiceLayer(
+                            layer.url,
+                            {
+                                id: layer.id + "_RightLayer",
+                                imageServiceParameters: params,
+                                visible: true,
+                                infoTemplate: popupInfo,
+                                opacity: layer.opacity,
+                                useMapTime: layer.useMapTime,
+                                useMapImage: layer.useMapImage
+                            });
+                }
                 this.map.addLayer(this.secondaryLayer, this.secondaryLayerIndex);
             }
         },
@@ -456,12 +499,14 @@ define([
             if (this.secondaryLayer) {
                 if (value === "default") {
                     this.secondaryLayer.setBandIds(this.defaultBandIdsRight, true);
+                    this.secondaryLayer.setRenderer(this.defaultRendererRight, true);
                     this.secondaryLayer.setRenderingRule(this.defaultRenderingRuleRight, true);
-                    this.secondaryLayer.setRenderer(this.defaultRendererRight);
+                    this.secondaryLayer.refresh();
                 } else {
                     this.secondaryLayer.setBandIds([], true);
-                    this.secondaryLayer.setRenderer(null);
-                    this.secondaryLayer.setRenderingRule(new RasterFunction({"rasterFunction": value}));
+                    this.secondaryLayer.setRenderer(null, true);
+                    this.secondaryLayer.setRenderingRule(new RasterFunction({"rasterFunction": value}), true);
+                    this.secondaryLayer.refresh();
                 }
             }
         },
@@ -516,7 +561,7 @@ define([
                         registry.byId("imageSelector").set("checked", false);
                         registry.byId("imageSelector").set("disabled", true);
                         if (!this.currentLayerProp.imageField) {
-                            html.set(document.getElementById("errorDiv"), this.i18n.error1);
+                            html.set(document.getElementById("errorDiv"), "");
                         } else if (!this.currentLayerProp.objectID) {
                             html.set(document.getElementById("errorDiv"), this.i18n.error2);
                         } else {
@@ -584,7 +629,7 @@ define([
                         registry.byId("imageSelectorRight").set("checked", false);
                         registry.byId("imageSelectorRight").set("disabled", true);
                         if (!this.currentLayerPropRight.imageField) {
-                            html.set(document.getElementById("errorDivRight"), this.i18n.error1);
+                            html.set(document.getElementById("errorDivRight"), "");
                         } else if (!this.currentLayerPropRight.objectID) {
                             html.set(document.getElementById("errorDivRight"), this.i18n.error2);
                         } else {
@@ -671,8 +716,12 @@ define([
                     this.imageSliderRefreshRight();
                 }
             } else {
+                /*if(registry.byId("imageSelector").checked || registry.byId("imageSelectorRight")){
+                 this.map.setZoom(this.config.zoomLevel);
+                 }else {*/
                 this.turnOffSelector();
                 this.turnOffSelectorRight();
+                // }
             }
 
             this.previousExtentChangeLevel = evt.lod.level;
@@ -690,8 +739,10 @@ define([
                 domStyle.set("selectorDiv", "display", "none");
                 this.clearGraphics();
                 if (this.primaryLayer) {
-                    var mr = new MosaicRule(this.currentLayerProp.defaultMosaicRule);
-                    this.primaryLayer.setMosaicRule(mr);
+                    if (this.currentLayerProp.defaultMosaicRule) {
+                        var mr = new MosaicRule(this.currentLayerProp.defaultMosaicRule);
+                        this.primaryLayer.setMosaicRule(mr);
+                    }
                     this.leftLayerInfos[this.primaryLayer.id].state = false;
                 }
             }
@@ -710,8 +761,10 @@ define([
                 domStyle.set("selectorDivRight", "display", "none");
                 this.clearGraphicsRight();
                 if (this.secondaryLayer) {
-                    var mr = new MosaicRule(this.currentLayerPropRight.defaultMosaicRule);
-                    this.secondaryLayer.setMosaicRule(mr);
+                    if (this.currentLayerPropRight.defaultMosaicRule) {
+                        var mr = new MosaicRule(this.currentLayerPropRight.defaultMosaicRule);
+                        this.secondaryLayer.setMosaicRule(mr);
+                    }
                     this.rightLayerInfos[this.secondaryLayer.id].state = false;
                 }
             }
@@ -793,11 +846,14 @@ define([
                 this.refreshHandler.remove();
                 this.refreshHandler = null;
             }
+
             if (this.layerSwipe) {
                 this.swipePosition = this.layerSwipe.domNode.children[0].offsetLeft;
+                this.map.swipe = {position: this.swipePosition, state: true, layers: this.layerSwipe.layers, invert: this.layerSwipe.invertPlacement};
                 this.layerSwipe.destroy();
                 this.layerSwipe = null;
-            }
+            } else
+                this.map.swipe = {position: null, state: false, layers: null, invert: false};
             this.previousLayerInfo = {primary: {id: null, mosaicRule: null}, secondary: {id: null, mosaicRule: null}};
         },
         imageSliderShow: function () {
@@ -1459,20 +1515,20 @@ define([
         },
         refreshSwipe: function () {
             if (this.primaryLayer || this.secondaryLayer) {
-                
+
                 if (this.primaryLayer && this.secondaryLayer && (this.primaryLayer.id === this.secondaryLayer.id.split("_RightLayer")[0] && (JSON.stringify(this.primaryLayer.mosaicRule) === JSON.stringify(this.secondaryLayer.mosaicRule) || (!this.primaryLayer.mosaicRule && JSON.stringify(this.primaryLayer.defaultMosaicRule) === JSON.stringify(this.secondaryLayer.mosaicRule))) && (JSON.stringify(this.primaryLayer.renderingRule) === JSON.stringify(this.secondaryLayer.renderingRule)) || !this.primaryLayer.visible || !this.secondaryLayer.visible)) {
                     if (this.layerSwipe) {
                         this.swipePosition = this.layerSwipe.domNode.children[0].offsetLeft;
                         this.layerSwipe.destroy();
                         this.layerSwipe = null;
                     }
-                    if(this.primaryLayer.visible && this.secondaryLayer.visible){
-                    document.getElementById("errorSwipeDiv").innerHTML = this.i18n.identicalLayerError;
-                    this.previousLayerInfo = {primary: this.primaryLayer ? {id: this.primaryLayer.id, mosaicRule: this.primaryLayer.mosaicRule, renderer : this.primaryLayer.renderingRule} : {id: null, mosaicRule: null, renderer: null}, secondary: this.secondaryLayer ? {id: this.secondaryLayer.id, mosaicRule: this.secondaryLayer.mosaicRule, renderer: this.secondaryLayer.renderingRule} : {id: null, mosaicRule: null, renderer:null}};
-                }else {
-                    document.getElementById("errorSwipeDiv").innerHTML = "";    
-                    this.previousLayerInfo = {primary: {id: null, mosaicRule: null, renderer: null}, secondary:  {id: null, mosaicRule: null, renderer:null}};
-                }
+                    if (this.primaryLayer.visible && this.secondaryLayer.visible) {
+                        document.getElementById("errorSwipeDiv").innerHTML = this.i18n.identicalLayerError;
+                        this.previousLayerInfo = {primary: this.primaryLayer ? {id: this.primaryLayer.id, mosaicRule: this.primaryLayer.mosaicRule, renderer: this.primaryLayer.renderingRule} : {id: null, mosaicRule: null, renderer: null}, secondary: this.secondaryLayer ? {id: this.secondaryLayer.id, mosaicRule: this.secondaryLayer.mosaicRule, renderer: this.secondaryLayer.renderingRule} : {id: null, mosaicRule: null, renderer: null}};
+                    } else {
+                        document.getElementById("errorSwipeDiv").innerHTML = "";
+                        this.previousLayerInfo = {primary: {id: null, mosaicRule: null, renderer: null}, secondary: {id: null, mosaicRule: null, renderer: null}};
+                    }
                 } else {
                     document.getElementById("errorSwipeDiv").innerHTML = "";
                     if ((this.primaryLayer && (this.primaryLayer.id !== this.previousLayerInfo.primary.id || JSON.stringify(this.primaryLayer.mosaicRule) !== JSON.stringify(this.previousLayerInfo.primary.mosaicRule) || JSON.stringify(this.primaryLayer.renderingRule) !== JSON.stringify(this.previousLayerInfo.primary.renderer))) || (this.secondaryLayer && (this.secondaryLayer.id !== this.previousLayerInfo.secondary.id || JSON.stringify(this.secondaryLayer.mosaicRule) !== JSON.stringify(this.previousLayerInfo.secondary.mosaicRule) || JSON.stringify(this.secondaryLayer.renderingRule) !== JSON.stringify(this.previousLayerInfo.secondary.renderer))) || (!this.primaryLayer && this.previousLayerInfo.primary.id) || (!this.secondaryLayer && this.previousLayerInfo.secondary.id)) {
@@ -1491,7 +1547,7 @@ define([
                         }
                         if (!this.swipePosition) {
                             if (registry.byId("leftLayer").checked)
-                                this.swipePosition = this.map.width - 40;
+                                this.swipePosition = document.getElementById("aboutDialog") && document.getElementById("aboutDialog").clientWidth ? this.map.width - document.getElementById("aboutDialog").clientWidth - 35 : this.map.width - 40;
                             else
                                 this.swipePosition = document.getElementById("toolsContentContainer").clientWidth ? document.getElementById("toolsContentContainer").clientWidth + 15 : 40;
                         }
@@ -1503,7 +1559,7 @@ define([
                             layers: [layer]
                         }, dom.byId("swipewidget"));
                         this.layerSwipe.startup();
-                        this.previousLayerInfo = {primary: this.primaryLayer ? {id: this.primaryLayer.id, mosaicRule: this.primaryLayer.mosaicRule, renderer: this.primaryLayer.renderingRule} : {id: null, mosaicRule: null, renderer: null}, secondary: this.secondaryLayer ? {id: this.secondaryLayer.id, mosaicRule: this.secondaryLayer.mosaicRule, renderer: this.secondaryLayer.renderingRule} : {id: null, mosaicRule: null,renderer: null}};
+                        this.previousLayerInfo = {primary: this.primaryLayer ? {id: this.primaryLayer.id, mosaicRule: this.primaryLayer.mosaicRule, renderer: this.primaryLayer.renderingRule} : {id: null, mosaicRule: null, renderer: null}, secondary: this.secondaryLayer ? {id: this.secondaryLayer.id, mosaicRule: this.secondaryLayer.mosaicRule, renderer: this.secondaryLayer.renderingRule} : {id: null, mosaicRule: null, renderer: null}};
                     }
                 }
             } else if (this.layerSwipe) {

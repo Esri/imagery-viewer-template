@@ -16,7 +16,11 @@
  */
 define({
   "map": {
-    "error": "Nie można utworzyć mapy"
+    "error": "Nie można utworzyć mapy",
+    "licenseError": {
+      "message": "Twoje konto nie jest licencjonowane do korzystania z aplikacji konfigurowalnych, które nie są publiczne. Poproś administratora instytucji o przypisanie typu użytkownika, który obejmuje licencję na kluczowe aplikacje lub licencję na kluczowe aplikacje dodatkowe.",
+      "title": "Nie licencjonowano"
+    }
   },
   "nav": {
     "close": "Zamknij"
@@ -28,40 +32,18 @@ define({
     "title": "Warstwy operacyjne",
     "error": "Brak warstw operacyjnych na mapie."
   },
-  "layerSelector": {
-    "active": "Aktywna warstwa",
-    "comparison": "Warstwa porównania",
-    "other": "Inne",
-    "result": "Wynik",
-    "title": "Selektor warstwy",
-    "resultSave": "Dodaj warstwę wynikową do listy warstw porównania",
-    "copy": "Skopiuj aktywną warstwę na warstwę porównania.",
-    "swap": "Zamień warstwy aktywną i porównania."
-  },
-  "renderer": {
-    "title": "Moduł renderowania",
-    "stretch": "Parametry rozciągnięcia",
-    "stretchType": "Typ rozciągnięcia",
-    "dra": "DRA",
-    "draText": "Dynamiczna regulacja zakresu aktualizuje usprawnienia w oparciu o bieżący widok",
-    "gamma": "Gamma",
-    "apply": "Zastosuj",
-    "top": "Wyklucz górne",
-    "bottom": "Wyklucz dolne",
-    "topText": " Wyklucz górną wartość procentową x histogramu",
-    "bottomText": " Wyklucz dolną wartość procentową x histogramu",
-    "stdDev": "# odchylenia standardowego",
-    "layer": "Bieżąca warstwa",
-    "error": "Brak widocznych warstw zobrazowań na mapie."
-  },
-  "imageSelector": {
-    "title": "Selektor obrazów",
-    "enable": "Włącz selektor obrazów",
+  "singleLayerViewer": {
+    "title": "Selektor warstwy zobrazowania",
+    "enable": "Szukaj pojedynczych obrazów",
+    "tooltip": "Włącz wyszukiwanie określonych obrazów.",
     "secondary": "Ustaw warstwę aktywną jako warstwę porównania.",
     "dropDown": "Pokaż obrazy na liście rozwijanej.",
-    "refresh": "Odśwież zapytanie w oparciu o bieżący zasięg.",
+    "refresh": "Przycisk Odśwież",
+    "refreshTooltip": "Odśwież zapytanie w oparciu o bieżący zasięg.",
+    "renderer": "Renderowanie",
+    "layer": "Warstwa",
     "show": "Pokaż",
-    "age": "Wiek",
+    "age": "Zakres wyszukiwania",
     "zoom": "Powiększ, aby wybrać obrazy.",
     "error": "Brak widocznych warstw zobrazowań na mapie.",
     "error1": "Nie określono pola.",
@@ -70,24 +52,58 @@ define({
     "error4": "Nie można wykonać działania dla warstwy.",
     "error5": "Usługi w wersjach starszych niż 10.2.1 nie są obsługiwane.",
     "error6": "Brak scen w bieżącym zasięgu.",
-    "error7": "Liczba wybranych atrybutów przekroczyła 20. Zostanie wyświetlonych tylko pierwszych 20 atrybutów. Naciśnij przycisk OK, aby to ostrzeżenie nie było ponownie wyświetlane.",
-    "slider": "Pokaż obrazy na suwaku."
+    "error7": "Liczba wybranych obrysów przekroczyła 20. Zostanie wyświetlonych tylko pierwszych 20 obrysów. Naciśnij przycisk OK, aby to ostrzeżenie nie było ponownie wyświetlane.",
+    "slider": "Pokaż obrazy na suwaku.",
+    "ageOption1": "Dni",
+    "ageOption2": "Tygodnie",
+    "ageOption3": "Miesiące",
+    "ageOption4": "Lata",
+    "showOption1": "Obraz rastrowy",
+    "showOption2": "Obwiednie",
+    "date": "Daty",
+    "imageLabel": "obrazy",
+    "default": "Domyślnie"
   },
-  "changeDetection": {
-    "title": "Wykrywanie zmian",
-    "mode": "Tryb",
-    "method": "Metoda",
-    "positive": "Różnica dodatnia",
-    "negative": "Różnica ujemna",
-    "threshold": "Próg",
-    "difference": "Różnica",
-    "apply": "Zastosuj",
-    "error": "Wykrywanie zmian działa w odniesieniu do obrazów wykonanych w różnym czasie przy użyciu tej samej usługi.<br />Najpierw za pomocą selektora obrazów wybierz jeden obraz,<br />następnie kliknij przycisk <img src='images/down.png' height='14'/> i wybierz drugi obraz.<br />Wróć do tego elementu sterującego, aby kontynuować wykrywanie zmian."
+  "twoLayerViewer": {
+    "title": "Selektor warstwy",
+    "enable": "Szukaj pojedynczych obrazów",
+    "tooltip": "Włącz wyszukiwanie określonych obrazów.",
+    "secondary": "Ustaw warstwę aktywną jako warstwę porównania.",
+    "dropDown": "Pokaż obrazy na liście rozwijanej.",
+    "refresh": "Przycisk Odśwież",
+    "refreshTooltip": "Odśwież zapytanie w oparciu o bieżący zasięg.",
+    "renderer": "Renderowanie",
+    "layer": "Warstwa",
+    "show": "Pokaż",
+    "age": "Zakres wyszukiwania",
+    "zoom": "Powiększ, aby wybrać obrazy.",
+    "error": "Brak widocznych warstw zobrazowań na mapie.",
+    "error1": "Nie określono pola.",
+    "error2": "Brak pola OBJECTID.",
+    "error3": "Brak pola Kategoria.",
+    "error4": "Nie można wykonać działania dla warstwy.",
+    "error5": "Usługi w wersjach starszych niż 10.2.1 nie są obsługiwane.",
+    "error6": "Brak scen w bieżącym zasięgu.",
+    "error7": "Liczba wybranych obrysów przekroczyła 20. Zostanie wyświetlonych tylko pierwszych 20 obrysów. Naciśnij przycisk OK, aby to ostrzeżenie nie było ponownie wyświetlane.",
+    "slider": "Pokaż obrazy na suwaku.",
+    "ageOption1": "Dni",
+    "ageOption2": "Tygodnie",
+    "ageOption3": "Miesiące",
+    "ageOption4": "Lata",
+    "showOption1": "Obraz rastrowy",
+    "showOption2": "Obwiednie",
+    "left": "Obraz po lewej",
+    "right": "Obraz po prawej",
+    "identicalLayerError": "Obrazy po lewej i prawej są identyczne.",
+    "date": "Daty",
+    "imageLabel": "obrazy",
+    "default": "Domyślnie"
   },
   "editor": {
     "title": "Edytor",
-    "error": "Nie wybrano warstwy do edycji.",
-    "error1": "Odmowa dostępu. Nie można edytować warstw."
+    "error": "Nie znaleziono warstwy do edycji.",
+    "error1": "Odmowa dostępu. Warstw nie można edytować.",
+    "text": "Wybierz symbol i kliknij na mapie."
   },
   "measurement": {
     "title": "Pomiar obrazu",
@@ -95,25 +111,50 @@ define({
   },
   "export": {
     "title": "Eksportuj",
-    "mode": "Tryb",
-    "titleText": "Tytuł",
+    "mode": "Zapisz lokalizację",
+    "titleText": "Tytuł (wymagany)",
     "description": "Opis",
-    "tags": "Znaczniki",
+    "tags": "Znaczniki (wymagane)",
+    "preview": "Podgląd",
     "submit": "Zapisz",
+    "cancel": "Anuluj",
     "pixel": "Rozmiar pikseli",
     "outsr": "Wynikowe odniesienie przestrzenne",
-    "renderer": "Bieżący moduł renderowania",
-    "extent": "Definiuj zasięg",
-    "text": "Jeśli zaznaczono opcję Bieżący moduł renderowania, eksportowane będą wartości renderowane<br />; w przeciwnym razie wyeksportowane zostaną <br/>oryginalne wartości danych.",
+    "renderer": "Opcje pobierania obrazu TIFF",
+    "formatText1": "Tak, jak jest wyświetlany",
+    "formatText2": "Surowe dane (wszystkie pasma)",
+    "extent": "Narysuj poligon, aby zdefiniować zasięg",
+    "drawText": "(kliknij obraz, aby rozpocząć)",
+    "text": "Surowych danych nie można wyświetlać w standardowych aplikacjach do przeglądania zdjęć. Otwórz w aplikacji ArcGIS Pro.",
     "error": "Brak widocznych warstw zobrazowań na mapie.",
     "error1": "Tytuł jest wymagany.",
-    "error2": "Znacznik/znaczniki są wymagane."
+    "error2": "Znacznik/znaczniki są wymagane.",
+    "error3": "Parametr PixelSize eksportu jest ograniczony do",
+    "error4": "dla tego zasięgu.",
+    "error5": "Wpisz prawidłową wartość liczbową.",
+    "error6": "W tej chwili nie można wyeksportować Twojego obrazu.",
+    "thumbnailError": "Brak dostępnej miniatury",
+    "advance": "Zaawansowane opcje zapisu",
+    "modeOption1": "Zapisz w portalu",
+    "modeOption2": "Zapisz na dysku",
+    "default": "Domyślnie",
+    "utm": "Strefa WGS84 UTM",
+    "layer": "Warstwa",
+    "mercator": "WebMercatorAS",
+    "folder": "Wybierz folder"
   },
-  "compare": {
-    "title": "Porównanie",
-    "slider": "Suwak przezroczystości",
-    "hSwipe": "Zwijanie w poziomie",
-    "vSwipe": "Zwijanie w pionie",
-    "error": "Brak widocznych warstw zobrazowań dostępnych do porównania."
+  "imageDate": {
+    "label": "Dane obrazowe"
+  },
+  "about": {
+    "title": "O"
+  },
+  "bookmark": {
+    "title": "Zakładki",
+    "selectBookmark": "Wybierz zakładki",
+    "default": "Domyślnie",
+    "add": "Dodaj zakładki",
+    "addTitle": "Wprowadź tytuł",
+    "addBtn": "Dodaj tymczasowe"
   }
 });

@@ -16,7 +16,11 @@
  */
 define({
   "map": {
-    "error": "Không thể tạo bản đồ"
+    "error": "Không thể tạo bản đồ",
+    "licenseError": {
+      "message": "Tài khoản của bạn không được cấp phép để sử dụng ứng dụng có thể cấu hình mà không được công khai. Vui lòng yêu cầu quản trị viên của tổ chức bạn gán cho bạn loại người dùng nào có bao gồm các ứng dụng thiết yếu hoặc có giấy phép sử dụng các ứng dụng thiết yếu bổ trợ.",
+      "title": "Không được cấp phép"
+    }
   },
   "nav": {
     "close": "Đóng"
@@ -25,43 +29,21 @@ define({
     "title": "Bộ sưu tập bản đồ nền"
   },
   "operationalLayers": {
-    "title": "Các lớp hoạt động",
-    "error": "Không có lớp hoạt động nào trong bản đồ."
+    "title": "Các lớp chuyên đề",
+    "error": "Không có lớp chuyên đề nào trong bản đồ."
   },
-  "layerSelector": {
-    "active": "Lớp hoạt động",
-    "comparison": "Lớp so sánh",
-    "other": "Khác",
-    "result": "Kết quả",
-    "title": "Trình lựa chọn lớp",
-    "resultSave": "Thêm lớp Kết quả trong danh sách lớp so sánh",
-    "copy": "Sao chép lớp hoạt động vào lớp so sánh.",
-    "swap": "Hoán đổi lớp hoạt động và lớp so sánh."
-  },
-  "renderer": {
-    "title": "Trình kết xuất",
-    "stretch": "Các thông số kéo giãn",
-    "stretchType": "Loại Kéo giãn",
-    "dra": "DRA",
-    "draText": "Chức năng Điều chỉnh Phạm vi Động được cải tiến dựa trên trình xem hiện tại",
-    "gamma": "Gamma",
-    "apply": "Áp dụng",
-    "top": "Loại trừ đỉnh",
-    "bottom": "Loại trừ đáy",
-    "topText": " Loại trừ tỷ lệ phần trăm đỉnh x của biểu đồ tần số",
-    "bottomText": " Loại trừ tỷ lệ phần trăm đáy x của biểu đồ tần số",
-    "stdDev": "# của độ lệch chuẩn",
-    "layer": "Lớp hiện tại",
-    "error": "Không có Lớp Hình ảnh hiển thị nào trong bản đồ."
-  },
-  "imageSelector": {
-    "title": "Trình lựa chọn hình ảnh",
-    "enable": "Bật Trình lựa chọn Hình ảnh",
+  "singleLayerViewer": {
+    "title": "Công cụ chọn lớp hình ảnh",
+    "enable": "Tìm hình ảnh riêng lẻ",
+    "tooltip": "Bật để tìm kiếm các hình ảnh cụ thể.",
     "secondary": "Thiết lập lớp hoạt động thành Lớp So sánh.",
     "dropDown": "Hiển thị hình ảnh trong danh sách xổ xuống.",
-    "refresh": "Làm mới lại câu truy vấn dựa trên phạm vi hiện tại.",
+    "refresh": "Nút Làm mới",
+    "refreshTooltip": "Làm mới lại câu truy vấn dựa trên phạm vi hiện tại.",
+    "renderer": "Đang thực hiện",
+    "layer": "Lớp",
     "show": "Hiển thị",
-    "age": "Tuổi",
+    "age": "Phạm vi tìm kiếm",
     "zoom": "Phóng to để chọn hình ảnh.",
     "error": "Không có Lớp Hình ảnh hiển thị nào trong bản đồ.",
     "error1": "Trường không được chỉ định.",
@@ -70,24 +52,58 @@ define({
     "error4": "Không thể thực hiện hoạt động cho lớp dữ liệu.",
     "error5": "Các dịch vụ trước phiên bản 10.2.1 sẽ không được hỗ trợ.",
     "error6": "Không có scene nào trong phạm vi hiện tại.",
-    "error7": "Số điểm được chọn vượt quá 20 điểm. Chỉ 20 điểm đầu tiên mới được hiển thị. Nhấn OK để không bị cảnh bảo lại.",
-    "slider": "Hiển thị hình ảnh trên thanh trượt."
+    "error7": "Số lượng footprint đã chọn vượt quá 20. Chỉ hiển thị 20 mục đầu tiên. Bấm OK để không cảnh báo lại.",
+    "slider": "Hiển thị hình ảnh trên thanh trượt.",
+    "ageOption1": "(Các) ngày",
+    "ageOption2": "(Các) tuần",
+    "ageOption3": "(Các) tháng",
+    "ageOption4": "Năm",
+    "showOption1": "Hình ảnh",
+    "showOption2": "Footprint",
+    "date": "Ngày",
+    "imageLabel": "hình ảnh",
+    "default": "Mặc định"
   },
-  "changeDetection": {
-    "title": "Phát hiện Thay đổi",
-    "mode": "Chế độ",
-    "method": "Phương pháp",
-    "positive": "Chênh lệch dương",
-    "negative": "Chênh lệch âm",
-    "threshold": "Ngưỡng",
-    "difference": "Chênh lệch",
-    "apply": "Áp dụng",
-    "error": "Chức năng Phát hiện Thay đổi hoạt động với hai hình ảnh từ các ngày khác nhau từ cùng một dịch vụ.<br />Trước tiên sử dụng Trình lựa chọn Hình ảnh để xác định ra một hình ảnh,<br />sau đó nhấp vào nút <img src='images/down.png' height='14'/> và chọn hình ảnh thứ hai.<br />Trở lại bảng điều khiển này để tiếp tục với việc phát hiện thay đổi."
+  "twoLayerViewer": {
+    "title": "Trình lựa chọn lớp",
+    "enable": "Tìm hình ảnh riêng lẻ",
+    "tooltip": "Bật để tìm kiếm các hình ảnh cụ thể.",
+    "secondary": "Thiết lập lớp hoạt động thành Lớp So sánh.",
+    "dropDown": "Hiển thị hình ảnh trong danh sách xổ xuống.",
+    "refresh": "Nút Làm mới",
+    "refreshTooltip": "Làm mới lại câu truy vấn dựa trên phạm vi hiện tại.",
+    "renderer": "Đang thực hiện",
+    "layer": "Lớp",
+    "show": "Hiển thị",
+    "age": "Phạm vi tìm kiếm",
+    "zoom": "Phóng to để chọn hình ảnh.",
+    "error": "Không có Lớp Hình ảnh hiển thị nào trong bản đồ.",
+    "error1": "Trường không được chỉ định.",
+    "error2": "Không có trường OBJECTID.",
+    "error3": "Không có trường Thể loại.",
+    "error4": "Không thể thực hiện hoạt động cho lớp dữ liệu.",
+    "error5": "Các dịch vụ trước phiên bản 10.2.1 sẽ không được hỗ trợ.",
+    "error6": "Không có scene nào trong phạm vi hiện tại.",
+    "error7": "Số lượng footprint đã chọn vượt quá 20. Chỉ hiển thị 20 mục đầu tiên. Bấm OK để không cảnh báo lại.",
+    "slider": "Hiển thị hình ảnh trên thanh trượt.",
+    "ageOption1": "(Các) ngày",
+    "ageOption2": "(Các) tuần",
+    "ageOption3": "(Các) tháng",
+    "ageOption4": "Năm",
+    "showOption1": "Hình ảnh",
+    "showOption2": "Footprint",
+    "left": "Hình ảnh bên trái",
+    "right": "Hình ảnh bên phải",
+    "identicalLayerError": "Hình ảnh bên trái và bên phải giống nhau.",
+    "date": "Ngày",
+    "imageLabel": "hình ảnh",
+    "default": "Mặc định"
   },
   "editor": {
     "title": "Trình biên tập",
-    "error": "Không có Lớp Chỉnh sửa nào được chọn.",
-    "error1": "Truy cập bị từ chối. Không thể chỉnh sửa các lớp."
+    "error": "Không tìm thấy Lớp Chỉnh sửa nào.",
+    "error1": "Truy cập bị từ chối. Không thể chỉnh sửa lớp.",
+    "text": "Chọn một biểu tượng và bấm vào bản đồ."
   },
   "measurement": {
     "title": "Đo lường Hình ảnh",
@@ -95,25 +111,50 @@ define({
   },
   "export": {
     "title": "Xuất",
-    "mode": "Chế độ",
-    "titleText": "Tiêu đề",
+    "mode": "Lưu vị trí",
+    "titleText": "Tiêu đề (bắt buộc)",
     "description": "Mô tả",
-    "tags": "Thẻ",
-    "submit": "Gửi",
+    "tags": "Thẻ (bắt buộc)",
+    "preview": "Xem trước",
+    "submit": "Lưu",
+    "cancel": "Hủy",
     "pixel": "Kích thước Pixel",
     "outsr": "Tham chiếu Không gian Đầu ra",
-    "renderer": "Trình kết xuất Hiện tại",
-    "extent": "Xác định Phạm vi",
-    "text": "Nếu Trình kết xuất Hiện tại được đánh dấu chọn, việc kết xuất<br /> sẽ được xuất, nếu không giá trị dữ liệu ban đầu<br/> sẽ được xuất ra.",
-    "error": "Không có lớp hình ảnh hiển thị nào trên bản đồ.",
+    "renderer": "Tùy chọn tải về TIFF",
+    "formatText1": "Như hiển thị",
+    "formatText2": "Dữ liệu thô (tất cả các dải sóng)",
+    "extent": "Vẽ đa giác để xác định phạm vi",
+    "drawText": "(bấm vào hình ảnh để bắt đầu)",
+    "text": "Không thể hiển thị dữ liệu thô bằng chương trình xem ảnh thông thường. Vui lòng mở bằng ArcGIS Pro.",
+    "error": "Không có lớp hình ảnh nào hiển thị trên bản đồ.",
     "error1": "Cần có tiêu đề.",
-    "error2": "Cần có (các) Thẻ."
+    "error2": "Cần có (các) Thẻ.",
+    "error3": "Kích thước pixel của nội dung xuất ra được giới hạn đến",
+    "error4": "cho phạm vi này.",
+    "error5": "Vui lòng nhập giá trị số hợp lệ.",
+    "error6": "Không thể xuất hình ảnh của bạn lúc này.",
+    "thumbnailError": "Không có hình thu nhỏ",
+    "advance": "Tùy chọn lưu nâng cao",
+    "modeOption1": "Lưu vào cổng thông tin",
+    "modeOption2": "Lưu vào ổ đĩa",
+    "default": "Mặc định",
+    "utm": "Khu vực UTM WGS84",
+    "layer": "Lớp",
+    "mercator": "WebMercatorAS",
+    "folder": "Chọn thư mục"
   },
-  "compare": {
-    "title": "So sánh",
-    "slider": "Thanh trượt Trong suốt",
-    "hSwipe": "Trượt Ngang",
-    "vSwipe": "Trượt dọc",
-    "error": "Không có Lớp Hình ảnh hiển thị nào có sẵn để so sánh."
+  "imageDate": {
+    "label": "Ngày chụp hình ảnh"
+  },
+  "about": {
+    "title": "Về"
+  },
+  "bookmark": {
+    "title": "Đánh dấu",
+    "selectBookmark": "Chọn đánh dấu",
+    "default": "Mặc định",
+    "add": "Thêm đánh dấu",
+    "addTitle": "Nhập tiêu đề",
+    "addBtn": "Thêm tạm thời"
   }
 });

@@ -31,7 +31,7 @@ define([
                 declare, Evented,
                 html, domClass,
                 registry,
-                lang, domStyle, webMercatorUtils, SpatialReference, GeometryService, ProjectParameters, Deferred, Extent, Polygon, esriRequest, SimpleLineSymbol, bundle, domConstruct, arcgisPortal, Color, Draw, domAttr, RasterFunction) {
+                lang, domStyle, webMercatorUtils,SpatialReference, GeometryService, ProjectParameters, Deferred, Extent, Polygon, esriRequest, SimpleLineSymbol, bundle, domConstruct, arcgisPortal, Color, Draw, domAttr, RasterFunction) {
             return declare("application.Export", [Evented], {
                 constructor: function (parameters) {
                     var defaults = {
@@ -67,6 +67,11 @@ define([
                     }));
                     registry.byId("exportBtn").on("click", lang.hitch(this, this.exportLayer));
                     registry.byId("defineExtent").on("change", lang.hitch(this, this.activatePolygon));
+                    document.getElementById("saveAgolBtn").addEventListener("click", lang.hitch(this, this.addItemRequest));
+                    document.getElementById("cancelAgolBtn").addEventListener("click", lang.hitch(this, function () {
+                        domStyle.set("previewContainer", "display", "none");
+                        document.getElementsByClassName("h3Title")[0].innerHTML = document.getElementsByClassName("h3Title")[0].title = "";
+                    }));
                     if (this.map) {
                         this.map.on("update-start", lang.hitch(this, this.showLoading));
                         this.map.on("update-end", lang.hitch(this, this.hideLoading));
@@ -132,7 +137,7 @@ define([
                     }
                 },
                 setSavingType: function () {
-                    domStyle.set("extentCheckBoxContainer","display","block");
+                    domStyle.set("extentCheckBoxContainer", "display", "block");
                     if (this.exportMode === "both") {
                         domStyle.set("selectExportDisplay", "display", "block");
                         if (registry.byId("saveAndExportOption").get("value") === "agol")
@@ -174,7 +179,7 @@ define([
                     if (this.imageServiceLayer) {
                         var extent = this.map.geographicExtent.xmin + "," + this.map.geographicExtent.ymin + "," + this.map.geographicExtent.xmax + "," + this.map.geographicExtent.ymax;
                         var spatialReference = this.map.extent.spatialReference.wkid;
-                        var mosaicRule = this.imageServiceLayer.mosaicRule ? this.imageServiceLayer.mosaicRule.toJson() : null;
+                        var mosaicRule = this.imageServiceLayer.mosaicRule ? this.imageServiceLayer.mosaicRule.toJson() : "";
                         var bandIds = this.imageServiceLayer.bandIds ? [this.imageServiceLayer.bandIds] : [];
                         if (registry.byId("defineExtent").checked) {
 
@@ -185,14 +190,15 @@ define([
                             clipArguments.ClippingType = 1;
                             if (this.imageServiceLayer.renderingRule)
                                 clipArguments.Raster = this.imageServiceLayer.renderingRule;
-                            else
+                              else 
                                 clipArguments.Raster = "$$";
                             rasterClip.functionArguments = clipArguments;
-
+                            
                             var renderingRule = rasterClip.toJson();
                         } else {
                             var renderingRule = this.imageServiceLayer.renderingRule ? this.imageServiceLayer.renderingRule.toJson() : null;
                         }
+
                         var opacity = this.imageServiceLayer.opacity ? this.imageServiceLayer.opacity : 1;
                         var interpolation = this.imageServiceLayer.interpolation ? this.imageServiceLayer.interpolation : "RSP_BilinearInterpolation";
                         var format = this.imageServiceLayer.format ? this.imageServiceLayer.format : "jpgpng";
@@ -200,7 +206,7 @@ define([
                         var itemData = {
                             "id": this.imageServiceLayer.id,
                             "visibility": true,
-                            "bandIds": bandIds,
+                            "bandIds": this.imageServiceLayer.bandIds,
                             "opacity": opacity,
                             "title": registry.byId("itemTitle").get("value"),
                             "timeAnimation": false,
@@ -210,6 +216,31 @@ define([
                             "format": format,
                             "compressionQuality": compressionQuality
                         };
+
+                        var layersRequest = esriRequest({
+                            url: this.imageServiceLayer.url + "/exportImage",
+                            content: {
+                                f: "image",
+                                bbox: extent,
+                                bboxSR: 4326,
+                                size: "300,200",
+                                compressionQuality: compressionQuality,
+                                format: format,
+                                interpolation: interpolation,
+                                renderingRule: JSON.stringify(renderingRule),
+                                mosaicRule: JSON.stringify(mosaicRule),
+                                bandIds: this.imageServiceLayer.bandIds,
+                                imageSR: JSON.stringify(this.imageServiceLayer.spatialReference)
+                            },
+                            handleAs: "blob",
+                            callbackParamName: "callback"
+                        });
+
+                        layersRequest.then(lang.hitch(this, function (data) {
+                            document.getElementById("layerThumbnail").src = URL.createObjectURL(data);
+                        }));
+                        document.getElementsByClassName("h3Title")[0].innerHTML = document.getElementsByClassName("h3Title")[0].title = registry.byId("itemTitle").get("value");
+                        this.itemInfo = {itemData: itemData, extent: extent};
                         var portalUrl = this.portalUrl.indexOf("arcgis.com") !== -1 ? "http://www.arcgis.com" : this.portalUrl;
                         var portal = new arcgisPortal.Portal(portalUrl);
                         bundle.identity.lblItem = "Account";
@@ -218,37 +249,82 @@ define([
 
                         portal.signIn().then(lang.hitch(this, function (loggedInUser) {
 
-                            var url = loggedInUser.userContentUrl;
-                            var addItemRequest = esriRequest({
-                                url: url + "/addItem",
-                                content: {f: "json",
-                                    title: registry.byId("itemTitle").get("value"),
-                                    type: "Image Service",
-                                    url: this.imageServiceLayer.url,
-                                    description: registry.byId("itemDescription").get("value"),
-                                    tags: registry.byId("itemTags").get("value"),
-                                    extent: extent,
-                                    spatialReference: spatialReference,
-                                    text: JSON.stringify(itemData)
-                                },
-                                handleAs: "json",
-                                callbackParamName: "callback"
-                            }, {usePost: true});
-                            addItemRequest.then(lang.hitch(this, function (result) {
-                                html.set(document.getElementById("successNotification"), "<br />Layer saved.");
-                                setTimeout(lang.hitch(this, function () {
-                                    html.set(document.getElementById("successNotification"), "");
-                                }), 4000);
-                                domStyle.set("loadingExport", "display", "none");
+                            if (loggedInUser.userContentUrl !== this.userContentUrl) {
+                                registry.byId("folderList").removeOption(registry.byId("folderList").getOptions());
+                                registry.byId("folderList").addOption({label: this.i18n.default, value: ""});
+                                domStyle.set("folderContainer", "display", "none");
+                                this.userContentUrl = loggedInUser.userContentUrl;
+                                var request = esriRequest({
+                                    url: loggedInUser.userContentUrl,
+                                    content: {f: "json"},
+                                    handleAs: "json",
+                                    callbackParamName: "callback"
+                                });
+                                request.then(lang.hitch(this, function (result) {
+                                    if (result.folders.length > 0)
+                                        domStyle.set("folderContainer", "display", "inline-block");
 
-                            }), lang.hitch(this, function (error) {
-                                html.set(document.getElementById("successNotification"), "Error! " + error);
+
+                                    for (var a = 0; a < result.folders.length; a++) {
+                                        registry.byId("folderList").addOption({label: result.folders[a].title, value: result.folders[a].id});
+                                    }
+                                    domStyle.set("previewContainer", "display", "block");
+                                    domStyle.set("loadingExport", "display", "none");
+                                }), lang.hitch(this, function () {
+                                    domStyle.set("previewContainer", "display", "block");
+                                    html.set(document.getElementById("successNotification"), "Error! " + error);
+                                    domStyle.set("loadingExport", "display", "none");
+                                }));
+                            } else {
+                                domStyle.set("previewContainer", "display", "block");
                                 domStyle.set("loadingExport", "display", "none");
-                            }));
+                            }
+
                         }));
                     } else {
                         html.set(document.getElementById("successNotification"), this.i18n.error);
                     }
+                },
+                addItemRequest: function () {
+                    this.showLoading();
+                    var portalUrl = this.portalUrl.indexOf("arcgis.com") !== -1 ? "http://www.arcgis.com" : this.portalUrl;
+                    var portal = new arcgisPortal.Portal(portalUrl);
+                    bundle.identity.lblItem = "Account";
+                    var tempText = (bundle.identity.info).split("access the item on");
+                    bundle.identity.info = tempText[0] + tempText[1];
+
+                    portal.signIn().then(lang.hitch(this, function (loggedInUser) {
+                        var folder = registry.byId("folderList").get("value");
+                        var url = loggedInUser.userContentUrl;
+                        var addItemRequest = esriRequest({
+                            url: url + (folder ? "/" + folder : "") + "/addItem",
+                            content: {f: "json",
+                                title: registry.byId("itemTitle").get("value"),
+                                type: "Image Service",
+                                url: this.imageServiceLayer.url,
+                                description: registry.byId("itemDescription").get("value"),
+                                tags: registry.byId("itemTags").get("value"),
+                                extent: this.itemInfo.extent,
+                                spatialReference: JSON.stringify(this.map.extent.spatialReference.toJson()),
+                                text: JSON.stringify(this.itemInfo.itemData)
+                            },
+                            handleAs: "json",
+                            callbackParamName: "callback"
+                        }, {usePost: true});
+                        addItemRequest.then(lang.hitch(this, function (result) {
+                            domStyle.set("previewContainer", "display", "none");
+                            html.set(document.getElementById("successNotification"), "<br />Layer saved.");
+                            setTimeout(lang.hitch(this, function () {
+                                html.set(document.getElementById("successNotification"), "");
+                            }), 4000);
+                            domStyle.set("loadingExport", "display", "none");
+
+                        }), lang.hitch(this, function (error) {
+                            domStyle.set("previewContainer", "display", "none");
+                            html.set(document.getElementById("successNotification"), "Error! " + error);
+                            domStyle.set("loadingExport", "display", "none");
+                        }));
+                    }));
                 },
                 updateValues: function (info) {
                     this.project(this.map.extent, "extent").then(lang.hitch(this, function (extent) {
@@ -270,7 +346,7 @@ define([
                                 registry.byId("pixelSize").set("value", ps.toFixed(3));
                                 registry.byId("pixelSize").set("constraints", {min: parseFloat(ps.toFixed(3)), place: 0});
                                 registry.byId("pixelSize").set("rangeMessage", this.i18n.error3 + " " + ps.toFixed(3) + " " + this.i18n.error4);
-                                this.currentPixelSize = ps;
+                                 this.currentPixelSize = parseFloat(ps.toFixed(3));
                             }
                         }
                         this.previousSpatialReference = registry.byId("outputSp").get("value");
@@ -281,10 +357,10 @@ define([
                 activatePolygon: function () {
                     if (registry.byId("defineExtent").checked) {
                         this.map.setInfoWindowOnClick(false);
-                           registry.byId("exportBtn").set("disabled", true);
-                            domStyle.set(document.getElementById("exportBtn"), "color", "grey");
-                            registry.byId("submitAgolBtn").set("disabled", true);
-                            domStyle.set(document.getElementById("submitAgolBtn"), "color", "grey");
+                        registry.byId("exportBtn").set("disabled", true);
+                        domStyle.set(document.getElementById("exportBtn"), "color", "grey");
+                        registry.byId("submitAgolBtn").set("disabled", true);
+                        domStyle.set(document.getElementById("submitAgolBtn"), "color", "grey");
                         this.toolbarForExport.activate(Draw.POLYGON);
                     } else {
                         registry.byId("exportBtn").set("disabled", false);
@@ -304,6 +380,9 @@ define([
                             }
                         }
                         this.geometry = null;
+                        var info = {};
+                        info.levelChange = true;
+                        this.updateValues(info);
                     }
                 },
                 getExtent: function (geometry) {
@@ -339,7 +418,7 @@ define([
                             registry.byId("pixelSize").set("value", ps.toFixed(3));
                             registry.byId("pixelSize").set("constraints", {min: parseFloat(ps.toFixed(3)), place: 0});
                             registry.byId("pixelSize").set("rangeMessage", this.i18n.error3 + " " + ps.toFixed(3) + " " + this.i18n.error4);
-                            this.currentPixelSize = ps;
+                             this.currentPixelSize = parseFloat(ps.toFixed(3));
                         }
                     }));
                 },
@@ -440,9 +519,9 @@ define([
                         } else {
                             var size = (parseInt(width / pixelSize)).toString() + ", " + (parseInt(height / pixelSize)).toString();
                             document.getElementById("errorPixelSize").innerHTML = "";
-                            
+
                             if (registry.byId("renderer").checked) {
-                                var renderingRule =  this.imageServiceLayer.renderingRule;
+                                var renderingRule = this.imageServiceLayer.renderingRule;
                             } else
                                 var renderingRule = new RasterFunction({"rasterFunction": "None"});
                             if (registry.byId("defineExtent").checked) {
@@ -455,11 +534,11 @@ define([
                                     clipArguments.Raster = renderingRule;
                                 rasterClip.functionArguments = clipArguments;
 
-                               renderingRule = JSON.stringify(rasterClip.toJson());
+                                renderingRule = JSON.stringify(rasterClip.toJson());
                             } else {
                                 renderingRule = renderingRule ? JSON.stringify(renderingRule.toJson()) : null;
                             }
-                            
+
                             var format = "tiff";
                             var compression = "LZ77";
                             var mosaicRule = this.imageServiceLayer.mosaicRule ? JSON.stringify(this.imageServiceLayer.mosaicRule.toJson()) : null;
@@ -545,7 +624,7 @@ define([
                         }
                     }
                     if (this.imageServiceLayer) {
-                        html.set(document.getElementById("exportLayerTitle"), this.i18n.layer+": <b>" + (this.imageServiceLayer.arcgisProps ? this.imageServiceLayer.arcgisProps.title : (this.imageServiceLayer.title || this.imageServiceLayer.name || this.imageServiceLayer.id)) + "</b>");
+                        html.set(document.getElementById("exportLayerTitle"), this.i18n.layer + ": <b>" + (this.imageServiceLayer.arcgisProps ? this.imageServiceLayer.arcgisProps.title : (this.imageServiceLayer.title || this.imageServiceLayer.name || this.imageServiceLayer.id)) + "</b>");
                         document.getElementById("exportLayerTitle").style.color = "black";
                         this.setSavingType();
 
@@ -555,7 +634,7 @@ define([
                         domStyle.set("exportSaveContainer", "display", "none");
                         domStyle.set("saveAgolContainer", "display", "none");
                         domStyle.set("selectExportDisplay", "display", "none");
-                        domStyle.set("extentCheckBoxContainer","display","none");
+                        domStyle.set("extentCheckBoxContainer", "display", "none");
                     }
                 },
                 showLoading: function () {

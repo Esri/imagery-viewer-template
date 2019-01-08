@@ -16,104 +16,145 @@
  */
 define({
   "map": {
-    "error": "Imposibil de creat harta"
+    "error": "Imposibil de creat harta",
+    "licenseError": {
+      "message": "Contul dvs. nu este licențiat să utilizeze aplicații configurabile care nu sunt publice. Solicitați-i administratorului organizației să vă aloce un tip de utilizator care include aplicații esențiale sau o licență pentru aplicații esențiale de completare.",
+      "title": "Nelicențiat"
+    }
   },
   "nav": {
     "close": "Închidere"
   },
   "basemap": {
-    "title": "Galerie de hărţi fundal"
+    "title": "Galeria de hărți de fundal"
   },
   "operationalLayers": {
-    "title": "Straturi tematice operaţionale",
+    "title": "Straturi tematice operaționale",
     "error": "Niciun strat tematic operațional pe hartă."
   },
-  "layerSelector": {
-    "active": "Strat tematic activ",
-    "comparison": "Strat tematic de comparație",
-    "other": "Altul",
-    "result": "Rezultat",
-    "title": "Selector de straturi tematice",
-    "resultSave": "Adăugare strat tematic de rezultate în lista cu straturi tematice de comparație",
-    "copy": "Copiere strat tematic activ pe strat tematic de comparație.",
-    "swap": "Schimb între strat tematic activ și strat tematic de comparație."
-  },
-  "renderer": {
-    "title": "Reprezentare",
-    "stretch": "Parametri de întindere",
-    "stretchType": "Tip întindere",
-    "dra": "DRA",
-    "draText": "Ajustarea de domeniu dinamic actualizează intensificarea în baza vizualizării curente",
-    "gamma": "Gamma",
-    "apply": "Aplicare",
-    "top": "Excludere zonă superioară",
-    "bottom": "Excludere zonă inferioară",
-    "topText": " Excludere x procente din zona superioară a histogramei",
-    "bottomText": " Excludere x procente din zona inferioară a histogramei",
-    "stdDev": "# din abatere standard",
-    "layer": "Strat tematic curent",
-    "error": "Niciun strat tematic imagistic vizibil pe hartă."
-  },
-  "imageSelector": {
-    "title": "Selector imagine",
-    "enable": "Activare selector imagine",
-    "secondary": "Setare Activ drept strat tematic de comparație.",
-    "dropDown": "Vizualizare imagini în listă derulantă.",
-    "refresh": "Împrospătare căutare pe baza extinderii curente.",
-    "show": "Afişare",
-    "age": "Vârstă",
-    "zoom": "Focalizare pentru selectare imagini.",
+  "singleLayerViewer": {
+    "title": "Selector de straturi tematice de imagistică",
+    "enable": "Căutare imagini individuale",
+    "tooltip": "Activați pentru a căuta imagini specifice.",
+    "secondary": "Setați Activ drept strat tematic de comparație.",
+    "dropDown": "Vor fi afișate imaginile în lista derulantă.",
+    "refresh": "Butonul Reîmprospătare",
+    "refreshTooltip": "Reîmprospătați căutarea pe baza extinderii curente.",
+    "renderer": "Redare",
+    "layer": "Strat tematic",
+    "show": "Afișare",
+    "age": "Căutare interval",
+    "zoom": "Focalizați pentru a selecta imagini.",
     "error": "Niciun strat tematic imagistic vizibil pe hartă.",
     "error1": "Câmpul nu este specificat.",
     "error2": "Niciun câmp OBJECTID.",
-    "error3": "Niciun câmp pentru categorie.",
+    "error3": "Niciun câmp Categorie.",
     "error4": "Nu se poate efectua acțiunea pentru stratul tematic.",
-    "error5": "Servicii anterioare 10.2.1 nesuportate.",
+    "error5": "Servicii anterioare 10.2.1 neacceptate.",
     "error6": "Nicio scenă în extinderea curentă.",
-    "error7": "Numărul de urme selectate depășește 20. Doare primele 20 se vor afișa. Apăsați OK pentru a nu recepționa din nou avertizarea.",
-    "slider": "Prezentare imagini pe cursor."
+    "error7": "Numărul de amprente selectate depășește 20. Vor fi afișate doar primele 20. Apăsați OK pentru a nu primi o nouă avertizare.",
+    "slider": "Vor fi afișate imaginile pe cursor.",
+    "ageOption1": "Zi(le)",
+    "ageOption2": "Săptămână(i)",
+    "ageOption3": "Lună(i)",
+    "ageOption4": "An(i)",
+    "showOption1": "Imagine",
+    "showOption2": "Amprentă",
+    "date": "Dată(e)",
+    "imageLabel": "Imagine (imagini)",
+    "default": "Implicit"
   },
-  "changeDetection": {
-    "title": "Detectare modificare",
-    "mode": "Mod",
-    "method": "Metodă",
-    "positive": "Diferență pozitivă",
-    "negative": "Diferență negativă",
-    "threshold": "Prag",
-    "difference": "Diferență",
-    "apply": "Aplicare",
-    "error": "Detectarea modificării lucrează cu două imagini din date diferite pentru același serviciu.<br />Mai întâi utilizați selector de imagini pentru a defini o imagine,<br />apoi faceți clic pe butonul <img src='images/down.png' height='14'/> și selectați a doua imagine.<br />Reveniți la această comandă pentru a continua cu detectarea modificării."
+  "twoLayerViewer": {
+    "title": "Selector de straturi tematice",
+    "enable": "Căutare imagini individuale",
+    "tooltip": "Activați pentru a căuta imagini specifice.",
+    "secondary": "Setați Activ drept strat tematic de comparație.",
+    "dropDown": "Vor fi afișate imaginile în lista derulantă.",
+    "refresh": "Butonul Reîmprospătare",
+    "refreshTooltip": "Reîmprospătați căutarea pe baza extinderii curente.",
+    "renderer": "Redare",
+    "layer": "Strat tematic",
+    "show": "Afișare",
+    "age": "Căutare interval",
+    "zoom": "Focalizați pentru a selecta imagini.",
+    "error": "Niciun strat tematic imagistic vizibil pe hartă.",
+    "error1": "Câmpul nu este specificat.",
+    "error2": "Niciun câmp OBJECTID.",
+    "error3": "Niciun câmp Categorie.",
+    "error4": "Nu se poate efectua acțiunea pentru stratul tematic.",
+    "error5": "Servicii anterioare 10.2.1 neacceptate.",
+    "error6": "Nicio scenă în extinderea curentă.",
+    "error7": "Numărul de amprente selectate depășește 20. Vor fi afișate doar primele 20. Apăsați OK pentru a nu primi o nouă avertizare.",
+    "slider": "Vor fi afișate imaginile pe cursor.",
+    "ageOption1": "Zi(le)",
+    "ageOption2": "Săptămână(i)",
+    "ageOption3": "Lună(i)",
+    "ageOption4": "An(i)",
+    "showOption1": "Imagine",
+    "showOption2": "Amprentă",
+    "left": "Imaginea din stânga",
+    "right": "Imaginea din dreapta",
+    "identicalLayerError": "Imaginea din partea stângă și cea din partea dreaptă sunt identice.",
+    "date": "Dată(e)",
+    "imageLabel": "imagine (imagini)",
+    "default": "Implicit"
   },
   "editor": {
     "title": "Editor",
-    "error": "Niciun strat tematic de editare selectat.",
-    "error1": "Acces respins. Straturile tematice nu se pot edita."
+    "error": "Niciun strat tematic de editare găsit.",
+    "error1": "Acces refuzat. Straturile tematice nu pot fi editate.",
+    "text": "Selectați un simbol și faceți clic pe hartă."
   },
   "measurement": {
     "title": "Măsurare imagine",
-    "error": "Capacități de măsurare nesuportate."
+    "error": "Capacități de măsurare neacceptate."
   },
   "export": {
     "title": "Export",
-    "mode": "Mod",
-    "titleText": "Titlu",
+    "mode": "Salvare locație",
+    "titleText": "Titlu(obligatoriu)",
     "description": "Descriere",
-    "tags": "Etichete",
-    "submit": "Trimitere",
+    "tags": "Etichete(obligatorii)",
+    "preview": "Previzualizare",
+    "submit": "Salvare",
+    "cancel": "Anulare",
     "pixel": "Dimensiune pixeli",
-    "outsr": "Referinţă spaţială de ieşire",
-    "renderer": "Reprezentare curentă",
-    "extent": "Definire extindere",
-    "text": "Dacă se verifică reprezentarea curentă, se exportă<br /> reprezentare, în caz contrar se exportă valorile datelor originale<br/>.",
+    "outsr": "Referință spațială de ieșire",
+    "renderer": "Opțiuni descărcare TIFF",
+    "formatText1": "Conform afișării",
+    "formatText2": "Date brute(toate benzile)",
+    "extent": "Trasați un poligon pentru a defini extinderea",
+    "drawText": "(faceți clic pe imagine pentru a începe)",
+    "text": "Datele brute nu pot fi afișate cu aplicații standard de vizualizare a fotografiilor. Deschideți cu ArcGIS Pro.",
     "error": "Niciun strat tematic imagistic vizibil pe hartă.",
     "error1": "Este necesar un titlu.",
-    "error2": "Este necesară o etichetă."
+    "error2": "Este necesară o etichetă (etichete).",
+    "error3": "Dimensiunea pixelilor exportului este restricționată la",
+    "error4": "pentru această extindere.",
+    "error5": "Vă rugăm să introduceți o valoare numerică validă.",
+    "error6": "Imaginea dvs. nu poate fi exportată în acest moment.",
+    "thumbnailError": "Nicio miniatură nu este disponibilă",
+    "advance": "Opțiuni de salvare avansate",
+    "modeOption1": "Salvare pe portal",
+    "modeOption2": "Salvare pe disc",
+    "default": "Implicit",
+    "utm": "Zona UTM WGS84",
+    "layer": "Strat tematic",
+    "mercator": "WebMercatorAS",
+    "folder": "Selectaţi dosarul"
   },
-  "compare": {
-    "title": "Comparare",
-    "slider": "Cursor transparență",
-    "hSwipe": "Trecere orizontală",
-    "vSwipe": "Trecere verticală",
-    "error": "Niciun strat tematic imagistic disponibil pentru comparație."
+  "imageDate": {
+    "label": "Data imaginii"
+  },
+  "about": {
+    "title": "Despre"
+  },
+  "bookmark": {
+    "title": "Semne de carte",
+    "selectBookmark": "Selectare semne de carte",
+    "default": "Implicit",
+    "add": "Adăugare semne de carte",
+    "addTitle": "Introducere titlu",
+    "addBtn": "Adăugare element temporar"
   }
 });

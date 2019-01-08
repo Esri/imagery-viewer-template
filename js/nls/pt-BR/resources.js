@@ -16,7 +16,11 @@
  */
 define({
   "map": {
-    "error": "Não foi possível criar o mapa"
+    "error": "Não foi possível criar o mapa",
+    "licenseError": {
+      "message": "Sua conta não está licenciada para utilizar Aplicativos Configuráveis que não sejam públicos. Solicite ao administrador da sua organização que lhe atribua um tipo de usuário que inclua os Aplicativos Fundamentais ou uma licença complementar dos Aplicativos Fundamentais.",
+      "title": "Não Licenciado"
+    }
   },
   "nav": {
     "close": "Fechar"
@@ -28,40 +32,18 @@ define({
     "title": "Camadas Operacionais",
     "error": "Nenhuma camada operacional no mapa."
   },
-  "layerSelector": {
-    "active": "Camada Ativa",
-    "comparison": "Camada de Comparação",
-    "other": "Outro",
-    "result": "Resultado",
-    "title": "Seletor de Camada",
-    "resultSave": "Adicione a camada Resultado na lista da camada de comparação",
-    "copy": "Copie a camada ativa na camada de comparação.",
-    "swap": "Alterne a camada ativa e de comparação."
-  },
-  "renderer": {
-    "title": "Renderizador",
-    "stretch": "Parâmetros de Contraste",
-    "stretchType": "Tipo de Constraste",
-    "dra": "DRA",
-    "draText": "O Ajuste de Intervalo Dinâmico atualiza as melhorias com base na visualização atual",
-    "gamma": "Gama",
-    "apply": "Aplicar",
-    "top": "Excluir superior",
-    "bottom": "Excluir inferior",
-    "topText": " Excluir superior x percentagem do histograma",
-    "bottomText": " Excluir inferior x percentagem do histograma",
-    "stdDev": "# de Desvio Padrão",
-    "layer": "Camada Atual",
-    "error": "Nenhuma Camada de Imagem visível no mapa."
-  },
-  "imageSelector": {
-    "title": "Seletor de Imagem",
-    "enable": "Habilitar Seletor de Imagem",
+  "singleLayerViewer": {
+    "title": "Seletor de Camada de Imagem",
+    "enable": "Pesquisar por imagens individuais",
+    "tooltip": "Habilita para procurar por imagens específicas.",
     "secondary": "Define Ativo como Camada de Comparação.",
     "dropDown": "Mostra imagens na lista suspensa.",
-    "refresh": "Atualiza a consulta com base na extensão atual.",
+    "refresh": "Botão Atualizar",
+    "refreshTooltip": "Atualiza a consulta com base na extensão atual.",
+    "renderer": "Renderização",
+    "layer": "Camada",
     "show": "Mostrar",
-    "age": "Idade",
+    "age": "Faixa de pesquisa",
     "zoom": "Amplia nas imagens selecionadas.",
     "error": "Nenhuma Camada de Imagem visível no mapa.",
     "error1": "O campo não está especificado.",
@@ -70,24 +52,58 @@ define({
     "error4": "Não é possível executar a ação na camada.",
     "error5": "Serviços pré 10.2.1 não suportados.",
     "error6": "Nenhuma cena na extensão atual.",
-    "error7": "O número de pegadas selecionadas excede 20. Somente as primeiras 20 serão exibidas. Pressione OK para não avisar novamente.",
-    "slider": "Mostra imagens no controle deslizante."
+    "error7": "O número de áreas de cobertura selecionadas excede 20. Somente as primeiras 20 serão exibidas. Pressione OK para não avisar novamente.",
+    "slider": "Mostra imagens no controle deslizante.",
+    "ageOption1": "Dias",
+    "ageOption2": "Semanas",
+    "ageOption3": "Meses",
+    "ageOption4": "Anos",
+    "showOption1": "Imagem",
+    "showOption2": "Área de Cobertura",
+    "date": "Datas",
+    "imageLabel": "imagens",
+    "default": "Padrão"
   },
-  "changeDetection": {
-    "title": "Detecção de Alteração",
-    "mode": "Modo",
-    "method": "Método",
-    "positive": "Diferença Positiva",
-    "negative": "Diferença Negativa",
-    "threshold": "Limite",
-    "difference": "Diferença",
-    "apply": "Aplicar",
-    "error": "A Detecção de Alteração funciona com duas imagens de datas diferentes do mesmo serviço.<br />Primeiro utilize o Seletor de Imagem para definir uma imagem,<br />então clique no botão <img src='images/down.png' height='14'/> e selecione a segunda imagem.<br />Retorne a este controle para prosseguir com a detecção de alterações."
+  "twoLayerViewer": {
+    "title": "Seletor de Camada",
+    "enable": "Pesquisar por imagens individuais",
+    "tooltip": "Habilita para procurar por imagens específicas.",
+    "secondary": "Define Ativo como Camada de Comparação.",
+    "dropDown": "Mostra imagens na lista suspensa.",
+    "refresh": "Botão Atualizar",
+    "refreshTooltip": "Atualiza a consulta com base na extensão atual.",
+    "renderer": "Renderização",
+    "layer": "Camada",
+    "show": "Mostrar",
+    "age": "Faixa de pesquisa",
+    "zoom": "Amplia nas imagens selecionadas.",
+    "error": "Nenhuma Camada de Imagem visível no mapa.",
+    "error1": "O campo não está especificado.",
+    "error2": "Sem campo de OBJECTID.",
+    "error3": "Sem campo de Categoria.",
+    "error4": "Não é possível executar a ação na camada.",
+    "error5": "Serviços pré 10.2.1 não suportados.",
+    "error6": "Nenhuma cena na extensão atual.",
+    "error7": "O número de áreas de cobertura selecionadas excede 20. Somente as primeiras 20 serão exibidas. Pressione OK para não avisar novamente.",
+    "slider": "Mostra imagens no controle deslizante.",
+    "ageOption1": "Dias",
+    "ageOption2": "Semanas",
+    "ageOption3": "Meses",
+    "ageOption4": "Anos",
+    "showOption1": "Imagem",
+    "showOption2": "Área de Cobertura",
+    "left": "Imagem esquerda",
+    "right": "Imagem direita",
+    "identicalLayerError": "A Image da Esquerda e Direita são idênticas.",
+    "date": "Datas",
+    "imageLabel": "imagens",
+    "default": "Padrão"
   },
   "editor": {
     "title": "Editor",
-    "error": "Nenhuma Camada de Edição selecionada.",
-    "error1": "Acesso negado. As camadas não podem ser editadas."
+    "error": "Nenhuma Camada de Edição encontrada.",
+    "error1": "Acesso negado. As camadas não podem ser editadas.",
+    "text": "Selecione um símbolo e clique no mapa."
   },
   "measurement": {
     "title": "Medida da Imagem",
@@ -95,25 +111,50 @@ define({
   },
   "export": {
     "title": "Exportar",
-    "mode": "Modo",
-    "titleText": "Título",
+    "mode": "Salvar localização",
+    "titleText": "Título(exigido)",
     "description": "Descrição",
-    "tags": "Tags",
-    "submit": "Enviar",
+    "tags": "Tags(exigida)",
+    "preview": "Visualizar",
+    "submit": "Salvar",
+    "cancel": "Cancelar",
     "pixel": "Tamanho do Pixel",
     "outsr": "Referência Espacial de Saída",
-    "renderer": "Renderizador Atual",
-    "extent": "Definir Extensão",
-    "text": "Se o Renderizador Atual estiver selecionado, a renderização<br /> será exportada, senão os valores de dados originais<br/>serão exportados.",
+    "renderer": "Opções de download de TIFF",
+    "formatText1": "Como exibido",
+    "formatText2": "Dados brutos(todas as bandas)",
+    "extent": "Desenhar polígono para definir a extensão",
+    "drawText": "(clique na imagem para iniciar)",
+    "text": "Os dados brutos não podem ser exibidos com visualizadores de fotos padrão. Abra com ArcGIS Pro.",
     "error": "Nenhuma camada de imagem visível no mapa.",
     "error1": "O título é necessário.",
-    "error2": "Tags são exigidas."
+    "error2": "Tags são exigidas.",
+    "error3": "O Tamanho do Pixel de exportação é restrito a",
+    "error4": "desta extensão.",
+    "error5": "Insira um valor numérico válido.",
+    "error6": "Sua imagem não pode ser exportada neste momento.",
+    "thumbnailError": "Nenhuma miniatura disponível",
+    "advance": "Opções avançadas para salvar",
+    "modeOption1": "Salvar no portal",
+    "modeOption2": "Salvar no disco",
+    "default": "Padrão",
+    "utm": "Zona WGS84 UTM",
+    "layer": "Camada",
+    "mercator": "WebMercatorAS",
+    "folder": "Selecionar Pasta"
   },
-  "compare": {
-    "title": "Comparar",
-    "slider": "Controle Deslizante da Transparência",
-    "hSwipe": "Oscilação Horizontal",
-    "vSwipe": "Oscilação Vertical",
-    "error": "Nenhuma Camada de Imagem visível disponível para comparação."
+  "imageDate": {
+    "label": "Data da Imagem"
+  },
+  "about": {
+    "title": "Sobre"
+  },
+  "bookmark": {
+    "title": "Marcadores",
+    "selectBookmark": "Selecionar marcadores",
+    "default": "Padrão",
+    "add": "Adicionar marcadores",
+    "addTitle": "Inserir título",
+    "addBtn": "Adicionar temporário"
   }
 });

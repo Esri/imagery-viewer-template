@@ -16,7 +16,11 @@
  */
 define({
   "map": {
-    "error": "Harita oluşturulamıyor"
+    "error": "Harita oluşturulamıyor",
+    "licenseError": {
+      "message": "Hesabınız herkese açık olmayan Yapılandırılabilir Uygulamaları kullanmak için lisanslandırılmamış. Lütfen kuruluş yöneticinizden Temel Uygulamalar veya eklenti Temel Uygulamalar lisansı içeren bir kullanıcı türü atamasını isteyin.",
+      "title": "Lisanslı Değil"
+    }
   },
   "nav": {
     "close": "Kapat"
@@ -25,43 +29,21 @@ define({
     "title": "Altlık Harita Galerisi"
   },
   "operationalLayers": {
-    "title": "Operasyonel Katmanlar",
+    "title": "İşlem Katmanları",
     "error": "Haritada işlem katmanı yok."
   },
-  "layerSelector": {
-    "active": "Aktif Katman",
-    "comparison": "Karşılaştırma Katmanı",
-    "other": "Diğer",
-    "result": "Sonuç",
-    "title": "Katman Seçici",
-    "resultSave": "Sonuç katmanını karşılaştırma katmanı listesine ekleyin",
-    "copy": "Aktif katmanı karşılaştırma katmanına kopyalayın.",
-    "swap": "Aktif katman ve karşılaştırma katmanını değiştirin."
-  },
-  "renderer": {
-    "title": "Canlandırıcı",
-    "stretch": "Esneme Parametleri",
-    "stretchType": "Esneme Türü",
-    "dra": "DRA",
-    "draText": "Dinamik Aralık Ayarı geliştirmeleri mevcut görünüme dayanarak günceller",
-    "gamma": "Gama",
-    "apply": "Uygula",
-    "top": "Üstü dışarıda bırak",
-    "bottom": "Altı dışarıda bırak",
-    "topText": " Histogramın üst x yüzdesini dışarıda bırak",
-    "bottomText": " Histogramın alt x yüzdesini dışarıda bırak",
-    "stdDev": "Std. Sap. #",
-    "layer": "Geçerli Katman",
-    "error": "Haritada görünür Görüntü Katmanı yok."
-  },
-  "imageSelector": {
-    "title": "Görüntü Seçici",
-    "enable": "Görüntü Seçiciyi Etkinleştir",
+  "singleLayerViewer": {
+    "title": "Görüntü Katmanı Seçici",
+    "enable": "Tek tek görüntü arayın",
+    "tooltip": "Belirli görüntüler için aramayı etkinleştir.",
     "secondary": "Aktif Katmanı Karşılaştırma Katmanı olarak ayarla.",
     "dropDown": "Görüntüleri açılır listede göster.",
-    "refresh": "Sorguyu geçerli yayılıma dayanarak yenile.",
+    "refresh": "Yenileme Düğmesi",
+    "refreshTooltip": "Sorguyu geçerli yayılıma dayanarak yenile.",
+    "renderer": "Canlandırılıyor",
+    "layer": "Katman",
     "show": "Göster",
-    "age": "Yaş",
+    "age": "Arama aralığı",
     "zoom": "Görüntü seçmek için yakınlaştır.",
     "error": "Haritada görünür Görüntü Katmanı yok.",
     "error1": "Alan belirtilmedi.",
@@ -70,24 +52,58 @@ define({
     "error4": "Katman için işlem yapılamıyor.",
     "error5": "10.2.1 öncesi servisler desteklenmiyor.",
     "error6": "Geçerli yayılımda sahne yok.",
-    "error7": "Seçilen ayak izi 20'yi geçti. Sadece ilk 20 gösterilecek. Tekrar uyarmak için Tamam öğesine basın.",
-    "slider": "Görüntüleri kaydırıcıda göster."
+    "error7": "Seçilen taban alanı sayısı 20’nin üzerinde. Yalnızca ilk 20 görüntülenecek. Tekrar uyarı almamak için Tamam seçeneğine tıklayın.",
+    "slider": "Görüntüleri kaydırıcıda göster.",
+    "ageOption1": "Gün(ler)",
+    "ageOption2": "Hafta",
+    "ageOption3": "Ay",
+    "ageOption4": "Yıl(lar)",
+    "showOption1": "Görüntü",
+    "showOption2": "Bina Taban Alanı",
+    "date": "Tarih(ler)",
+    "imageLabel": "görüntü(ler)",
+    "default": "Varsayılan"
   },
-  "changeDetection": {
-    "title": "Değişiklik Algılama",
-    "mode": "Mod",
-    "method": "Yöntem",
-    "positive": "Olumlu Fark",
-    "negative": "Olumsuz Fark",
-    "threshold": "Eşik",
-    "difference": "Fark",
-    "apply": "Uygula",
-    "error": "Değişiklik Algılama, aynı servisten farklı tarihlerdeki iki görüntüyle birlikte çalışır.<br />Önce bir görüntüyü tanımlamak için Görüntü Seçiciyi kullanın,<br />ardından <img src='images/down.png' height='14'/> düğmesine basın ve ikinci görüntüyü seçin.<br />Değişiklik algılamayla devam etmek için bu kontrole dönün."
+  "twoLayerViewer": {
+    "title": "Katman Seçici",
+    "enable": "Tek tek görüntü arayın",
+    "tooltip": "Belirli görüntüler için aramayı etkinleştir.",
+    "secondary": "Aktif Katmanı Karşılaştırma Katmanı olarak ayarla.",
+    "dropDown": "Görüntüleri açılır listede göster.",
+    "refresh": "Yenileme Düğmesi",
+    "refreshTooltip": "Sorguyu geçerli yayılıma dayanarak yenile.",
+    "renderer": "Canlandırılıyor",
+    "layer": "Katman",
+    "show": "Göster",
+    "age": "Arama aralığı",
+    "zoom": "Görüntü seçmek için yakınlaştır.",
+    "error": "Haritada görünür Görüntü Katmanı yok.",
+    "error1": "Alan belirtilmedi.",
+    "error2": "OBJECTID alanı yok.",
+    "error3": "Kategori alanı yok.",
+    "error4": "Katman için işlem yapılamıyor.",
+    "error5": "10.2.1 öncesi servisler desteklenmiyor.",
+    "error6": "Geçerli yayılımda sahne yok.",
+    "error7": "Seçilen taban alanı sayısı 20’nin üzerinde. Yalnızca ilk 20 görüntülenecek. Tekrar uyarı almamak için Tamam seçeneğine tıklayın.",
+    "slider": "Görüntüleri kaydırıcıda göster.",
+    "ageOption1": "Gün(ler)",
+    "ageOption2": "Hafta",
+    "ageOption3": "Ay",
+    "ageOption4": "Yıl(lar)",
+    "showOption1": "Görüntü",
+    "showOption2": "Bina Taban Alanı",
+    "left": "Sol Görüntü",
+    "right": "Sağ Görüntü",
+    "identicalLayerError": "Sol ve Sağ görüntüler aynı.",
+    "date": "Tarih(ler)",
+    "imageLabel": "görüntü(ler)",
+    "default": "Varsayılan"
   },
   "editor": {
     "title": "Düzenleyici",
-    "error": "Seçili Düzenleme Katman yok.",
-    "error1": "Erişim reddedildi. Katmanlar düzenlenemez."
+    "error": "Düzenleme Katmanı bulunamadı.",
+    "error1": "Erişim reddedildi. Katmanlar düzenlenemiyor.",
+    "text": "Harita üzerinde bir simge seçin ve tıklayın."
   },
   "measurement": {
     "title": "Görüntü Ölçümü",
@@ -95,25 +111,50 @@ define({
   },
   "export": {
     "title": "Dışa Aktar",
-    "mode": "Mod",
-    "titleText": "Başlık",
+    "mode": "Konumu kaydet",
+    "titleText": "Başlık (gerekli)",
     "description": "Açıklama",
-    "tags": "Etiketler",
-    "submit": "Gönder",
+    "tags": "Etiketler (gerekli)",
+    "preview": "Önizleme",
+    "submit": "Kaydet",
+    "cancel": "İptal Et",
     "pixel": "Piksel Boyutu",
     "outsr": "Çıktı Mekansal Referansı",
-    "renderer": "Geçerli İşleyici",
-    "extent": "Yayılımı Tanımla",
-    "text": "Geçerli İşleyici işaretlenirse, <br /> işleme dışarı aktarılır; aksi takdirde orijinal veri değerleri <br/> dışa aktarılır.",
+    "renderer": "TIFF indirme seçenekleri",
+    "formatText1": "Görüntülendiği gibi",
+    "formatText2": "Ham veriler (tüm gruplar)",
+    "extent": "Kapsamı tanımlamak için çokgen çizin",
+    "drawText": "(başlamak için görüntüye tıklayın)",
+    "text": "Ham veriler standart fotoğraf görüntüleyicileriyle görüntülenemez. ArcGIS Pro ile aç.",
     "error": "Haritada görünür görüntü katmanı yok.",
     "error1": "Başlık gerekli.",
-    "error2": "Etiket gerekli."
+    "error2": "Etiket gerekli.",
+    "error3": "Aktarım için maksimum Piksel Boyutu",
+    "error4": "bu yayılım için.",
+    "error5": "Geçerli bir sayısal değer girin.",
+    "error6": "Görüntünüz şu anda dışa aktarılamıyor.",
+    "thumbnailError": "Kullanılabilir küçük resim yok",
+    "advance": "Gelişmiş kaydetme seçenekleri",
+    "modeOption1": "Portala kaydet",
+    "modeOption2": "Diske kaydet",
+    "default": "Varsayılan",
+    "utm": "WGS84 UTM Zone",
+    "layer": "Katman",
+    "mercator": "WebMercatorAS",
+    "folder": "Klasör seç"
   },
-  "compare": {
-    "title": "Karşılaştır",
-    "slider": "Şeffaflık Kaydırıcı",
-    "hSwipe": "Yatay Kaydırma",
-    "vSwipe": "Dikey Kaydırma",
-    "error": "Karşılaştırılacak görünür Görüntü Katmanı yok."
+  "imageDate": {
+    "label": "Görüntü Tarihi"
+  },
+  "about": {
+    "title": "Yaklaşık"
+  },
+  "bookmark": {
+    "title": "Yer işaretleri",
+    "selectBookmark": "Seçilen yer işaretleri",
+    "default": "Varsayılan",
+    "add": "Yer İşareti ekle",
+    "addTitle": "Başlık girin",
+    "addBtn": "Geçici ekle"
   }
 });

@@ -21,6 +21,9 @@
                 "type":"string",
                 "tooltip":"Provide exciting info for the App title tooltip.",
                 "stringFieldOption":"textarea"
+        },
+        {
+        "type": "appproxies"
         }
         ]
 },
@@ -219,8 +222,6 @@
                         ]
                 }
                 ]
-        }, {
-        "type": "appproxies"
         }
         ]
 },

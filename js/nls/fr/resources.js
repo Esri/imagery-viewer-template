@@ -16,7 +16,11 @@
  */
 define({
   "map": {
-    "error": "Impossible de créer la carte"
+    "error": "Impossible de créer la carte",
+    "licenseError": {
+      "message": "La licence de votre compte ne permet pas d’utiliser des applications configurables non publiques. Demandez à l’administrateur de votre organisation de vous attribuer un type d’utilisateur qui inclut une licence Essential Apps ou une licence Essential Apps additionnelle.",
+      "title": "Pas de licence"
+    }
   },
   "nav": {
     "close": "Fermer"
@@ -28,40 +32,18 @@ define({
     "title": "Couches opérationnelles",
     "error": "Aucune couche opérationnelle dans la carte."
   },
-  "layerSelector": {
-    "active": "Couche active",
-    "comparison": "Couche de comparaison",
-    "other": "Autre",
-    "result": "Résultat",
-    "title": "Sélecteur de couche",
-    "resultSave": "Ajouter la couche Résultat dans la liste des couches de comparaison",
-    "copy": "Copiez la couche active vers la couche de comparaison.",
-    "swap": "Intervertissez la couche active et la couche de comparaison."
-  },
-  "renderer": {
-    "title": "Moteur de rendu",
-    "stretch": "Paramètres d’étirement",
-    "stretchType": "Type d’étirement",
-    "dra": "DRA",
-    "draText": "La fonction d’ajustement dynamique de la page met à jour l’amélioration en fonction de la vue actuelle",
-    "gamma": "Gamma",
-    "apply": "Appliquer",
-    "top": "Exclure la valeur haute",
-    "bottom": "Exclure la valeur basse",
-    "topText": " Exclure les x pourcentages les plus hauts de l’histogramme",
-    "bottomText": " Exclure les x pourcentages les plus bas de l’histogramme",
-    "stdDev": "Nb d’écarts types",
-    "layer": "Couche actuelle",
-    "error": "Aucune couche d’imagerie visible sur la carte."
-  },
-  "imageSelector": {
-    "title": "Sélecteur d’image",
-    "enable": "Activer le sélecteur d’image",
+  "singleLayerViewer": {
+    "title": "Sélecteur de couches d’imagerie",
+    "enable": "Rechercher des images individuelles",
+    "tooltip": "Sélectionnez cette option pour rechercher des images spécifiques.",
     "secondary": "Activez la couche active comme couche de comparaison.",
     "dropDown": "Affichez les images dans la liste déroulante.",
-    "refresh": "Actualisez la requête en fonction de l’étendue actuelle.",
+    "refresh": "Bouton Actualiser",
+    "refreshTooltip": "Actualisez la requête en fonction de l’étendue actuelle.",
+    "renderer": "Rendu",
+    "layer": "Couche",
     "show": "Afficher",
-    "age": "Age",
+    "age": "Plage de recherche",
     "zoom": "Faites un zoom avant pour sélectionner des images.",
     "error": "Aucune couche d’imagerie visible sur la carte.",
     "error1": "Le champ n’est pas spécifié.",
@@ -70,24 +52,58 @@ define({
     "error4": "Impossible d’appliquer une action à la couche.",
     "error5": "Les services antérieurs à 10.2.1 ne sont pas pris en charge.",
     "error6": "Aucune scène dans l’étendue actuelle.",
-    "error7": "Le nombre d’emprises sélectionnées est supérieur à 20. Seules les 20 premières emprises sont affichées. Cliquez sur OK pour ne plus afficher l’avertissement.",
-    "slider": "Affichez les images au niveau du curseur."
+    "error7": "Le nombre d’emprises sélectionnées est supérieur à 20. Seules les 20 premières emprises sont affichées. Cliquez sur OK pour ne plus afficher l’avertissement.",
+    "slider": "Affichez les images au niveau du curseur.",
+    "ageOption1": "Jour(s)",
+    "ageOption2": "Semaine(s)",
+    "ageOption3": "Mois",
+    "ageOption4": "Année(s)",
+    "showOption1": "Image",
+    "showOption2": "Emprise",
+    "date": "Date(s)",
+    "imageLabel": "image(s)",
+    "default": "Par défaut"
   },
-  "changeDetection": {
-    "title": "Détection de changement",
-    "mode": "Mode",
-    "method": "Méthode",
-    "positive": "Différence positive",
-    "negative": "Différence négative",
-    "threshold": "Seuil",
-    "difference": "Différence",
-    "apply": "Appliquer",
-    "error": "La fonction Détection de changement concerne deux images à différentes dates provenant du même service.<br />Spécifiez une image à l’aide du Sélecteur d’image,<br />cliquez sur le bouton <img src=’images/down.png’ height=’14’/>, puis sélectionnez la deuxième image.<br />Revenez ensuite à cette commande pour procéder à la détection de changement."
+  "twoLayerViewer": {
+    "title": "Sélecteur de couche",
+    "enable": "Rechercher des images individuelles",
+    "tooltip": "Sélectionnez cette option pour rechercher des images spécifiques.",
+    "secondary": "Activez la couche active comme couche de comparaison.",
+    "dropDown": "Affichez les images dans la liste déroulante.",
+    "refresh": "Bouton Actualiser",
+    "refreshTooltip": "Actualisez la requête en fonction de l’étendue actuelle.",
+    "renderer": "Rendu",
+    "layer": "Couche",
+    "show": "Afficher",
+    "age": "Plage de recherche",
+    "zoom": "Faites un zoom avant pour sélectionner des images.",
+    "error": "Aucune couche d’imagerie visible sur la carte.",
+    "error1": "Le champ n’est pas spécifié.",
+    "error2": "Aucun champ OBJECTID",
+    "error3": "Aucun champ de catégorie.",
+    "error4": "Impossible d’appliquer une action à la couche.",
+    "error5": "Les services antérieurs à 10.2.1 ne sont pas pris en charge.",
+    "error6": "Aucune scène dans l’étendue actuelle.",
+    "error7": "Le nombre d’emprises sélectionnées est supérieur à 20. Seules les 20 premières emprises sont affichées. Cliquez sur OK pour ne plus afficher l’avertissement.",
+    "slider": "Affichez les images au niveau du curseur.",
+    "ageOption1": "Jour(s)",
+    "ageOption2": "Semaine(s)",
+    "ageOption3": "Mois",
+    "ageOption4": "Année(s)",
+    "showOption1": "Image",
+    "showOption2": "Emprise",
+    "left": "Image de gauche",
+    "right": "Image de droite",
+    "identicalLayerError": "L’image de gauche et l’image de droite sont identiques.",
+    "date": "Date(s)",
+    "imageLabel": "image(s)",
+    "default": "Par défaut"
   },
   "editor": {
     "title": "Editeur",
-    "error": "Aucune couche à modifier sélectionnée.",
-    "error1": "Accès refusé. Les couches ne peuvent pas être modifiées."
+    "error": "Aucune couche à modifier trouvée.",
+    "error1": "Accès refusé. Les couches ne peuvent pas être modifiées.",
+    "text": "Sélectionnez un symbole et cliquez sur la carte."
   },
   "measurement": {
     "title": "Mesure de l'image",
@@ -95,25 +111,50 @@ define({
   },
   "export": {
     "title": "Exporter",
-    "mode": "Mode",
-    "titleText": "Titre",
+    "mode": "Enregistrer l’emplacement",
+    "titleText": "Titre (obligatoire)",
     "description": "Description",
-    "tags": "Balises",
-    "submit": "Envoyer",
+    "tags": "Balises (obligatoire)",
+    "preview": "Aperçu",
+    "submit": "Enregistrer",
+    "cancel": "Annuler",
     "pixel": "Taille de pixel",
     "outsr": "Référence spatiale de sortie",
-    "renderer": "Moteur de rendu actuel",
-    "extent": "Définir l'étendue",
-    "text": "Si l’option Moteur de rendu actuel est activée, le rendu<br /> est exporté. Sinon, ce sont les valeurs de données d’origine<br/>qui sont exportées.",
+    "renderer": "Options de téléchargement TIFF",
+    "formatText1": "Tel qu’à l’écran",
+    "formatText2": "Données brutes (tous les canaux)",
+    "extent": "Dessiner un polygone pour définir l’étendue",
+    "drawText": "(cliquez sur une image pour démarrer)",
+    "text": "Les données brutes ne peuvent pas s’afficher avec des visionneuses de photos standard. Ouvrez avec ArcGIS Pro.",
     "error": "Aucune couche d’imagerie visible sur la carte.",
     "error1": "Titre requis.",
-    "error2": "Balise(s) requise(s)."
+    "error2": "Balise(s) requise(s).",
+    "error3": "La taille de pixel de l’exportation est limitée à",
+    "error4": "pour cette étendue.",
+    "error5": "Saisissez une valeur numérique valide.",
+    "error6": "Votre image ne peut actuellement pas être exportée.",
+    "thumbnailError": "Aucune miniature disponible",
+    "advance": "Options d’enregistrement avancées",
+    "modeOption1": "Enregistrer sur le portail",
+    "modeOption2": "Enregistrer sur le disque",
+    "default": "Par défaut",
+    "utm": "Zone UTM WGS84",
+    "layer": "Couche",
+    "mercator": "Web Mercator AS",
+    "folder": "Sélectionner un dossier"
   },
-  "compare": {
-    "title": "Comparer",
-    "slider": "Curseur de transparence",
-    "hSwipe": "Balayage horizontal",
-    "vSwipe": "Balayage vertical",
-    "error": "Aucune couche d’imagerie disponible à des fins de comparaison."
+  "imageDate": {
+    "label": "Date de l’image"
+  },
+  "about": {
+    "title": "A propos"
+  },
+  "bookmark": {
+    "title": "Géosignets",
+    "selectBookmark": "Sélectionner des géosignets",
+    "default": "Par défaut",
+    "add": "Ajouter des géosignets",
+    "addTitle": "Saisir un titre",
+    "addBtn": "Ajouter temporairement"
   }
 });

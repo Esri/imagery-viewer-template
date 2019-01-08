@@ -727,11 +727,38 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-#addBtn:hover,#addBookmark:hover,#idapply:hover,#dropDownImageList:hover,#dropDownImageListRight:hover,#submitAgolBtn:hover,#exportBtn:hover, #refreshImageSliderBtn:hover,#refreshImageSliderBtnRight:hover{
+#addBtn:hover,#addBookmark:hover,#idapply:hover,#dropDownImageList:hover,#dropDownImageListRight:hover,#submitAgolBtn:hover, #exportBtn:hover, #refreshImageSliderBtn:hover,#refreshImageSliderBtnRight:hover{
     background: #ddd;
 }
-
-
+.centerBtn {
+    margin-left: 40%;
+}
+.previewContainer {
+    width: 96%;
+    padding: 2%;
+    background-color: #f8f8f8;
+    float: left;
+    display: none;
+}
+.h3Title {
+    margin: 0;
+    padding-left: 5px;
+    font-size: inherit;
+    font-weight: bold;
+    color: #4c4c4c;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.anchorBtns {
+        text-decoration: none;
+    color: black;
+    padding: 5px;
+    font-size: inherit;
+}
+.anchorBtns:hover {
+    text-decoration: underline;
+}
 .toolContainers{
     display: block;
     width: 80px;

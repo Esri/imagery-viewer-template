@@ -32,6 +32,7 @@ define([
                     lang.mixin(this, defaults, parameters);
                 },
                 imageServiceMeasureWidget: null,
+                worldImagery: "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer",
                 postCreate: function () {
                     this.inherited(arguments);
                     this.map.on("update-end", lang.hitch(this, this.refreshData));
@@ -89,8 +90,7 @@ define([
                 refreshData: function () {
                     this.layer = null;
                     if (this.map.primaryLayer) {
-                        this.layer = this.map.getLayer(this.map.primaryLayer).mensurationCapabilities ? this.map.getLayer(this.map.primaryLayer) : null;
-                        
+                        this.layer = this.map.getLayer(this.map.primaryLayer);//.mensurationCapabilities ? this.map.getLayer(this.map.primaryLayer) : null;
                     } else {
 
                         for (var a = this.map.layerIds.length - 1; a >= 0; a--) {
@@ -98,7 +98,7 @@ define([
                         
                             var layer = this.map.getLayer(this.map.layerIds[a]);
                             
-                            if (layer && layer.visible && layer.serviceDataType && layer.serviceDataType.substr(0, 16) === "esriImageService" && layer.id !== this.map.resultLayer && layer.id !== "resultLayer") {
+                            if (layer && layer.visible && ((layer.url.indexOf(this.worldImagery) !== -1) || (layer.serviceDataType && layer.serviceDataType.substr(0, 16) === "esriImageService" && layer.id !== this.map.resultLayer && layer.id !== "resultLayer"))) {
                                 this.layer = layer;
                                 break;
                             }

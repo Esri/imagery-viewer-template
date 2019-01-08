@@ -19,8 +19,8 @@ define({
 //Default configuration settings for the application. This is where you'll define things like a bing maps key,
 //default web map, default app color theme and more. These values can be overwritten by template configuration settings and url parameters.
     "appid": "",
-    "webmap": "d5e02a0c1f2b4ec399823fdd3c2fdebd",
-    "oauthappid": null,
+    "webmap": "1e061cec3dae4bb39e69cc3206e03939",
+    "oauthappid":  "arcgisWebApps",
     //Group templates must support a group url parameter. This will contain the id of the group.
     "group": "",
     //Enter the url to the proxy if needed by the application. See the 'Using the proxy page' help topic for details
@@ -62,7 +62,7 @@ define({
     "showFlag":false,
     "imageSelectorLayer": "[]",
     "imageDateFlag": false,
-    "imageDateLabel": "Image Date",
+    "imageDateLabel": "",
     "imageDateLayer": "[]",
     "exportFlag": false,
     "exportType": "disk",
