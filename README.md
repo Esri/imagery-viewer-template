@@ -1,4 +1,4 @@
-# imagery-viewer-template
+# Imagery Viewer
 With the Imagery Viewer configurable template, create apps to visualize and interpret imagery layers through time and space.
 
 Check out an [example application](https://www.arcgis.com/apps/ImageryViewer/index.html?appid=3c084bed42b4424caf81c8e53652abd8) built with the Imagery Viewer template.
