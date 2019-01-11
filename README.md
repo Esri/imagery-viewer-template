@@ -1,8 +1,12 @@
 # imagery-viewer-template
 With the Imagery Viewer configurable template, create apps to visualize and interpret imagery layers through time and space.
 
+Check out an [example application](https://www.arcgis.com/apps/ImageryViewer/index.html?appid=3c084bed42b4424caf81c8e53652abd8) built with the Imagery Viewer template.
+
 ![App](https://github.com/ArcGIS/imagery-viewer-template/blob/master/Imagery%20Viewer%20-%20Single%20Layer.png)
 ![App](https://github.com/ArcGIS/imagery-viewer-template/blob/master/Imagery%20Viewer%20-%20Two%20Layers.png)
+
+>There are three configurable app templates designed for imagery: [Imagery Viewer](https://github.com/Esri/imagery-viewer-template), [Image Mask](https://github.com/Esri/image-change-detection-template), and [Image Visit](https://github.com/Esri/image-visit-template/). Explore [example applications](http://arcgis.maps.arcgis.com/apps/MinimalGallery/index.html?appid=7207e9505d3e4cd4bf33e81c57190d1d) built with these templates.
 
 ## Description
 Imagery Viewer is a configurable app template for visualizing and exploring imagery through time and space, and includes tools for navigating through time, recording locations, measurement, and more. A one-image configuration lets users focus on a single imagery layer, while a two-image configuration lets users compare two imagery layers using a swipe tool. 
@@ -26,7 +30,7 @@ Possible use cases include:
 * Apps created with this template are responsively designed for display on desktops, mobile phones, and tablets  using all [browsers supported by ArcGIS Online](http://doc.arcgis.com/en/arcgis-online/reference/browsers.htm).
 
 ## Instructions
-1. To deploy this application, download the template from Portal/ArcGIS Online and unzip it.
+1. To deploy this application, download the template repo and unzip it.
 2. Copy the unzipped folder containing the web app template files, such as index.html, to your web server. You can rename the folder to change the URL through which users will access the application. By default the URL to the app will be `http://<Your Web Server>/<app folder name>/index.html`
 3. Change the sharing host, found in defaults.js inside the config folder for the application, to the sharing URL for ArcGIS Online or Portal. For ArcGIS Online users, keep the default value of www.arcgis.com or specify the name of your organization.
 
@@ -38,6 +42,8 @@ Possible use cases include:
 	- For example: `"//webadaptor.domain.com/arcgis/jsapi/jsapi"` where `arcgis` is the name of your Web Adaptor.
 
 5. Copy a group ID from Portal/ArcGIS Online and replace the default group ID in the application's default.js file. You can now run the application on your web server or configure the application further.
+
+6. Read [instructions](https://doc.arcgis.com/en/arcgis-online/create-maps/create-app-templates.htm#ESRI_SECTION1_FBEEDC333D2A4765BA3F807B50AD558A) for making make the configurable template available through your organization.
 
 > **Note:** If your application edits features in a feature service, contains secure services or web maps that aren't shared publicly, or generate requests that exceed 200 characters, you may need to set up and use a proxy page. Common situations where you may exceed the URL length are using complex polygons as input to a task or specifying a spatial reference using well-known text (WKT). For details on installing and configuring a proxy page see [Using the proxy](https://developers.arcgis.com/javascript/jshelp/ags_proxy.html). If you do not have an Internet connection, you will need to access and deploy the ArcGIS API for JavaScript documentation from [developers.arcgis.com](https://developers.arcgis.com/).
 
