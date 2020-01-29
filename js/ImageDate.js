@@ -33,7 +33,8 @@ define([
                         map: null,
                         layers: null,
                         prefix: "",
-                        i18n: ""
+                        i18n: "",
+                        viewerTool:"single"
                     };
                     lang.mixin(this, defaults, parameters);
                 },
@@ -95,6 +96,7 @@ define([
                 },
                 clearDateRange: function () {
                     html.set("primaryDate", '');
+                    html.set("secondaryDate", '');
 
                 },
                 primarydate: function ()
@@ -239,12 +241,26 @@ define([
                     if (primary || secondary) {
                         if (primary)
                             html.set("primaryDate", this.prefix + ": " + locale.format(new Date(primary), {selector: "date", formatLength: "long"}));
+                        else if(document.getElementById("swipewidget")){
+                            html.set("primaryDate", this.prefix + ": Basemap");
+                        }
                         else
                             html.set("primaryDate", this.prefix + ": ");
-                        if (secondary)
-                            html.set("primaryDate", document.getElementById("primaryDate").innerHTML + " vs " + locale.format(new Date(secondary), {selector: "date", formatLength: "long"}));
-                    } else
+                        
+                        if (secondary&&document.getElementById("swipewidget"))
+                            html.set("secondaryDate", "vs " + locale.format(new Date(secondary), {selector: "date", formatLength: "long"}));
+                        else if(document.getElementById("swipewidget")){
+                            html.set("secondaryDate", "vs " + "Basemap");
+                        }
+                        else {
+                            html.set("secondaryDate", "");
+                        }
+
+                        
+                    } else{
                         html.set("primaryDate", '');
+                        html.set("secondaryDate", "");
+                    }
                 }
 
             });

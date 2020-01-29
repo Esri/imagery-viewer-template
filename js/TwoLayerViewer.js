@@ -329,7 +329,9 @@ define([
                 }));
             }
             this.refreshHandler = this.map.on("update-end", lang.hitch(this, this.refreshSwipe));
-
+            if(document.getElementById("secondaryDate")){
+                domStyle.set("secondaryDate", "display", "inline-block");
+            }
             this.refreshSwipe();
             if (this.map.getLevel() < this.config.zoomLevel) {
                 this.turnOffSelector();
@@ -348,6 +350,10 @@ define([
                 domStyle.set("imageSelectCheckBox", "display", "none");
                 registry.byId("imageSelector").set("checked", false);
                 domStyle.set("leftRenderer", "display", "none");
+                if(document.getElementById("errorDiv").innerHTML === this.i18n.zoom)
+                    html.set(document.getElementById("errorDiv"), '');
+               
+                
                 this.refreshSwipe();
             } else {
                 this.currentLayerProp = value !== "none" ? this.leftLayerInfos[value] : null;
@@ -413,6 +419,17 @@ define([
                 domStyle.set("imageSelectCheckBoxRight", "display", "none");
                 registry.byId("imageSelectorRight").set("checked", false);
                 domStyle.set("rightRenderer", "display", "none");
+                if(document.getElementById("secondaryDate")) {
+                    if(!this.primaryLayer){
+                        document.getElementById("primaryDate").innerHTML = "Basemap";
+                        document.getElementById("secondaryDate").innerHTML = "";
+                    }
+                    else
+                    document.getElementById("secondaryDate").innerHTML = "vs "+"Basemap";
+                }
+
+                if(document.getElementById("errorDivRight").innerHTML === this.i18n.zoom)
+                    html.set(document.getElementById("errorDivRight"), '');
                 this.refreshSwipe();
             } else {
 
@@ -652,7 +669,9 @@ define([
             else
                 this.setFilterDiv();
             registry.byId("imageSelector").set("disabled", true);
-            html.set(document.getElementById("errorDiv"), this.i18n.zoom);
+            if(registry.byId("leftLayerSelector").value!=="none") {
+                html.set(document.getElementById("errorDiv"), this.i18n.zoom);
+            }
         },
         turnOffSelectorRight: function () {
             if (registry.byId("imageSelectorRight").checked)
@@ -660,7 +679,9 @@ define([
             else
                 this.setFilterDivRight();
             registry.byId("imageSelectorRight").set("disabled", true);
-            html.set(document.getElementById("errorDivRight"), this.i18n.zoom);
+            if(registry.byId("rightLayerSelector").value!=="none") {
+                html.set(document.getElementById("errorDivRight"), this.i18n.zoom);
+            }
         },
         setSavedState: function () {
             registry.byId("show").set("value", this.currentLayerProp.type);
@@ -682,10 +703,12 @@ define([
         },
         mapExtentChange: function (evt) {
             if (evt.lod.level >= this.config.zoomLevel) {
+                this.checkField(this.primaryLayer.currentVersion);
                 if (registry.byId("imageSelector").get("disabled")) {
                     registry.byId("imageSelector").set("disabled", false);
                     html.set(document.getElementById("errorDiv"), "");
                 }
+                this.checkFieldRight(this.secondaryLayer.currentVersion);
                 if (registry.byId("imageSelectorRight").get("disabled")) {
                     registry.byId("imageSelectorRight").set("disabled", false);
                     html.set(document.getElementById("errorDivRight"), "");
@@ -846,7 +869,10 @@ define([
                 this.refreshHandler.remove();
                 this.refreshHandler = null;
             }
-
+          
+            if(document.getElementById("secondaryDate")){
+                domStyle.set("secondaryDate", "display", "none");
+            }
             if (this.layerSwipe) {
                 this.swipePosition = this.layerSwipe.domNode.children[0].offsetLeft;
                 this.map.swipe = {position: this.swipePosition, state: true, layers: this.layerSwipe.layers, invert: this.layerSwipe.invertPlacement};
@@ -872,6 +898,14 @@ define([
                 if (this.currentLayerProp.defaultMosaicRule && this.currentLayerProp.defaultMosaicRule.where)
                     var layerFilter = this.currentLayerProp.defaultMosaicRule.where;
                 query.where = layerFilter ? this.categoryField + " = 1 AND " + layerFilter : this.categoryField + " = 1";
+
+                if(this.config.imageDateRangeFlag && this.imageFieldType === "esriFieldTypeDate") {
+                    var startDate = (locale.format(new Date(this.config.startDate), {selector: "date", datePattern: "yyyy-MM-dd"}));
+                    var endDate = (locale.format(new Date(this.config.endDate), {selector: "date", datePattern: "yyyy-MM-dd"}));
+                    var imageFieldFilter = this.imageField+" BETWEEN DATE '"+ startDate +"' AND DATE '"+ endDate+"'";
+                    query.where = "("+query.where + ") AND ("+imageFieldFilter+")";
+                }
+
                 query.orderByFields = [this.imageField];
                 query.returnGeometry = true;
                 this.showLoading();
@@ -979,6 +1013,9 @@ define([
                         }
                     } else {
                         html.set(document.getElementById("errorDiv"), this.i18n.error6);
+                        if(this.config.imageDateRangeFlag && (new Date(this.config.endDate) < new Date(this.config.startDate))) {
+                            html.set(document.getElementById("errorDiv"), this.i18n.error9);  
+                        }
                         domStyle.set("selectorDiv", "display", "none");
                         html.set(document.getElementById("imageRange"), "");
                         html.set(document.getElementById("imageCount"), "");
@@ -1003,6 +1040,14 @@ define([
                 if (this.currentLayerPropRight.defaultMosaicRule && this.currentLayerPropRight.defaultMosaicRule.where)
                     var layerFilter = this.currentLayerPropRight.defaultMosaicRule.where;
                 query.where = layerFilter ? this.categoryFieldRight + " = 1 AND " + layerFilter : this.categoryFieldRight + " = 1";
+
+                if(this.config.imageDateRangeFlag && this.imageFieldType === "esriFieldTypeDate") {
+                    var startDate = (locale.format(new Date(this.config.startDate), {selector: "date", datePattern: "yyyy-MM-dd"}));
+                    var endDate = (locale.format(new Date(this.config.endDate), {selector: "date", datePattern: "yyyy-MM-dd"}));
+                    var imageFieldFilter = this.imageFieldRight+" BETWEEN DATE '"+ startDate +"' AND DATE '"+ endDate+"'";
+                    query.where = "("+query.where + ") AND ("+imageFieldFilter+")";
+                }
+
                 query.orderByFields = [this.imageFieldRight];
                 query.returnGeometry = true;
                 this.showLoading();
@@ -1106,6 +1151,9 @@ define([
                         }
                     } else {
                         html.set(document.getElementById("errorDivRight"), this.i18n.error6);
+                        if(this.config.imageDateRangeFlag && (new Date(this.config.endDate) < new Date(this.config.startDate))) {
+                            html.set(document.getElementById("errorDiv"), this.i18n.error9);  
+                        }
                         domStyle.set("selectorDivRight", "display", "none");
                         html.set(document.getElementById("imageRangeRight"), "");
                         html.set(document.getElementById("imageCountRight"), "");
@@ -1318,6 +1366,16 @@ define([
                                 aqDate = compareDate;
                                 compareDate = new Date(temp);
                             }
+
+                            if(this.config.imageDateRangeFlag) {
+                                if((locale.format(new Date(compareDate), {selector: "date", datePattern: "yyyy/MM/dd"}))<(locale.format(new Date(this.config.startDate), {selector: "date", datePattern: "yyyy/MM/dd"}))||(locale.format(new Date(aqDate), {selector: "date", datePattern: "yyyy/MM/dd"}))>(locale.format(new Date(this.config.endDate), {selector: "date", datePattern: "yyyy/MM/dd"}))) {
+                                    html.set(document.getElementById("errorDiv"), this.i18n.error8 + this.config.startDate+" and "+this.config.endDate);
+                                }
+                                else {
+                                    html.set(document.getElementById("errorDiv"),"");
+                                }
+                            }
+
                             for (var i = this.orderedFeatures.length - 1; i >= 0; i--) {
                                 if ((locale.format(new Date(this.orderedFeatures[i].attributes[this.imageField]), {selector: "date", datePattern: "yyyy/MM/dd"}) <= locale.format(new Date(aqDate), {selector: "date", datePattern: "yyyy/MM/dd"})) && (locale.format(new Date(this.orderedFeatures[i].attributes[this.imageField]), {selector: "date", datePattern: "yyyy/MM/dd"}) >= locale.format(compareDate, {selector: "date", datePattern: "yyyy/MM/dd"}))) {
                                     featureSelect.push(this.orderedFeatures[i]);
@@ -1430,6 +1488,16 @@ define([
                                 aqDate = compareDate;
                                 compareDate = new Date(temp);
                             }
+
+                            if(this.config.imageDateRangeFlag) {
+                                if((locale.format(new Date(compareDate), {selector: "date", datePattern: "yyyy/MM/dd"}))<(locale.format(new Date(this.config.startDate), {selector: "date", datePattern: "yyyy/MM/dd"}))||(locale.format(new Date(aqDate), {selector: "date", datePattern: "yyyy/MM/dd"}))>(locale.format(new Date(this.config.endDate), {selector: "date", datePattern: "yyyy/MM/dd"}))) {
+                                    html.set(document.getElementById("errorDivRight"), this.i18n.error8+this.config.startDate+" and "+this.config.endDate);
+                                }
+                                else {
+                                    html.set(document.getElementById("errorDivRight"),"");
+                                }
+                            }
+                            
                             for (var i = this.orderedFeaturesRight.length - 1; i >= 0; i--) {
 
                                 if ((locale.format(new Date(this.orderedFeaturesRight[i].attributes[this.imageFieldRight]), {selector: "date", datePattern: "yyyy/MM/dd"}) <= locale.format(new Date(aqDate), {selector: "date", datePattern: "yyyy/MM/dd"})) && (locale.format(new Date(this.orderedFeaturesRight[i].attributes[this.imageFieldRight]), {selector: "date", datePattern: "yyyy/MM/dd"}) >= locale.format(compareDate, {selector: "date", datePattern: "yyyy/MM/dd"}))) {
@@ -1524,6 +1592,7 @@ define([
                     }
                     if (this.primaryLayer.visible && this.secondaryLayer.visible) {
                         document.getElementById("errorSwipeDiv").innerHTML = this.i18n.identicalLayerError;
+                       
                         this.previousLayerInfo = {primary: this.primaryLayer ? {id: this.primaryLayer.id, mosaicRule: this.primaryLayer.mosaicRule, renderer: this.primaryLayer.renderingRule} : {id: null, mosaicRule: null, renderer: null}, secondary: this.secondaryLayer ? {id: this.secondaryLayer.id, mosaicRule: this.secondaryLayer.mosaicRule, renderer: this.secondaryLayer.renderingRule} : {id: null, mosaicRule: null, renderer: null}};
                     } else {
                         document.getElementById("errorSwipeDiv").innerHTML = "";
